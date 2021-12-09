@@ -106,7 +106,7 @@ constexpr Dual<T> operator -(double scalar, Dual<T> d)
 }
 
 template<class T>
-constexpr typename T dot(Dual<T> left, Dual<T> right)
+constexpr T dot(Dual<T> left, Dual<T> right)
 {
     return left.real * right.real +
            left.dual * right.dual;
