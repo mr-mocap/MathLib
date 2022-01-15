@@ -2,7 +2,7 @@
 
 #include "math/ApproximatelyEqualTo.h"
 #include "math/Conjugate.h"
-#include <tuple>
+#include "math/types.h"
 
 
 template<class T>
@@ -12,6 +12,7 @@ public:
     using value_type = T;
 
     Quaternion() = default;
+    explicit constexpr Quaternion(value_type real_number) : _w(real_number) { }
     explicit constexpr Quaternion(value_type w, value_type i, value_type j, value_type k) : _w(w), _i(i), _j(j), _k(k) { }
 
     constexpr static Quaternion<T> unit() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
@@ -38,20 +39,10 @@ public:
     const value_type j() const { return _j; }
     const value_type k() const { return _k; }
 
-    constexpr std::tuple<value_type, value_type, value_type> imaginary() { return { _i, _j, _k }; }
+    constexpr triple<value_type> imaginary() { return { _i, _j, _k }; }
 
-    constexpr value_type accumulate(Quaternion<T> q) const { return q.w() + q.i() + q.j() + q.k(); }
-
-    bool isUnit() const { return approximately_equal_to( accumulate(*this), accumulate(unit()), value_type(0.0001) ); }
-    bool isZero() const { return approximately_equal_to( accumulate(*this), accumulate(zero()), value_type(0.0001) ); }
-
-    friend constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T> value_it_should_be, T tolerance)
-    {
-        return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
-               approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
-               approximately_equal_to(value_to_test.j(), value_it_should_be.j(), tolerance) &&
-               approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
-    }
+    bool isUnit() const { return approximately_equal_to( accumulate(*this), accumulate(unit()) ); }
+    bool isZero() const { return approximately_equal_to( accumulate(*this), accumulate(zero()) ); }
 
 protected:
     value_type _w{};
@@ -59,6 +50,15 @@ protected:
     value_type _j{};
     value_type _k{};
 };
+
+template<class T>
+constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T> value_it_should_be, float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
+           approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
+           approximately_equal_to(value_to_test.j(), value_it_should_be.j(), tolerance) &&
+           approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
+}
 
 template<class T>
 constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
@@ -70,6 +70,12 @@ template<class T>
 constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
+}
+
+template<class T>
+constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
+{
+    return left * right.inverse();
 }
 
 template<class T>
@@ -116,10 +122,7 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
 template<class T>
 constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
 {
-    return (left.w() == right.w()) &&
-           (left.i() == right.i()) &&
-           (left.j() == right.j()) &&
-           (left.k() == right.k());
+    return approximately_equal_to(left, right);
 }
 
 template<class T>
@@ -165,6 +168,12 @@ template<class T>
 constexpr Quaternion<T> normalize(Quaternion<T> input)
 {
     return input / input.norm();
+}
+
+template<class T>
+constexpr T accumulate(Quaternion<T> input)
+{
+    return T{input.real() + input.i() + input.j() + input.k()};
 }
 
 using Quaternionf = Quaternion<float>;

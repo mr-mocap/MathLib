@@ -320,24 +320,44 @@ namespace Q
 
         assert( dot( q1, q2 ) == 110.0f );
     }
-#if 0
-    void RotatingA3DPointProducesExpectedResult()
+
+    void MultiplyingAQuaternionByItsConjugateProducesAPureRealNumber()
     {
-        // The rotation must be of unit length
-        const float rotation_amount_radians = 90.0f * static_cast<float>(M_PI_2);
-        Quaternionf rotation{ cos(rotation_amount_radians / 2.0f), sin(rotation_amount_radians / 2.0f), 0.0, 0.0 };
-        const float point[3] = { 0.0, 3.0, 0.0 };
-        const float expected_rotated_point[3] = { 0.0, 0.0, 3.0 };
-        Quaternionf expected_value{ 0.0, expected_rotated_point[0], expected_rotated_point[1], expected_rotated_point[2] };
+        Quaternionf q{ 3.5f, -45.668f, 113.443f, 6.332f};
+        Quaternionf product = q * q.conjugate();
 
-        // Place 3D point in the imaginary part, leaving the real part as 0.0
-        Quaternionf value_to_rotate{ 0.0, point[0], point[1], point[2] };
-
-        Quaternionf actual_output = value_to_rotate * rotation.conjugate();
-
-        assert(actual_output == expected_value);
+        assert( IsNear(product.i(), 0.0f ) );
+        assert( IsNear(product.j(), 0.0f ) );
+        assert( IsNear(product.k(), 0.0f ) );
     }
-#endif
+
+    void MagnitudeSquaredIsValueOfRealPartOfProductOfAQuaternionAndItsConjugate()
+    {
+        Quaternionf q{ 3.5f, -45.668f, 113.443f, 6.332f};
+        Quaternionf product = q * q.conjugate();
+        float       m_squared = q.magnitudeSquared();
+
+        assert(IsNear( m_squared, std::abs(product.real()) ));
+    }
+
+    void MagnitudeIsAbsoluteValueOfRealPartOfProductOfAQuaternionAndItsConjugate()
+    {
+        Quaternionf q{ 3.5f, -45.668f, 113.443f, 6.332f};
+        Quaternionf product = q * q.conjugate();
+        float       magnitude = q.magnitude();
+
+        assert(IsNear( magnitude, std::abs(product.real()) ));
+    }
+
+    void DivisionIsJustMultiplyingByTheInverse()
+    {
+        Quaternionf q{ 9.0f, 10.0f, 11.0f, 12.0f };
+        Quaternionf q2{ 3.5f, -45.668f, 113.443f, 6.332f};
+        Quaternionf q_dividedby_q2 = q / q2;
+        Quaternionf q_times_inverse_of_q2 = q * q2.inverse();
+
+        assert( IsNear(q_dividedby_q2, q_times_inverse_of_q2) );
+    }
 }
 
 void TestQuaternion()
@@ -376,6 +396,8 @@ void TestQuaternion()
     MakePureQuaternionSetsImaginaryVectorToInputParameters();
     ImaginaryReturnsIJK();
     DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues();
+    MultiplyingAQuaternionByItsConjugateProducesAPureRealNumber();
+    MagnitudeSquaredIsValueOfRealPartOfProductOfAQuaternionAndItsConjugate();
 }
 
 namespace D
@@ -413,6 +435,15 @@ namespace D
 
         assert( dot( d1, d2 ) == 42.0f );
     }
+
+    void DualScalarSquareRootTimesItselfIsTheOriginalNumber()
+    {
+        Dualf original_number{ 3.456f, 86.332f };
+        Dualf root = dualscalar_sqrt(original_number);
+        Dualf root_squared = root * root;
+
+        assert( IsNear(original_number, root_squared) );
+    }
 }
 
 void TestDual()
@@ -423,6 +454,7 @@ void TestDual()
     ZeroDualIsAsExpected();
     MakePureDualSetsRealComponentToZero();
     MakePureDualSetsDualComponentToInputParameter();
+    DualScalarSquareRootTimesItselfIsTheOriginalNumber();
 }
 
 namespace DQ
@@ -438,6 +470,14 @@ namespace DQ
     {
         assert(make_dualquaternion_translation( std::tuple{ 1.0f, 2.0f, 3.0f } ).real == Quaternionf::unit());
     }
+
+    void MagnitudeOfNormalizedDualQuaternionIsOne()
+    {
+        DualQuaternionf a{ Quaternionf{6.0f, 22.34f, -3.12f, 100.04f}, Quaternionf{1.0f, -43.1113f, -6.0f, 0.0f} };
+        DualQuaternionf normalized_a = normalized(a);
+
+        assert( IsNear( dualquaternion_norm(normalized_a), Dualf::unit() ) );
+    }
 }
 
 void TestDualQuaternion()
@@ -446,4 +486,5 @@ void TestDualQuaternion()
 
     PureRotationHasZeroTranslation();
     PureTranslationHasIdentityRotation();
+    MagnitudeOfNormalizedDualQuaternionIsOne();
 }

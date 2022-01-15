@@ -11,18 +11,18 @@ constexpr T conjugate(T input)
 template<>
 constexpr float conjugate<float>(float input)
 {
-    return input;
+    return -input;
 }
 
 template<>
 constexpr double conjugate<double>(double input)
 {
-    return input;
+    return -input;
 }
 
 template<>
 constexpr long double conjugate<long double>(long double input)
 {
-    return input;
+    return -input;
 }
 

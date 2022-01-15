@@ -154,6 +154,7 @@
     <ClInclude Include="include\math\Dual.h" />
     <ClInclude Include="include\math\DualQuaternion.h" />
     <ClInclude Include="include\math\Quaternion.h" />
+    <ClInclude Include="include\math\types.h" />
     <ClInclude Include="UnitTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
