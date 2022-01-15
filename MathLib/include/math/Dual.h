@@ -50,7 +50,7 @@ template<class T>
 constexpr Dual<T> operator *(Dual<T> left, Dual<T> right)
 {
     return Dual<T>(left.real * right.real,
-        left.real * right.dual + left.dual * right.real);
+                   left.real * right.dual + left.dual * right.real);
 }
 
 template<class T>

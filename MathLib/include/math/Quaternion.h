@@ -67,9 +67,21 @@ constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
 }
 
 template<class T>
+constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
+{
+    return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
+}
+
+template<class T>
 constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
+}
+
+template<class T>
+constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
+{
+    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
 
 template<class T>
@@ -147,14 +159,14 @@ constexpr T dot(Quaternion<T> left, Quaternion<T> right)
 }
 
 template<class T>
-constexpr Quaternion<T> make_pure_quaternion(std::tuple<T, T, T> t)
+constexpr Quaternion<T> make_pure_quaternion(triple<T> t)
 {
     return Quaternion<T>{ T(), std::get<0>(t), std::get<1>(t), std::get<2>(t) };
 }
 
 
 template<class T>
-constexpr Quaternion<T> make_quaternion_rotation(T radians, std::tuple<T, T, T> axis)
+constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
 {
     return Quaternion<T>{ T(cos(radians / T{2})),
                           T(sin(radians / T{2}) * std::get<0>(axis)),
