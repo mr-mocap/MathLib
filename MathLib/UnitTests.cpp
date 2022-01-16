@@ -477,6 +477,7 @@ namespace DQ
         DualQuaternionf normalized_a = normalized(a);
 
         assert( IsNear( dualquaternion_norm(normalized_a), Dualf::unit() ) );
+        assert( !is_unit(a) );
     }
 }
 

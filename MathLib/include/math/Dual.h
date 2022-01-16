@@ -191,7 +191,7 @@ constexpr T dualscalar_normsquared(Dual<T> d)
 
     assert( approximately_equal_to(result.dual, 0) );
 
-    return result.dual;
+    return result.real;
 }
 
 template<class T>

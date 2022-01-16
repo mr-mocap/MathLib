@@ -90,6 +90,30 @@ constexpr DualQuaternion<T> normalized(DualQuaternion<T> d)
     return d / dualquaternion_norm(d);
 }
 
+template<class T>
+constexpr bool unit_dualquaternion_magnitude_is_one(DualQuaternion<T> d)
+{
+    DualQuaternion<T> v = d * conjugate(d);
+    Dual<T> dualscalar = dualquaternion_magnitude(v);
+
+    return approximately_equal_to( dualscalar, Dual<T>::unit() );
+}
+
+template<class T>
+constexpr bool unit_dualquaternion_unit_condition_two(DualQuaternion<T> d)
+{
+    Quaternion<T> a = conjugate(d.real) * d.dual;
+    Quaternion<T> b = conjugate(d.dual) * d.real;
+
+    return approximately_equal_to(a + b, Quaternion<T>::zero());
+}
+
+template<class T>
+constexpr bool is_unit(DualQuaternion<T> d)
+{
+    return unit_dualquaternion_magnitude_is_one(d) && unit_dualquaternion_unit_condition_two(d);
+}
+
 using DualQuaternionf = DualQuaternion<float>;
 using DualQuaterniond = DualQuaternion<double>;
 using DualQuaternionld = DualQuaternion<long double>;
