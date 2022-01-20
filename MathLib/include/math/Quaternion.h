@@ -177,7 +177,7 @@ constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
 }
 
 template<class T>
-constexpr Quaternion<T> normalize(Quaternion<T> input)
+constexpr Quaternion<T> normalized(Quaternion<T> input)
 {
     return input / input.norm();
 }

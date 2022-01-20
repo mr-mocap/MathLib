@@ -108,6 +108,14 @@ constexpr bool is_unit(DualQuaternion<T> d)
     return unit_dualquaternion_rotation_magnitude_is_one(d) && unit_dualquaternion_rotation_and_translation_are_orthogonal(d);
 }
 
+template<class T>
+constexpr DualQuaternion<T> blend(DualQuaternion<T> beginning, DualQuaternion<T> end, float percentage)
+{
+    auto blended =  beginning + (end - beginning) * percentage;
+
+    return normalized(blended);
+}
+
 using DualQuaternionf = DualQuaternion<float>;
 using DualQuaterniond = DualQuaternion<double>;
 using DualQuaternionld = DualQuaternion<long double>;
