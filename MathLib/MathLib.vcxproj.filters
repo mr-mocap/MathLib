@@ -18,14 +18,17 @@
     <ClCompile Include="MathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UnitTests.cpp">
+    <ClCompile Include="DualNumberTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaternionTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DualQuaternionTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UnitTests.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\ApproximatelyEqualTo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,6 +45,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\math\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DualNumberTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DualQuaternionTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

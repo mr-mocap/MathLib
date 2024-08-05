@@ -1,15 +1,17 @@
 #include <iostream>
 #include <cstdlib>
-#include "UnitTests.h"
+#include "QuaternionTests.hpp"
+#include "DualNumberTests.hpp"
+#include "DualQuaternionTests.hpp"
 
 
 int main()
 {
     std::cout << "Running Unit Tests!\n";
 
-    TestQuaternion();
-    TestDual();
-    TestDualQuaternion();
+    QuaternionTests::Run();
+    DualNumberTests::Run();
+    DualQuaternionTests::Run();
 
     std::cout << "All tests passed!\n";
     return EXIT_SUCCESS;
