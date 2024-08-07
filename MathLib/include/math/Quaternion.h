@@ -5,7 +5,7 @@
 #include "math/types.h"
 
 
-template<class T>
+template <class T>
 class Quaternion
 {
 public:
@@ -51,7 +51,7 @@ protected:
     value_type _k{};
 };
 
-template<class T>
+template <class T>
 constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T> value_it_should_be, float tolerance = 0.0002f)
 {
     return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
@@ -60,37 +60,37 @@ constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T>
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
 {
     return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
 {
     return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
 {
     return left * right.inverse();
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
 {
     return Quaternion<T>{left.w() + right.w(),
@@ -99,7 +99,7 @@ constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
                          left.k() + right.k()};
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
 {
     return Quaternion<T>{left.w() - right.w(),
@@ -108,7 +108,7 @@ constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
                          left.k() - right.k()};
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
 {
     return Quaternion<T>{left.w() * right.w() - (left.i() * right.i() +
@@ -131,25 +131,25 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
     };
 }
 
-template<class T>
+template <class T>
 constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
 {
     return approximately_equal_to(left, right);
 }
 
-template<class T>
+template <class T>
 constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
 {
     return !(left == right);
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> q)
 {
     return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
 }
 
-template<class T>
+template <class T>
 constexpr T dot(Quaternion<T> left, Quaternion<T> right)
 {
     return left.w() * right.w() +
@@ -158,14 +158,31 @@ constexpr T dot(Quaternion<T> left, Quaternion<T> right)
            left.k() * right.k();
 }
 
-template<class T>
-constexpr Quaternion<T> make_pure_quaternion(triple<T> t)
+template <class T>
+constexpr Quaternion<T> make_pure_quaternion(T x, T y, T z)
+{
+    return Quaternion<T>{ T(), x, y, z };
+}
+
+template <class T>
+constexpr Quaternion<T> make_pure_quaternion(const triple<T> &t)
 {
     return Quaternion<T>{ T(), std::get<0>(t), std::get<1>(t), std::get<2>(t) };
 }
 
 
-template<class T>
+template <class T>
+constexpr Quaternion<T> make_quaternion_rotation(T radians, T axis_x, T axis_y, T axis_z)
+{
+    return Quaternion<T>{ T(cos(radians / T{2})),
+                          T(sin(radians / T{2}) * axis_x),
+                          T(sin(radians / T{2}) * axis_y),
+                          T(sin(radians / T{2}) * axis_z) };
+
+    // assert( output.isUnit() )
+}
+
+template <class T>
 constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
 {
     return Quaternion<T>{ T(cos(radians / T{2})),
@@ -176,13 +193,13 @@ constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
     // assert( output.isUnit() )
 }
 
-template<class T>
+template <class T>
 constexpr Quaternion<T> normalized(Quaternion<T> input)
 {
     return input / input.norm();
 }
 
-template<class T>
+template <class T>
 constexpr T accumulate(Quaternion<T> input)
 {
     return T{input.real() + input.i() + input.j() + input.k()};

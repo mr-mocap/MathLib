@@ -19,14 +19,14 @@ namespace DualQuaternionTests
 
 void PureRotationHasZeroTranslation()
 {
-    assert(make_dualquaternion_rotation(0.0f, triple<float>{0.0f, 1.0f, 0.0f} ).dual == Quaternionf::zero());
-    assert(make_dualquaternion_rotation(float(M_PI_4), triple<float>{0.0f, 0.0f, 1.0f}).dual == Quaternionf::zero());
-    assert(make_dualquaternion_rotation(float(M_PI_2), triple<float>{1.0f, 0.0f, 0.0f}).dual == Quaternionf::zero());
+    assert(make_dualquaternion_rotation(0.0f, 0.0f, 1.0f, 0.0f).dual == Quaternionf::zero());
+    assert(make_dualquaternion_rotation(float(M_PI_4), 0.0f, 0.0f, 1.0f).dual == Quaternionf::zero());
+    assert(make_dualquaternion_rotation(float(M_PI_2), 1.0f, 0.0f, 0.0f).dual == Quaternionf::zero());
 }
 
 void PureTranslationHasIdentityRotation()
 {
-    assert(make_dualquaternion_translation( triple<float>{ 1.0f, 2.0f, 3.0f } ).real == Quaternionf::unit());
+    assert(make_dualquaternion_translation(1.0f, 2.0f, 3.0f).real == Quaternionf::unit());
 }
 
 void MagnitudeOfNormalizedDualQuaternionIsOne()
