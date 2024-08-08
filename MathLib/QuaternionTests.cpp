@@ -1,5 +1,6 @@
 #include "QuaternionTests.hpp"
 #include "math/Quaternion.h"
+#include "math/Conversions.hpp"
 #include <cassert>
 #include <iostream>
 
@@ -339,6 +340,7 @@ void UnitQuaternionIsNear1()
     std::cout << __func__ << std::endl;
 
     assert( Quaternionf::unit().isUnit() );
+    assert( IsNear(Quaternionf::unit().norm(), 1.0f) );
 }
 
 void MakePureQuaternionSetsRealComponentToZero()
@@ -423,7 +425,69 @@ void DivisionIsJustMultiplyingByTheInverse()
     Quaternionf q_dividedby_q2 = q / q2;
     Quaternionf q_times_inverse_of_q2 = q * q2.inverse();
 
-    assert( IsNear(q_dividedby_q2, q_times_inverse_of_q2) );
+    assert( q_dividedby_q2 == q_times_inverse_of_q2 );
+}
+
+void ARotationIsStoredAsTheHalfAngle()
+{
+    std::cout << __func__ << std::endl;
+
+    // 90 deg rotation around X axis
+    {
+        float       degrees_of_rotation = 90.0f;
+        float       half_angle = degrees_of_rotation / 2.0f;
+        Quaternionf rotation = make_quaternion_rotation( DegreesToRadians(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+
+        assert( IsNear(rotation.norm(), 1.0f) );
+        assert( IsNear(rotation.w(), std::cos( DegreesToRadians(half_angle) )) );
+        assert( IsNear(rotation.i(), std::sin( DegreesToRadians(half_angle) )) );
+        assert( IsNear(rotation.j(), 0.0f) );
+        assert( IsNear(rotation.k(), 0.0f) );
+    }
+
+    // 60 deg rotation around X axis
+    {
+        float       degrees_of_rotation = 60.0f;
+        float       half_angle = degrees_of_rotation / 2.0f;
+        Quaternionf rotation = make_quaternion_rotation( DegreesToRadians(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+
+        assert( IsNear(rotation.norm(), 1.0f) );
+        assert( IsNear(rotation.w(), std::cos( DegreesToRadians(half_angle) )) );
+        assert( IsNear(rotation.i(), std::sin( DegreesToRadians(half_angle) )) );
+        assert( IsNear(rotation.j(), 0.0f) );
+        assert( IsNear(rotation.k(), 0.0f) );
+    }
+}
+
+void MakingARotationIsAccurate()
+{
+    std::cout << __func__ << std::endl;
+
+    // Rotate 90 deg around X axis.
+    // A unit in Y becomes a unit in Z.
+    {
+        Quaternionf rotation = make_quaternion_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf encoded_point = encode_point_as_quaternion(0.0f, 1.0f, 0.0f);
+        Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
+
+        assert( IsNear(transformed_point.w(), 0.0f) );
+        assert( IsNear(transformed_point.i(), 0.0f) );
+        assert( IsNear(transformed_point.j(), 0.0f) );
+        assert( IsNear(transformed_point.k(), 1.0f) );
+    }
+
+    // Rotate 90 deg around Y axis.
+    // A unit in X becomes a unit in Z.
+    {
+        Quaternionf rotation = make_quaternion_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf encoded_point = encode_point_as_quaternion(1.0f, 0.0f, 0.0f);
+        Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
+
+        assert( IsNear(transformed_point.w(), 0.0f) );
+        assert( IsNear(transformed_point.i(), 0.0f) );
+        assert( IsNear(transformed_point.j(), 0.0f) );
+        assert( IsNear(transformed_point.k(), -1.0f) );
+    }
 }
 
 void Run()
@@ -464,6 +528,8 @@ void Run()
     DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues();
     MultiplyingAQuaternionByItsConjugateProducesAPureRealNumber();
     MagnitudeSquaredIsValueOfRealPartOfProductOfAQuaternionAndItsConjugate();
+    ARotationIsStoredAsTheHalfAngle();
+    MakingARotationIsAccurate();
 
     std::cout << "PASSED!" << std::endl;
 }

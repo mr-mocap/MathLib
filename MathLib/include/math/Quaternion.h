@@ -42,7 +42,10 @@ public:
     constexpr triple<value_type> imaginary() { return { _i, _j, _k }; }
 
     bool isUnit() const { return approximately_equal_to( accumulate(*this), accumulate(unit()) ); }
+    bool isUnit(value_type tolerance) const { return approximately_equal_to( accumulate(*this), accumulate(unit()), tolerance ); }
+
     bool isZero() const { return approximately_equal_to( accumulate(*this), accumulate(zero()) ); }
+    bool isZero(value_type tolerance) const { return approximately_equal_to( accumulate(*this), accumulate(zero()), tolerance ); }
 
 protected:
     value_type _w{};
@@ -170,27 +173,38 @@ constexpr Quaternion<T> make_pure_quaternion(const triple<T> &t)
     return Quaternion<T>{ T(), std::get<0>(t), std::get<1>(t), std::get<2>(t) };
 }
 
+template <class T>
+constexpr Quaternion<T> encode_point_as_quaternion(T x, T y, T z)
+{
+    return make_pure_quaternion(x, y, z);
+}
 
 template <class T>
 constexpr Quaternion<T> make_quaternion_rotation(T radians, T axis_x, T axis_y, T axis_z)
 {
-    return Quaternion<T>{ T(cos(radians / T{2})),
-                          T(sin(radians / T{2}) * axis_x),
-                          T(sin(radians / T{2}) * axis_y),
-                          T(sin(radians / T{2}) * axis_z) };
+    T cos_theta = cos(radians / T{2});
+    T sin_theta = sin(radians / T{2});
 
-    // assert( output.isUnit() )
+    return normalized( Quaternion<T>{ cos_theta,
+                                      sin_theta * axis_x,
+                                      sin_theta * axis_y,
+                                      sin_theta * axis_z }
+                     );
+    // Postcondition: output.isUnit() == true
 }
 
 template <class T>
 constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
 {
-    return Quaternion<T>{ T(cos(radians / T{2})),
-                          T(sin(radians / T{2}) * std::get<0>(axis)),
-                          T(sin(radians / T{2}) * std::get<1>(axis)),
-                          T(sin(radians / T{2}) * std::get<2>(axis)) };
+    T cos_theta = cos(radians / T{2});
+    T sin_theta = sin(radians / T{2});
 
-    // assert( output.isUnit() )
+    return normalized( Quaternion<T>{ cos_theta,
+                                      sin_theta * std::get<0>(axis),
+                                      sin_theta * std::get<1>(axis),
+                                      sin_theta * std::get<2>(axis) }
+                     );
+    // Postcondition: output.isUnit() == true
 }
 
 template <class T>
