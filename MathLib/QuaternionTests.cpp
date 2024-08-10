@@ -477,7 +477,7 @@ void MakingARotationIsAccurate()
     }
 
     // Rotate 90 deg around Y axis.
-    // A unit in X becomes a unit in Z.
+    // A unit in X becomes a unit in -Z.
     {
         Quaternionf rotation = make_quaternion_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf encoded_point = encode_point_as_quaternion(1.0f, 0.0f, 0.0f);
@@ -487,6 +487,39 @@ void MakingARotationIsAccurate()
         assert( IsNear(transformed_point.i(), 0.0f) );
         assert( IsNear(transformed_point.j(), 0.0f) );
         assert( IsNear(transformed_point.k(), -1.0f) );
+    }
+}
+
+void PerformTwoConsecutiveRotations()
+{
+    std::cout << __func__ << std::endl;
+
+    {
+        Quaternionf rotation_90_x = make_quaternion_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = make_quaternion_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf encoded_point = encode_point_as_quaternion(0.0f, 1.0f, 0.0f);
+        Quaternionf transformed_point = passively_rotate_encoded_point(rotation_90_x, encoded_point);
+
+        transformed_point = passively_rotate_encoded_point(rotation_90_y, transformed_point);
+
+        assert( IsNear(transformed_point.w(), 0.0f) );
+        assert( IsNear(transformed_point.i(), 1.0f) );
+        assert( IsNear(transformed_point.j(), 0.0f) );
+        assert( IsNear(transformed_point.k(), 0.0f) );
+    }
+
+    // Same thing, but compose the rotations first
+    {
+        Quaternionf rotation_90_x = make_quaternion_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = make_quaternion_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf composed_rotation = compose_rotations( rotation_90_x, rotation_90_y );
+        Quaternionf encoded_point = encode_point_as_quaternion(0.0f, 1.0f, 0.0f);
+        Quaternionf transformed_point = passively_rotate_encoded_point(composed_rotation, encoded_point);
+
+        assert( IsNear(transformed_point.w(), 0.0f) );
+        assert( IsNear(transformed_point.i(), 1.0f) );
+        assert( IsNear(transformed_point.j(), 0.0f) );
+        assert( IsNear(transformed_point.k(), 0.0f) );
     }
 }
 
@@ -530,6 +563,7 @@ void Run()
     MagnitudeSquaredIsValueOfRealPartOfProductOfAQuaternionAndItsConjugate();
     ARotationIsStoredAsTheHalfAngle();
     MakingARotationIsAccurate();
+    PerformTwoConsecutiveRotations();
 
     std::cout << "PASSED!" << std::endl;
 }

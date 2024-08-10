@@ -17,6 +17,13 @@ constexpr DualQuaternion<T> make_dualquaternion_rotation(T radians, T axis_x, T 
 }
 
 template <class T>
+constexpr DualQuaternion<T> make_dualquaternion_rotation(const Quaternion<T> &rotation)
+{
+    // A pure rotation has the dual part set to zero.
+    return DualQuaternion<T>{ rotation, Quaternion<T>::zero() };
+}
+
+template <class T>
 constexpr DualQuaternion<T> make_dualquaternion_translation(T translation_x, T translation_y, T translation_z)
 {
     // A pure translation has the real part set to identity.
@@ -34,6 +41,12 @@ constexpr DualQuaternion<T> make_unit_dualquaternion()
     return DualQuaternion<T>{ Quaternion<T>::unit(), Quaternion<T>::zero() };
 }
 
+/** Encode both the @p rotation and translation together
+ *
+ *  @pre @p rotation is a unit Quaternion
+ *  @post result.real == @p rotation.
+ *        result.dual.isPure()
+ */
 template <class T>
 constexpr DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation, T translation_x, T translation_y, T translation_z)
 {

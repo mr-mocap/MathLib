@@ -3,8 +3,15 @@
 #include "math/ApproximatelyEqualTo.h"
 #include "math/Conjugate.h"
 #include "math/types.h"
+#include <cassert>
 
 
+/** A mathematical quaternion
+ *  
+ *  @note A quaternion is a 4-dimensional object that is an extension
+ *        of the complex number system.
+ *        Its main use is for encoding rotation in 3-dimensional space.
+ */
 template <class T>
 class Quaternion
 {
@@ -15,7 +22,10 @@ public:
     explicit constexpr Quaternion(value_type real_number) : _w(real_number) { }
     explicit constexpr Quaternion(value_type w, value_type i, value_type j, value_type k) : _w(w), _i(i), _j(j), _k(k) { }
 
+    // Quaternion representation of the real number 1
     constexpr static Quaternion<T> unit() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
+
+    // Quaternion representation of the real number 0
     constexpr static Quaternion<T> zero() { return Quaternion{}; }
     constexpr static Quaternion<T> unit_real() { return unit(); }
     constexpr static Quaternion<T> unit_i() { return Quaternion{ T{}, T{1}, T{},  T{} }; }
@@ -39,14 +49,17 @@ public:
     const value_type j() const { return _j; }
     const value_type k() const { return _k; }
 
+    // Extracts the imaginary part of a Quaternion as a 3-tuple
     constexpr triple<value_type> imaginary() { return { _i, _j, _k }; }
 
-    bool isUnit() const { return approximately_equal_to( accumulate(*this), accumulate(unit()) ); }
-    bool isUnit(value_type tolerance) const { return approximately_equal_to( accumulate(*this), accumulate(unit()), tolerance ); }
+    bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
+    bool isUnit(value_type tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
 
-    bool isZero() const { return approximately_equal_to( accumulate(*this), accumulate(zero()) ); }
-    bool isZero(value_type tolerance) const { return approximately_equal_to( accumulate(*this), accumulate(zero()), tolerance ); }
+    bool isZero() const { return approximately_equal_to( magnitude(), T{0} ); }
+    bool isZero(value_type tolerance) const { return approximately_equal_to( magnitude(), T{0}, tolerance ); }
 
+    // Checks if the real() part is 0
+    bool isPure() const { return approximately_equal_to(real(), T{0}); }
 protected:
     value_type _w{};
     value_type _i{};
@@ -161,24 +174,59 @@ constexpr T dot(Quaternion<T> left, Quaternion<T> right)
            left.k() * right.k();
 }
 
+/** Construct a pure Quaternion
+ *  
+ *  @post output.w() == 0
+ *        output.real() == 0
+
+ *  @note A pure Quaternion is one in which the w, or real, component
+ *        is 0.
+ */
 template <class T>
 constexpr Quaternion<T> make_pure_quaternion(T x, T y, T z)
 {
     return Quaternion<T>{ T(), x, y, z };
 }
 
+/** Construct a pure Quaternion
+ *  
+ *  @post output.w() == 0
+ *        output.real() == 0
+
+ *  @note A pure Quaternion is one in which the w, or real, component
+ *        is 0.
+ */
 template <class T>
 constexpr Quaternion<T> make_pure_quaternion(const triple<T> &t)
 {
     return Quaternion<T>{ T(), std::get<0>(t), std::get<1>(t), std::get<2>(t) };
 }
 
+/** Encode a 3D point as a pure Quaternion
+ *  
+ *  @post output.w() == 0
+ *        output.real() == 0
+
+ *  @note A pure Quaternion is one in which the w, or real, component
+ *        is 0.
+ *  
+ *  @see make_pure_quaternion
+ */
 template <class T>
 constexpr Quaternion<T> encode_point_as_quaternion(T x, T y, T z)
 {
     return make_pure_quaternion(x, y, z);
 }
 
+/** Enocde a rotation into a Quaternion
+ *  
+ *  @param radians The amount of rotation to apply (in radians)
+ *  @param axis_x  The X component of the vector to rotate around
+ *  @param axis_y  The Y component of the vector to rotate around
+ *  @param axis_z  The Z component of the vector to rotate around
+ *  
+ *  @post output.isUnit() == true
+ */
 template <class T>
 constexpr Quaternion<T> make_quaternion_rotation(T radians, T axis_x, T axis_y, T axis_z)
 {
@@ -190,9 +238,15 @@ constexpr Quaternion<T> make_quaternion_rotation(T radians, T axis_x, T axis_y, 
                                       sin_theta * axis_y,
                                       sin_theta * axis_z }
                      );
-    // Postcondition: output.isUnit() == true
 }
 
+/** Enocde a rotation into a Quaternion
+ *  
+ *  @param radians The amount of rotation to apply (in radians)
+ *  @param axis    The axis to rotate around
+ *  
+ *  @post output.isUnit() == true
+ */
 template <class T>
 constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
 {
@@ -204,7 +258,80 @@ constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
                                       sin_theta * std::get<1>(axis),
                                       sin_theta * std::get<2>(axis) }
                      );
-    // Postcondition: output.isUnit() == true
+}
+
+/** Rotates the encoded point using the given rotation
+ *  
+ *  @param rotation      The input rotation
+ *  @param encoded_point The input point to be rotated
+ *  
+ *  @return The passively rotated encoded point
+ *  
+ *  @pre  @p rotation is a unit Quaternion.
+ *        @p encoded_point is a pure Auaternion.
+ *  @post The output is a pure Quaternion
+ *  
+ *  @note This is a passive rotation, meaning that the coordinate system is
+ *        rotated with respect to the point.
+ *        This is also known as a local rotation.
+ */
+template <class T>
+constexpr Quaternion<T> passively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+{
+    assert( rotation.isUnit() );
+    assert( encoded_point.isPure() );
+
+    return rotation * encoded_point * rotation.conjugate();
+}
+
+/**
+ *  
+ *  @see passively_rotate_encoded_point
+ */
+template <class T>
+constexpr Quaternion<T> locally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+{
+    return passively_rotate_encoded_point(rotation, encoded_point);
+}
+
+/** Rotates the @p encoded_point using the given @p rotation
+ *  
+ *  @param rotation      The input rotation
+ *  @param encoded_point The input point to be rotated
+ *  
+ *  @return The actively rotated encoded point
+ *  
+ *  @pre  @p rotation is a unit Quaternion.
+ *        @p encoded_point is a pure Auaternion.
+ *  @post The output is a pure Quaternion
+ *  
+ *  @note This is an active rotation, meaning that the point is rotated with
+ *        respect to the coordinate system.
+ *        This is also known as a global rotation.
+ */
+template <class T>
+constexpr Quaternion<T> actively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+{
+    assert( rotation.isUnit() );
+    assert( encoded_point.isPure() );
+
+    return rotation.conjugate() * encoded_point * rotation;
+}
+
+/**
+ *  
+ *  @see actively_rotate_encoded_point
+ */
+template <class T>
+constexpr Quaternion<T> globally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+{
+    return actively_rotate_encoded_point(rotation, encoded_point);
+}
+
+template <class T>
+constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const Quaternion<T> &rotation_2)
+{
+    return rotation_2 * rotation_1;
 }
 
 template <class T>
@@ -213,6 +340,10 @@ constexpr Quaternion<T> normalized(Quaternion<T> input)
     return input / input.norm();
 }
 
+/** Sums up the components of @p input
+ *  
+ *  @input The Quaternion to operate on
+ */
 template <class T>
 constexpr T accumulate(Quaternion<T> input)
 {
