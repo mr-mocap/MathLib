@@ -67,6 +67,16 @@ protected:
     value_type _k{};
 };
 
+/** Compares two Quaternions equal, component-wise, to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ *  
+ *  @see approximately_equal_to
+ */
 template <class T>
 constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T> value_it_should_be, float tolerance = 0.0002f)
 {
@@ -76,36 +86,58 @@ constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T>
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
 }
 
+/** Defines multiplication of a Quaternion and a scalar
+ *  
+ */
 template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
 }
 
+/** Defines multiplication of a scalar and a Quaternion
+ *  
+ */
 template <class T>
 constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
 {
     return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
 }
 
+/** Defines division of a Quaternion by a scalar
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 {
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
 }
 
+/** Defines division of a scalar by a Quaternion
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
 {
     return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
 
+/** Defines division of a Quaternion by a Quaternion
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
 {
     return left * right.inverse();
 }
 
+/** Defines addition of a Quaternion and a Quaternion
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
 {
@@ -115,6 +147,10 @@ constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
                          left.k() + right.k()};
 }
 
+/** Defines subtraction of a Quaternion and a Quaternion
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
 {
@@ -124,6 +160,10 @@ constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
                          left.k() - right.k()};
 }
 
+/** Defines multiplication of a Quaternion and a Quaternion
+ *  
+ *  @return the new Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
 {
@@ -147,24 +187,46 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
     };
 }
 
+/** Defines equality of two Quaternions
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ */
 template <class T>
 constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
 {
     return approximately_equal_to(left, right);
 }
 
+/** Defines inequality of two Quaternions
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ */
 template <class T>
 constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
 {
     return !(left == right);
 }
 
+/** Defines negation of a Quaternion
+ *  
+ *  Performs a component-wise negation of the input
+ */
 template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> q)
 {
     return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
 }
 
+/** Calculates the dot product of two Quaternions
+ *  
+ *  @note In this case, the Quaternions are just treated as
+ *        separate 4-tuples and the dot product of those are
+ *        calculated.
+ */
 template <class T>
 constexpr T dot(Quaternion<T> left, Quaternion<T> right)
 {
@@ -334,6 +396,12 @@ constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const
     return rotation_2 * rotation_1;
 }
 
+/** Creates the normalized form of a Quaternion
+ *  
+ *  @param input The Quaternion to normalize
+ *  
+ *  @return The normalized version of @p input
+ */
 template <class T>
 constexpr Quaternion<T> normalized(Quaternion<T> input)
 {
@@ -350,6 +418,8 @@ constexpr T accumulate(Quaternion<T> input)
     return T{input.real() + input.i() + input.j() + input.k()};
 }
 
+///@{
 using Quaternionf = Quaternion<float>;
 using Quaterniond = Quaternion<double>;
 using Quaternionld = Quaternion<long double>;
+///@}
