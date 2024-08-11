@@ -5,6 +5,11 @@
 #include "math/types.h"
 #include <cassert>
 
+/** @file
+ *  
+ *  Contains the definition of the Quaternion class along with
+ *  various helper functions.
+ */
 
 /** A mathematical quaternion
  *  
@@ -67,7 +72,7 @@ protected:
     value_type _k{};
 };
 
-/** Compares two Quaternions equal, component-wise, to within a tolerance
+/** Compares two Quaternion inputs equal, component-wise, to within a tolerance
  *  
  *  @param value_to_test
  *  @param value_it_should_be 
@@ -121,7 +126,7 @@ constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 template <class T>
 constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
 {
-    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
+    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.kapproximately_equal_to under-the-hood() };
 }
 
 /** Defines division of a Quaternion by a Quaternion
@@ -201,7 +206,7 @@ constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
 
 /** Defines inequality of two Quaternions
  *  
- *  @note Uses approximately_equal_to under-the-hood
+ *  @note Uses operator ==()
  *  
  *  @see approximately_equal_to
  */

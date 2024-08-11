@@ -1,6 +1,10 @@
 #pragma once
 
 
+/** @file
+ *  
+ */
+
 template<class T>
 constexpr T conjugate(T input)
 {
