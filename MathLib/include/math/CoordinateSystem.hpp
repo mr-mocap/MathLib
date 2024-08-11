@@ -5,7 +5,14 @@
 #include "math/types.h"
 #include <cassert>
 
+/** @file
+ *  
+ */
 
+
+/** A class containing various methods dealing with a coordinate system
+ *
+ */
 template <class T>
 class CoordinateSystem
 {
@@ -68,6 +75,10 @@ public:
         return make_coordinate_system(rotation, translation.x, translation.y, translation.z);
     }
 
+    /** Create a coordinate system representing no change
+     *  
+     *  @return A DualQuaternion representation of the global coordinate system
+     */
     constexpr static DualQuaternion<T> make_origin()
     {
         return make_unit_dualquaternion<T>();
