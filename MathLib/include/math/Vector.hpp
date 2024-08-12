@@ -1,5 +1,7 @@
 #pragma once
 
+#include "math/ApproximatelyEqualTo.hpp"
+
 /** @file
  *  
  */
@@ -17,6 +19,12 @@ struct Vector2D
     Type y{};
 };
 
+template <class Type>
+bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
+}
+
 /** A simple 3D vector class
  */
 template <class Type>
@@ -30,6 +38,14 @@ struct Vector3D
     Type y{};
     Type z{};
 };
+
+template <class Type>
+bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return approximately_equal_to(left.x, right.x) &&
+           approximately_equal_to(left.y, right.y) &&
+           approximately_equal_to(left.z, right.z);
+}
 
 
 ///@{

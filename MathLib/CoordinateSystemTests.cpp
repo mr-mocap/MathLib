@@ -1,6 +1,6 @@
 #include "CoordinateSystemTests.hpp"
 #include "math/CoordinateSystem.hpp"
-#include "math/ApproximatelyEqualTo.h"
+#include "math/ApproximatelyEqualTo.hpp"
 #include "math/Conversions.hpp"
 #include <iostream>
 #include <cassert>
@@ -228,11 +228,21 @@ void RotateOnlyAroundAMainAxis()
         CreateRotationAndTestZAxis(90.0f);
 }
 
+void TranslationOfIsTheInverseOfMakeTranslation()
+{
+    std::cout << __func__ << std::endl;
+
+    Vector3Df vector{ 42.0f, 3.14f, -723.0f };
+    
+    assert( CoordinateSystemf::translation_of( CoordinateSystemf::make_translation(vector) ) == vector );
+}
+
 void TestTranslations()
 {
     TranslatingOriginOnlyAlongX();
     TranslatingOriginOnlyAlongY();
     TranslatingOriginOnlyAlongZ();
+    TranslationOfIsTheInverseOfMakeTranslation();
 }
 
 void TestRotations()

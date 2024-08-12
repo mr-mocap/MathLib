@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/ApproximatelyEqualTo.h"
-#include "math/Conjugate.h"
-#include "math/types.h"
+#include "math/ApproximatelyEqualTo.hpp"
+#include "math/Conjugate.hpp"
+#include "math/types.hpp"
 #include <cassert>
 
 /** @file
@@ -47,12 +47,12 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
-    const value_type w() const { return _w; }
-    const value_type real() const { return _w; }
+    const value_type &w() const { return _w; }
+    const value_type &real() const { return _w; }
 
-    const value_type i() const { return _i; }
-    const value_type j() const { return _j; }
-    const value_type k() const { return _k; }
+    const value_type &i() const { return _i; }
+    const value_type &j() const { return _j; }
+    const value_type &k() const { return _k; }
 
     // Extracts the imaginary part of a Quaternion as a 3-tuple
     constexpr triple<value_type> imaginary() { return { _i, _j, _k }; }

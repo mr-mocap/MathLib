@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/DualQuaternion.h"
+#include "math/DualQuaternion.hpp"
 #include "math/Vector.hpp"
-#include "math/types.h"
+#include "math/types.hpp"
 #include <cassert>
 
 /** @file
@@ -81,7 +81,7 @@ public:
      */
     constexpr static DualQuaternion<T> make_origin()
     {
-        return make_unit_dualquaternion<T>();
+        return make_identity_dualquaternion<T>();
     }
 
     constexpr static DualQuaternion<T> translate(const DualQuaternion<T> &coordinate_system, const Vector3D<T> &translation)
@@ -94,9 +94,9 @@ public:
         return coordinate_system * make_rotation(rotation);
     }
 
-    constexpr static Vector3D<T> unit_x_axis() { return { T{1}, T{},  T{} }; }
-    constexpr static Vector3D<T> unit_y_axis() { return { T{},  T{1}, T{} }; }
-    constexpr static Vector3D<T> unit_z_axis() { return { T{},  T{},  T{1} }; }
+    constexpr static Vector3D<T> unit_x_axis() { return { T{1}, T{0}, T{0} }; }
+    constexpr static Vector3D<T> unit_y_axis() { return { T{0}, T{1}, T{0} }; }
+    constexpr static Vector3D<T> unit_z_axis() { return { T{0}, T{0}, T{1} }; }
 };
 
 

@@ -32,22 +32,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\math\ApproximatelyEqualTo.h">
+    <ClInclude Include="include\math\ApproximatelyEqualTo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\Conjugate.h">
+    <ClInclude Include="include\math\Conjugate.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\Dual.h">
+    <ClInclude Include="include\math\Dual.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\DualQuaternion.h">
+    <ClInclude Include="include\math\DualQuaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\Quaternion.h">
+    <ClInclude Include="include\math\Quaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\types.h">
+    <ClInclude Include="include\math\types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DualNumberTests.hpp">

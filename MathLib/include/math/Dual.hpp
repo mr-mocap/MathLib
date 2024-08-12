@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/ApproximatelyEqualTo.h"
-#include "math/Conjugate.h"
-#include "math/types.h"
+#include "math/ApproximatelyEqualTo.hpp"
+#include "math/Conjugate.hpp"
+#include "math/types.hpp"
 #include <cassert>
 
 

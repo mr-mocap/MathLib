@@ -1,5 +1,5 @@
 #include "DualNumberTests.hpp"
-#include "math/Dual.h"
+#include "math/Dual.hpp"
 #include <cassert>
 #include <iostream>
 

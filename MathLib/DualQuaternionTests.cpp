@@ -1,6 +1,6 @@
 #include "DualNumberTests.hpp"
-#include "math/DualQuaternion.h"
-#include "math/types.h"
+#include "math/DualQuaternion.hpp"
+#include "math/types.hpp"
 #include <tuple>
 #include <cassert>
 #include <iostream>

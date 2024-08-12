@@ -159,14 +159,14 @@
     <ClInclude Include="CoordinateSystemTests.hpp" />
     <ClInclude Include="DualNumberTests.hpp" />
     <ClInclude Include="DualQuaternionTests.hpp" />
-    <ClInclude Include="include\math\ApproximatelyEqualTo.h" />
-    <ClInclude Include="include\math\Conjugate.h" />
+    <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
+    <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
     <ClInclude Include="include\math\CoordinateSystem.hpp" />
-    <ClInclude Include="include\math\Dual.h" />
-    <ClInclude Include="include\math\DualQuaternion.h" />
-    <ClInclude Include="include\math\Quaternion.h" />
-    <ClInclude Include="include\math\types.h" />
+    <ClInclude Include="include\math\Dual.hpp" />
+    <ClInclude Include="include\math\DualQuaternion.hpp" />
+    <ClInclude Include="include\math\Quaternion.hpp" />
+    <ClInclude Include="include\math\types.hpp" />
     <ClInclude Include="QuaternionTests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

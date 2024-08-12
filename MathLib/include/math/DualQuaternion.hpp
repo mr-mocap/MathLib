@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/Dual.h"
-#include "math/Quaternion.h"
+#include "math/Dual.hpp"
+#include "math/Quaternion.hpp"
 #include <cassert>
 
 /** @file
@@ -78,7 +78,7 @@ constexpr DualQuaternion<T> make_dualquaternion_translation(T translation_x, T t
  *  @return A DualQuaternion representing no rotation or translation
  */
 template <class T>
-constexpr DualQuaternion<T> make_unit_dualquaternion()
+constexpr DualQuaternion<T> make_identity_dualquaternion()
 {
     return DualQuaternion<T>{ Quaternion<T>::identity(), Quaternion<T>::zero() };
 }

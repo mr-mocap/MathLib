@@ -1,5 +1,5 @@
 #include "QuaternionTests.hpp"
-#include "math/Quaternion.h"
+#include "math/Quaternion.hpp"
 #include "math/Conversions.hpp"
 #include <cassert>
 #include <iostream>
