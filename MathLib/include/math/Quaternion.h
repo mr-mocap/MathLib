@@ -28,11 +28,11 @@ public:
     explicit constexpr Quaternion(value_type w, value_type i, value_type j, value_type k) : _w(w), _i(i), _j(j), _k(k) { }
 
     // Quaternion representation of the real number 1
-    constexpr static Quaternion<T> unit() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
+    constexpr static Quaternion<T> identity() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
 
     // Quaternion representation of the real number 0
     constexpr static Quaternion<T> zero() { return Quaternion{}; }
-    constexpr static Quaternion<T> unit_real() { return unit(); }
+    constexpr static Quaternion<T> unit_real() { return identity(); }
     constexpr static Quaternion<T> unit_i() { return Quaternion{ T{}, T{1}, T{},  T{} }; }
     constexpr static Quaternion<T> unit_j() { return Quaternion{ T{}, T{},  T{1}, T{} }; }
     constexpr static Quaternion<T> unit_k() { return Quaternion{ T{}, T{},  T{},  T{1} }; }
@@ -126,7 +126,7 @@ constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 template <class T>
 constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
 {
-    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.kapproximately_equal_to under-the-hood() };
+    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
 
 /** Defines division of a Quaternion by a Quaternion
@@ -369,7 +369,7 @@ constexpr Quaternion<T> locally_rotate_encoded_point(const Quaternion<T> &rotati
  *  @return The actively rotated encoded point
  *  
  *  @pre  @p rotation is a unit Quaternion.
- *        @p encoded_point is a pure Auaternion.
+ *        @p encoded_point is a pure Quaternion.
  *  @post The output is a pure Quaternion
  *  
  *  @note This is an active rotation, meaning that the point is rotated with

@@ -26,7 +26,7 @@ public:
     explicit constexpr Dual(const value_type r, const value_type e) : real(r), dual(e) { }
     explicit constexpr Dual(const std::tuple<value_type, value_type> tuple) : real(std::get<0>(tuple)), dual(std::get<1>(tuple)) { }
 
-    constexpr static Dual<T> unit() { return Dual{ T{1}, T{} }; }
+    constexpr static Dual<T> identity() { return Dual{ T{1}, T{0} }; }
     constexpr static Dual<T> zero() { return Dual{}; }
 
     constexpr Dual<T> conjugate() const { return Dual{ real, ::conjugate(dual) }; }

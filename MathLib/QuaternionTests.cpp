@@ -22,7 +22,7 @@ void UnitQuaternionIsAsExpected()
 {
     std::cout << __func__ << std::endl;
 
-    Quaternionf unit = Quaternionf::unit();
+    Quaternionf unit = Quaternionf::identity();
 
     assert(unit.w() == 1.0);
     assert(unit.i() == 0.0);
@@ -148,7 +148,7 @@ void RotatingA3DPointByUnitRotationLeavesPointUnchanged()
     std::cout << __func__ << std::endl;
 
     // The rotation must be of unit length
-    Quaternionf unit_rotation = Quaternionf::unit();
+    Quaternionf unit_rotation = Quaternionf::identity();
     const float point[3] = { 1.0, 3.0, 7.0 };
 
     // Place 3D point in the imaginary part, leaving the real part as 0.0
@@ -259,7 +259,7 @@ void HasOperatorNegate()
 {
     std::cout << __func__ << std::endl;
 
-    assert( (-Quaternionf::unit()   == Quaternionf{ -1.0,  0.0,  0.0,  0.0 }) );
+    assert( (-Quaternionf::identity()   == Quaternionf{ -1.0,  0.0,  0.0,  0.0 }) );
     assert( (-Quaternionf::unit_i() == Quaternionf{  0.0, -1.0,  0.0,  0.0 }) );
     assert( (-Quaternionf::unit_j() == Quaternionf{  0.0,  0.0, -1.0,  0.0 }) );
     assert( (-Quaternionf::unit_k() == Quaternionf{  0.0,  0.0,  0.0, -1.0 }) );
@@ -297,7 +297,7 @@ void UnitQuaternionHasNormOfOne()
 {
     std::cout << __func__ << std::endl;
 
-    assert( Quaternionf::unit().norm() == 1.0f );
+    assert( Quaternionf::identity().norm() == 1.0f );
     assert( Quaternionf::unit_i().norm() == 1.0f );
     assert( Quaternionf::unit_j().norm() == 1.0f );
     assert( Quaternionf::unit_k().norm() == 1.0f );
@@ -320,8 +320,8 @@ void MultiplyingByItsOwnInverseProducesUnity()
     Quaternionf q1_product = q1_inverse * q1;
     Quaternionf q1_product_reversed = q1 * q1_inverse;
 
-    assert( IsNear(q1_product, Quaternionf::unit()) );
-    assert( IsNear(q1_product_reversed, Quaternionf::unit()) );
+    assert( IsNear(q1_product, Quaternionf::identity()) );
+    assert( IsNear(q1_product_reversed, Quaternionf::identity()) );
     assert( IsNear(q1_product_reversed, q1_product) );
 }
 
@@ -339,8 +339,8 @@ void UnitQuaternionIsNear1()
 {
     std::cout << __func__ << std::endl;
 
-    assert( Quaternionf::unit().isUnit() );
-    assert( IsNear(Quaternionf::unit().norm(), 1.0f) );
+    assert( Quaternionf::identity().isUnit() );
+    assert( IsNear(Quaternionf::identity().norm(), 1.0f) );
 }
 
 void MakePureQuaternionSetsRealComponentToZero()

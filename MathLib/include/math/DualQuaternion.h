@@ -66,7 +66,7 @@ constexpr DualQuaternion<T> make_dualquaternion_translation(T translation_x, T t
 {
     // A pure translation has the real part set to identity.
 
-    return DualQuaternion<T>{ Quaternion<T>::unit(),
+    return DualQuaternion<T>{ Quaternion<T>::identity(),
                               make_pure_quaternion( translation_x / T(2),
                                                     translation_y / T(2),
                                                     translation_z / T(2) )
@@ -80,7 +80,7 @@ constexpr DualQuaternion<T> make_dualquaternion_translation(T translation_x, T t
 template <class T>
 constexpr DualQuaternion<T> make_unit_dualquaternion()
 {
-    return DualQuaternion<T>{ Quaternion<T>::unit(), Quaternion<T>::zero() };
+    return DualQuaternion<T>{ Quaternion<T>::identity(), Quaternion<T>::zero() };
 }
 
 /** Encode both the @p rotation and translation together

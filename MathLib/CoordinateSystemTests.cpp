@@ -134,7 +134,7 @@ void TranslatingOriginOnlyAlongX()
 
     Vector3Df       x_translation{ 5.0f, 0.0f, 0.0f };
     DualQuaternionf origin = CoordinateSystemf::make_origin();
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, x_translation.x, x_translation.y, x_translation.z} * Quaternionf::unit();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, x_translation.x, x_translation.y, x_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = CoordinateSystemf::translate(origin, x_translation);
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);
@@ -161,7 +161,7 @@ void TranslatingOriginOnlyAlongY()
 
     Vector3Df       y_translation{ 0.0f, 17.2f, 0.0f };
     DualQuaternionf origin = CoordinateSystemf::make_origin();
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, y_translation.x, y_translation.y, y_translation.z} * Quaternionf::unit();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, y_translation.x, y_translation.y, y_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = CoordinateSystemf::translate(origin, y_translation);
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);
@@ -188,7 +188,7 @@ void TranslatingOriginOnlyAlongZ()
 
     Vector3Df       z_translation{ 0.0f, 0.0f, -32.0f };
     DualQuaternionf origin = CoordinateSystemf::make_origin();
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, z_translation.x, z_translation.y, z_translation.z} * Quaternionf::unit();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, z_translation.x, z_translation.y, z_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = CoordinateSystemf::translate(origin, z_translation);
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);

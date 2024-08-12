@@ -26,7 +26,7 @@ void PureRotationHasZeroTranslation()
 
 void PureTranslationHasIdentityRotation()
 {
-    assert(make_dualquaternion_translation(1.0f, 2.0f, 3.0f).real == Quaternionf::unit());
+    assert(make_dualquaternion_translation(1.0f, 2.0f, 3.0f).real == Quaternionf::identity());
 }
 
 void MagnitudeOfNormalizedDualQuaternionIsOne()
@@ -34,7 +34,7 @@ void MagnitudeOfNormalizedDualQuaternionIsOne()
     DualQuaternionf a{ Quaternionf{6.0f, 22.34f, -3.12f, 100.04f}, Quaternionf{1.0f, -43.1113f, -6.0f, 0.0f} };
     DualQuaternionf normalized_a = normalized(a);
 
-    assert( IsNear( dualquaternion_norm(normalized_a), Dualf::unit() ) );
+    assert( IsNear( dualquaternion_norm(normalized_a), Dualf::identity() ) );
     assert( !is_unit(a) );
 }
 

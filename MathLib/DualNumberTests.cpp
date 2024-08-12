@@ -12,14 +12,14 @@ static bool IsNear(Dualf value_to_test, Dualf value_it_should_be, float epsilon 
 namespace DualNumberTests
 {
 
-void UnitDualIsAsExpected()
+void IdentityDualIsAsExpected()
 {
     std::cout << __func__ << std::endl;
 
-    Dualf unit = Dualf::unit();
+    Dualf identity = Dualf::identity();
 
-    assert(unit.real == 1.0);
-    assert(unit.dual == 0.0);
+    assert(identity.real == 1.0);
+    assert(identity.dual == 0.0);
 }
 
 void ZeroDualIsAsExpected()
@@ -37,6 +37,13 @@ void MakePureDualSetsRealComponentToZero()
     std::cout << __func__ << std::endl;
 
     assert( make_pure_dual(3.0f).real == 0.0f );
+}
+
+void MakePureDualSetsDualComponentToGivenValue()
+{
+    std::cout << __func__ << std::endl;
+
+    assert( make_pure_dual(3.3f).dual == 3.3f );
 }
 
 void MakePureDualSetsDualComponentToInputParameter()
@@ -71,9 +78,10 @@ void Run()
 {
     std::cout << "Running Dual Number Tests..." << std::endl;
 
-    UnitDualIsAsExpected();
+    IdentityDualIsAsExpected();
     ZeroDualIsAsExpected();
     MakePureDualSetsRealComponentToZero();
+    MakePureDualSetsDualComponentToGivenValue();
     MakePureDualSetsDualComponentToInputParameter();
     DualScalarSquareRootTimesItselfIsTheOriginalNumber();
 
