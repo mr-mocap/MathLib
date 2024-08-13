@@ -12,12 +12,15 @@
 
 /** A class containing various methods dealing with a coordinate system
  *
+ *  @see DualQuaternion
+ *  @see Vector3D
  */
 template <class T>
 class CoordinateSystem
 {
 public:
 
+    ///@{
     /** Creates a DualQuaternion that has only a rotation encoded within it
      *  
      *  @param radians The angle of rotation (in radians) to encode
@@ -42,11 +45,26 @@ public:
     {
         return make_dualquaternion_rotation(rotation);
     }
+    ///@}
+
+    /** Extract the rotation component of the given coordinate system
+     *  
+     *  @param coordinate_system The input coordinate system
+     *  
+     *  @return The Quaternion representing the rotation component of @p coordinate_system
+     */
+    constexpr static Quaternion<T> rotation_of(const DualQuaternion<T> &coord_system)
+    {
+        return coord_system.real;
+    }
 
     /** Creates a DualQuaternion that has only a translation encoded within it
      *  
      *  @param translation The translation to encode
      *  
+     *  @return A new DualQuaternion that has @p translation for the translation component
+     *          and an identity rotation
+     *   
      *  @post output.real.isZero() == true
      *        output.dual.isPure() == true
      */
@@ -55,6 +73,12 @@ public:
         return make_dualquaternion_translation(translation.x, translation.y, translation.z);
     }
 
+    /** Extract the translation component of the given coordinate system
+     *  
+     *  @param coordinate_system The input coordinate system
+     *  
+     *  @return The translation component of @p coordinate_system
+     */
     constexpr static Vector3D<T> translation_of(const DualQuaternion<T> &coordinate_system)
     {
         assert( coordinate_system.real.isUnit() );
@@ -84,11 +108,25 @@ public:
         return make_identity_dualquaternion<T>();
     }
 
+    /** Perform a translation in the given coordinate system
+     *  
+     *  @param coordinate_system The coordinate system to operate upon
+     *  @param translation       The translation to apply
+     *  
+     *  @return A new DualQuaternion that has the @p translation applied
+     */
     constexpr static DualQuaternion<T> translate(const DualQuaternion<T> &coordinate_system, const Vector3D<T> &translation)
     {
         return coordinate_system * make_translation(translation);
     }
 
+    /** Perform a rotation in the given coordinate system
+     *  
+     *  @param coordinate_system The coordinate system to operate upon
+     *  @param rotation          The rotation to apply
+     *  
+     *  @return A new DualQuaternion that has the @p rotation applied
+     */
     constexpr static DualQuaternion<T> rotate(const DualQuaternion<T> &coordinate_system, const Quaternion<T> &rotation)
     {
         return coordinate_system * make_rotation(rotation);
@@ -100,6 +138,8 @@ public:
 };
 
 
+///@{
 using CoordinateSystemf = CoordinateSystem<float>;
 using CoordinateSystemd = CoordinateSystem<double>;
 using CoordinateSystemld = CoordinateSystem<long double>;
+///@}
