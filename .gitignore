@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Doxygen-generated data
+MathLib/Documentation/html/
+MathLib/Documentation/latex/
