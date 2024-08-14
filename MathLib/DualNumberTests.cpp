@@ -12,6 +12,11 @@ static bool IsNear(Dualf value_to_test, Dualf value_it_should_be, float epsilon 
 namespace DualNumberTests
 {
 
+/** @addtogroup DualNumberTests
+ *   
+ *  @ingroup Tests
+ */
+/// @{
 void IdentityDualIsAsExpected()
 {
     std::cout << __func__ << std::endl;
@@ -73,6 +78,7 @@ void DualScalarSquareRootTimesItselfIsTheOriginalNumber()
 
     assert( IsNear(original_number, root_squared) );
 }
+/// @}
 
 void Run()
 {

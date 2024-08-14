@@ -18,6 +18,11 @@ static bool IsNear(Quaternionf value_to_test, Quaternionf value_it_should_be, fl
 namespace QuaternionTests
 {
 
+/** @addtogroup QuaternionTests
+ *   
+ *  @ingroup Tests
+ */
+/// @{
 void UnitQuaternionIsAsExpected()
 {
     std::cout << __func__ << std::endl;
@@ -522,6 +527,7 @@ void PerformTwoConsecutiveRotations()
         assert( IsNear(transformed_point.k(), 0.0f) );
     }
 }
+/// @}
 
 void Run()
 {

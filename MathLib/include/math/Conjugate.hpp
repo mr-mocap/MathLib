@@ -5,13 +5,29 @@
  *  
  */
 
+/** @addtogroup Conjugate
+ * 
+ *  @{
+ *  
+ *  Create the conjugate of the input
+ *  
+ */
+
+/**  This is the general template case
+ * 
+ *   @note This will just call @c input.conjugate()
+ */
 template<class T>
 constexpr T conjugate(T input)
 {
     return input.conjugate();
 }
 
-// Base cases
+/** @name Specializations
+ * 
+ *  These are the basic default template specializations for @c conjugate()
+ */
+/// @{
 template<>
 constexpr float conjugate<float>(float input)
 {
@@ -29,4 +45,6 @@ constexpr long double conjugate<long double>(long double input)
 {
     return -input;
 }
+/// @}
 
+/// @}

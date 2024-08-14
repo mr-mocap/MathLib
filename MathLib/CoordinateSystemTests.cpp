@@ -17,6 +17,11 @@ static bool IsNear(float value_to_test, float value_it_should_be, float epsilon 
 namespace
 {
 
+/** @addtogroup CoordinateSystemTests
+ *   
+ *  @ingroup Tests
+ */
+/// @{
 void CreateRotationAndTestXAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
@@ -236,6 +241,7 @@ void TranslationOfIsTheInverseOfMakeTranslation()
     
     assert( CoordinateSystemf::translation_of( CoordinateSystemf::make_translation(vector) ) == vector );
 }
+/// @}
 
 void TestTranslations()
 {

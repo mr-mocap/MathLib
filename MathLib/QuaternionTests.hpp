@@ -2,5 +2,6 @@
 
 namespace QuaternionTests
 {
+    /// @addtogroup Tests
     void Run();
 }

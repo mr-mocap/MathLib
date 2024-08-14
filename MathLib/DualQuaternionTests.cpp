@@ -17,6 +17,11 @@ static bool IsNear(Dualf value_to_test, Dualf value_it_should_be, float epsilon 
 namespace DualQuaternionTests
 {
 
+/** @addtogroup DualQuaternionTests
+ *   
+ *  @ingroup Tests
+ */
+/// @{
 void PureRotationHasZeroTranslation()
 {
     assert(make_dualquaternion_rotation(0.0f, 0.0f, 1.0f, 0.0f).dual == Quaternionf::zero());
@@ -37,6 +42,7 @@ void MagnitudeOfNormalizedDualQuaternionIsOne()
     assert( IsNear( dualquaternion_norm(normalized_a), Dualf::identity() ) );
     assert( !is_unit(a) );
 }
+/// @}
 
 void Run()
 {
