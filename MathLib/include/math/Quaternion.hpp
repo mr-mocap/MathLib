@@ -65,6 +65,71 @@ public:
 
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{0}); }
+
+    /** Construct a pure Quaternion
+     *  
+     *  @post output.w() == 0
+     *        output.real() == 0
+
+     *  @note A pure Quaternion is one in which the w, or real, component
+     *        is 0.
+     */
+    constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
+    constexpr static Quaternion<T> make_pure(const triple<T> &t) { return Quaternion<T>{ T{}, std::get<0>(t), std::get<1>(t), std::get<2>(t) }; }
+
+    /** Encode a 3D point as a pure Quaternion
+     *  
+     *  @post output.w() == 0
+     *        output.real() == 0
+
+     *  @note A pure Quaternion is one in which the w, or real, component
+     *        is 0.
+     *  
+     *  @see make_pure
+     */
+    constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
+
+    /** Enocde a rotation into a Quaternion
+     *  
+     *  @param radians The amount of rotation to apply (in radians)
+     *  @param axis_x  The X component of the vector to rotate around
+     *  @param axis_y  The Y component of the vector to rotate around
+     *  @param axis_z  The Z component of the vector to rotate around
+     *  
+     *  @post output.isUnit() == true
+     */
+    constexpr static Quaternion<T> make_rotation(T radians, T axis_x, T axis_y, T axis_z)
+    {
+        T half_angle = radians / T{2};
+        T cos_theta = cos( half_angle );
+        T sin_theta = sin( half_angle );
+
+        return normalized( Quaternion<T>{ cos_theta,
+                                          sin_theta * axis_x,
+                                          sin_theta * axis_y,
+                                          sin_theta * axis_z }
+                         );
+    }
+
+    /** Enocde a rotation into a Quaternion
+     *  
+     *  @param radians The amount of rotation to apply (in radians)
+     *  @param axis    The vector representing the axis of rotation
+     *  
+     *  @post output.isUnit() == true
+     */
+    constexpr static Quaternion<T> make_rotation(T radians, triple<T> axis)
+    {
+        T half_angle = radians / T{2};
+        T cos_theta = cos( half_angle );
+        T sin_theta = sin( half_angle );
+
+        return normalized( Quaternion<T>{ cos_theta,
+                                          sin_theta * std::get<0>(axis),
+                                          sin_theta * std::get<1>(axis),
+                                          sin_theta * std::get<2>(axis) }
+                         );
+    }
 protected:
     value_type _w{};
     value_type _i{};
@@ -241,92 +306,6 @@ constexpr T dot(Quaternion<T> left, Quaternion<T> right)
            left.k() * right.k();
 }
 
-/** Construct a pure Quaternion
- *  
- *  @post output.w() == 0
- *        output.real() == 0
-
- *  @note A pure Quaternion is one in which the w, or real, component
- *        is 0.
- */
-template <class T>
-constexpr Quaternion<T> make_pure_quaternion(T x, T y, T z)
-{
-    return Quaternion<T>{ T(), x, y, z };
-}
-
-/** Construct a pure Quaternion
- *  
- *  @post output.w() == 0
- *        output.real() == 0
-
- *  @note A pure Quaternion is one in which the w, or real, component
- *        is 0.
- */
-template <class T>
-constexpr Quaternion<T> make_pure_quaternion(const triple<T> &t)
-{
-    return Quaternion<T>{ T(), std::get<0>(t), std::get<1>(t), std::get<2>(t) };
-}
-
-/** Encode a 3D point as a pure Quaternion
- *  
- *  @post output.w() == 0
- *        output.real() == 0
-
- *  @note A pure Quaternion is one in which the w, or real, component
- *        is 0.
- *  
- *  @see make_pure_quaternion
- */
-template <class T>
-constexpr Quaternion<T> encode_point_as_quaternion(T x, T y, T z)
-{
-    return make_pure_quaternion(x, y, z);
-}
-
-/** Enocde a rotation into a Quaternion
- *  
- *  @param radians The amount of rotation to apply (in radians)
- *  @param axis_x  The X component of the vector to rotate around
- *  @param axis_y  The Y component of the vector to rotate around
- *  @param axis_z  The Z component of the vector to rotate around
- *  
- *  @post output.isUnit() == true
- */
-template <class T>
-constexpr Quaternion<T> make_quaternion_rotation(T radians, T axis_x, T axis_y, T axis_z)
-{
-    T cos_theta = cos(radians / T{2});
-    T sin_theta = sin(radians / T{2});
-
-    return normalized( Quaternion<T>{ cos_theta,
-                                      sin_theta * axis_x,
-                                      sin_theta * axis_y,
-                                      sin_theta * axis_z }
-                     );
-}
-
-/** Enocde a rotation into a Quaternion
- *  
- *  @param radians The amount of rotation to apply (in radians)
- *  @param axis    The axis to rotate around
- *  
- *  @post output.isUnit() == true
- */
-template <class T>
-constexpr Quaternion<T> make_quaternion_rotation(T radians, triple<T> axis)
-{
-    T cos_theta = cos(radians / T{2});
-    T sin_theta = sin(radians / T{2});
-
-    return normalized( Quaternion<T>{ cos_theta,
-                                      sin_theta * std::get<0>(axis),
-                                      sin_theta * std::get<1>(axis),
-                                      sin_theta * std::get<2>(axis) }
-                     );
-}
-
 /** Rotates the encoded point using the given rotation
  *  
  *  @param rotation      The input rotation
@@ -410,6 +389,8 @@ constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const
 template <class T>
 constexpr Quaternion<T> normalized(Quaternion<T> input)
 {
+    assert( Quaternion<T>{input / input.norm()}.isUnit() );
+
     return input / input.norm();
 }
 

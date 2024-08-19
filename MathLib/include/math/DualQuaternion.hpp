@@ -36,7 +36,7 @@ template <class T>
 constexpr DualQuaternion<T> make_dualquaternion_rotation(T radians, T axis_x, T axis_y, T axis_z)
 {
     // A pure rotation has the dual part set to zero.
-    return DualQuaternion<T>{ make_quaternion_rotation(radians, axis_x, axis_y, axis_z), Quaternion<T>::zero() };
+    return DualQuaternion<T>{ Quaternion<T>::make_rotation(radians, axis_x, axis_y, axis_z), Quaternion<T>::zero() };
 }
 
 /** Creates a DualQuaternion containing a rotation only
@@ -48,6 +48,8 @@ constexpr DualQuaternion<T> make_dualquaternion_rotation(T radians, T axis_x, T 
 template <class T>
 constexpr DualQuaternion<T> make_dualquaternion_rotation(const Quaternion<T> &rotation)
 {
+    assert( rotation.isUnit() );
+
     // A pure rotation has the dual part set to zero.
     return DualQuaternion<T>{ rotation, Quaternion<T>::zero() };
 }
@@ -67,9 +69,9 @@ constexpr DualQuaternion<T> make_dualquaternion_translation(T translation_x, T t
     // A pure translation has the real part set to identity.
 
     return DualQuaternion<T>{ Quaternion<T>::identity(),
-                              make_pure_quaternion( translation_x / T(2),
-                                                    translation_y / T(2),
-                                                    translation_z / T(2) )
+                              Quaternion<T>::make_pure( translation_x / T(2),
+                                                        translation_y / T(2),
+                                                        translation_z / T(2) )
                             };
 }
 
@@ -101,7 +103,7 @@ constexpr DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation
 {
     assert( rotation.isUnit() );
 
-    return DualQuaternion<T>{ rotation, make_pure_quaternion(translation_x, translation_y, translation_z) / T(2) * rotation };
+    return DualQuaternion<T>{ rotation, Quaternion<T>::make_pure(translation_x, translation_y, translation_z) / T(2) * rotation };
 }
 
 /** Create the conjugate of a DualQuaternion
@@ -109,6 +111,11 @@ constexpr DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation
  *  @param q The input DualQuaternion
  *  
  *  @return the conjugate of @p q
+ *  
+ *  @note This is a bit different from the definition of a conjugate for
+ *        a Dual, in that the conjugate of a Dual is just { real, dual.conjugate() },
+ *        while for a DualQuaternion the operation needs to be
+ *        { real.conjugate(), dual.conjugate() }.
  */
 template <class T>
 constexpr DualQuaternion<T> dualquaternion_conjugate(DualQuaternion<T> q)

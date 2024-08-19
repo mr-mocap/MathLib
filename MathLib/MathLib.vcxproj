@@ -152,22 +152,29 @@
     <ClCompile Include="CoordinateSystemTests.cpp" />
     <ClCompile Include="DualNumberTests.cpp" />
     <ClCompile Include="DualQuaternionTests.cpp" />
+    <ClCompile Include="HierarchicalCoordinateSystemTests.cpp" />
     <ClCompile Include="MathLib.cpp" />
     <ClCompile Include="QuaternionTests.cpp" />
+    <ClCompile Include="SceneNodeTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoordinateSystemTests.hpp" />
     <ClInclude Include="DualNumberTests.hpp" />
     <ClInclude Include="DualQuaternionTests.hpp" />
+    <ClInclude Include="HierarchicalCoordinateSystemTests.hpp" />
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
     <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
     <ClInclude Include="include\math\CoordinateSystem.hpp" />
     <ClInclude Include="include\math\Dual.hpp" />
     <ClInclude Include="include\math\DualQuaternion.hpp" />
+    <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp" />
     <ClInclude Include="include\math\Quaternion.hpp" />
+    <ClInclude Include="include\math\SceneNode.hpp" />
     <ClInclude Include="include\math\types.hpp" />
+    <ClInclude Include="include\math\Vector.hpp" />
     <ClInclude Include="QuaternionTests.hpp" />
+    <ClInclude Include="SceneNodeTests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

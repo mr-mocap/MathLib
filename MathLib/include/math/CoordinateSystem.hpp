@@ -132,6 +132,11 @@ public:
         return coordinate_system * make_rotation(rotation);
     }
 
+    constexpr static Quaternion<T> encode_point_as_quaternion(const Vector3D<T> &point_to_encode)
+    {
+        return make_pure_quaternion( point_to_encode.x, point_to_encode.y, point_to_encode.z );
+    }
+
     constexpr static Vector3D<T> unit_x_axis() { return { T{1}, T{0}, T{0} }; }
     constexpr static Vector3D<T> unit_y_axis() { return { T{0}, T{1}, T{0} }; }
     constexpr static Vector3D<T> unit_z_axis() { return { T{0}, T{0}, T{1} }; }
