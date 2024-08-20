@@ -31,7 +31,7 @@ public:
      */
     constexpr static DualQuaternion<T> make_rotation(T radians, const Vector3D<T> &axis)
     {
-        return make_dualquaternion_rotation(radians, axis.x, axis.y, axis.z);
+        return DualQuaternion<T>::make_rotation( Quaternion<T>::make_rotation(radians, axis.x, axis.y, axis.z) );
     }
 
     /** Creates a DualQuaternion that has only a rotation encoded within it
@@ -43,7 +43,7 @@ public:
      */
     constexpr static DualQuaternion<T> make_rotation(const Quaternion<T> &rotation)
     {
-        return make_dualquaternion_rotation(rotation);
+        return DualQuaternion<T>::make_rotation(rotation);
     }
     ///@}
 
@@ -55,7 +55,7 @@ public:
      */
     constexpr static Quaternion<T> rotation_of(const DualQuaternion<T> &coord_system)
     {
-        return coord_system.real;
+        return coord_system.real();
     }
 
     /** Creates a DualQuaternion that has only a translation encoded within it
@@ -70,7 +70,7 @@ public:
      */
     constexpr static DualQuaternion<T> make_translation(const Vector3D<T> &translation)
     {
-        return make_dualquaternion_translation(translation.x, translation.y, translation.z);
+        return DualQuaternion<T>::make_translation(translation.x, translation.y, translation.z);
     }
 
     /** Extract the translation component of the given coordinate system
@@ -81,9 +81,9 @@ public:
      */
     constexpr static Vector3D<T> translation_of(const DualQuaternion<T> &coordinate_system)
     {
-        assert( coordinate_system.real.isUnit() );
+        assert( coordinate_system.real().isUnit());
 
-        Quaternion<T> translation_decoded = T{2} * coordinate_system.dual * coordinate_system.real.conjugate();
+        Quaternion<T> translation_decoded = T{2} * coordinate_system.dual() * coordinate_system.real().conjugate();
         auto [x, y, z] = translation_decoded.imaginary();
 
         return Vector3D<T>{ x, y, z };
@@ -96,7 +96,7 @@ public:
      */
     constexpr static DualQuaternion<T> make(const Quaternion<T> &rotation, const Vector3D<T> &translation)
     {
-        return make_coordinate_system(rotation, translation.x, translation.y, translation.z);
+        return DualQuaternion<T>{rotation, translation.x, translation.y, translation.z};
     }
 
     /** Create a coordinate system representing no change
@@ -105,7 +105,7 @@ public:
      */
     constexpr static DualQuaternion<T> make_origin()
     {
-        return make_identity_dualquaternion<T>();
+        return DualQuaternion<T>::identity();
     }
 
     /** Perform a translation in the given coordinate system

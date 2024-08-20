@@ -20,17 +20,15 @@ class SceneNode : public std::enable_shared_from_this<SceneNode<Type>>
 public:
     SceneNode(Private) { }
     SceneNode(Private ,
-              std::weak_ptr<SceneNode> parent,
-              const Vector3D<Type> &translation,
-              const Quaternion<Type> &rotation)
+              std::weak_ptr<SceneNode>  parent,
+              const Vector3D<Type>     &translation,
+              const Quaternion<Type>   &rotation)
         :
-        _coordinate_system{ CoordinateSystem<Type>::make(rotation, translation) },
+        _coordinate_system{ DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
         _parent{parent}
     {
     }
-   ~SceneNode()
-    {
-    }
+    ~SceneNode() = default;
 
     /** Creates a default-constructed SceneNode
      *

@@ -24,8 +24,8 @@ public:
     using value_type = T;
 
     Quaternion() = default;
-    explicit constexpr Quaternion(value_type real_number) : _w(real_number) { }
-    explicit constexpr Quaternion(value_type w, value_type i, value_type j, value_type k) : _w(w), _i(i), _j(j), _k(k) { }
+    explicit constexpr Quaternion(T real_number) : _w(real_number) { }
+    explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
     // Quaternion representation of the real number 1
     constexpr static Quaternion<T> identity() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
@@ -39,32 +39,32 @@ public:
 
     Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
 
-    value_type    normSquared() const { return accumulate(*this * conjugate()); }
-    value_type    norm() const { return std::sqrt( normSquared() ); }
+    T    normSquared() const { return accumulate(*this * conjugate()); }
+    T    norm() const { return std::sqrt( normSquared() ); }
 
-    value_type    magnitudeSquared() const { return normSquared(); }
-    value_type    magnitude() const { return norm(); }
+    T    magnitudeSquared() const { return normSquared(); }
+    T    magnitude() const { return norm(); }
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
-    const value_type &w() const { return _w; }
-    const value_type &real() const { return _w; }
+    const T &w() const { return _w; }
+    const T &real() const { return _w; }
 
-    const value_type &i() const { return _i; }
-    const value_type &j() const { return _j; }
-    const value_type &k() const { return _k; }
+    const T &i() const { return _i; }
+    const T &j() const { return _j; }
+    const T &k() const { return _k; }
 
     // Extracts the imaginary part of a Quaternion as a 3-tuple
-    constexpr triple<value_type> imaginary() { return { _i, _j, _k }; }
+    constexpr triple<T> imaginary() { return { _i, _j, _k }; }
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
-    bool isUnit(value_type tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
+    bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
 
-    bool isZero() const { return approximately_equal_to( magnitude(), T{0} ); }
-    bool isZero(value_type tolerance) const { return approximately_equal_to( magnitude(), T{0}, tolerance ); }
+    bool isZero() const { return approximately_equal_to( magnitude(), T{} ); }
+    bool isZero(T tolerance) const { return approximately_equal_to( magnitude(), T{}, tolerance ); }
 
     // Checks if the real() part is 0
-    bool isPure() const { return approximately_equal_to(real(), T{0}); }
+    bool isPure() const { return approximately_equal_to(real(), T{}); }
 
     /** Construct a pure Quaternion
      *  
@@ -100,7 +100,7 @@ public:
      */
     constexpr static Quaternion<T> make_rotation(T radians, T axis_x, T axis_y, T axis_z)
     {
-        T half_angle = radians / T{2};
+        T half_angle = radians * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
 
@@ -120,7 +120,7 @@ public:
      */
     constexpr static Quaternion<T> make_rotation(T radians, triple<T> axis)
     {
-        T half_angle = radians / T{2};
+        T half_angle = radians * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
 
@@ -131,10 +131,10 @@ public:
                          );
     }
 protected:
-    value_type _w{};
-    value_type _i{};
-    value_type _j{};
-    value_type _k{};
+    T _w{};
+    T _i{};
+    T _j{};
+    T _k{};
 };
 
 /** Compares two Quaternion inputs equal, component-wise, to within a tolerance
@@ -148,12 +148,36 @@ protected:
  *  @see approximately_equal_to
  */
 template <class T>
-constexpr bool approximately_equal_to(Quaternion<T> value_to_test, Quaternion<T> value_it_should_be, float tolerance = 0.0002f)
+constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, float tolerance = 0.0002f)
 {
     return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
            approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
            approximately_equal_to(value_to_test.j(), value_it_should_be.j(), tolerance) &&
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
+}
+
+/** Defines equality of two Quaternions
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ */
+template<class T>
+constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
+{
+    return approximately_equal_to(left, right);
+}
+
+/** Defines inequality of two Quaternions
+ *  
+ *  @note Uses operator ==()
+ *  
+ *  @see approximately_equal_to
+ */
+template<class T>
+constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
+{
+    return !(left == right);
 }
 
 /** Defines multiplication of a Quaternion and a scalar
@@ -255,30 +279,6 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
                          left.j() * right.i() +
                          left.k() * right.w()
     };
-}
-
-/** Defines equality of two Quaternions
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see approximately_equal_to
- */
-template <class T>
-constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
-{
-    return approximately_equal_to(left, right);
-}
-
-/** Defines inequality of two Quaternions
- *  
- *  @note Uses operator ==()
- *  
- *  @see approximately_equal_to
- */
-template <class T>
-constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
-{
-    return !(left == right);
 }
 
 /** Defines negation of a Quaternion

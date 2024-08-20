@@ -47,7 +47,7 @@ public:
  *  @see approximately_equal_to
  */
 template<class T>
-constexpr bool approximately_equal_to(Dual<T> value_to_test, Dual<T> value_it_should_be, float tolerance = 0.0002f)
+constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T> &value_it_should_be, float tolerance = 0.0002f)
 {
     return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
            approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
@@ -65,7 +65,7 @@ constexpr bool operator ==(Dual<T> left, Dual<T> right)
     return approximately_equal_to(left, right);
 }
 
-/** Defines inequality of two Quaternions
+/** Defines inequality of two Duals
  *  
  *  @note Uses operator ==()
  *  
@@ -231,7 +231,7 @@ constexpr Dual<T> operator -(Dual<T> d, double scalar)
  *        as expected of that.
  */
 template<class T>
-constexpr T dot(Dual<T> left, Dual<T> right)
+constexpr T dot(const Dual<T> &left, const Dual<T> &right)
 {
     return left.real * right.real +
            left.dual * right.dual;
@@ -245,7 +245,7 @@ constexpr T dot(Dual<T> left, Dual<T> right)
  *  @return The Dual as a dual scalar
  */
 template<class T>
-constexpr Dual<T> dualscalar_sqrt(Dual<T> input)
+constexpr Dual<T> dualscalar_sqrt(const Dual<T> &input)
 {
     // Expect that T is a scalar type (float, double, int, etc.)
     T root = std::sqrt(input.real);
@@ -254,7 +254,7 @@ constexpr Dual<T> dualscalar_sqrt(Dual<T> input)
 }
 
 template<class T>
-constexpr T dualscalar_normsquared(Dual<T> d)
+constexpr T dualscalar_normsquared(const Dual<T> &d)
 {
     Dual<T> result = d * conjugate(d);
 
@@ -268,7 +268,7 @@ constexpr T dualscalar_normsquared(Dual<T> d)
  *  @return A scalar that is the sum of the components
  */
 template<class T>
-constexpr T accumulate(Dual<T> input)
+constexpr T accumulate(const Dual<T> &input)
 {
     return T{input.real + input.dual};
 }

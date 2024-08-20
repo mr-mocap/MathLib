@@ -28,13 +28,13 @@ void CreateRotationAndTestXAxis(float degrees_of_rotation)
     DualQuaternionf rotation = CoordinateSystemf::make_rotation( DegreesToRadians(degrees_of_rotation), CoordinateSystemf::unit_x_axis() );
 
     // Rotation is 45 deg angle in right-hand coordinate system
-    assert( IsNear(rotation.real.w(), std::cos( DegreesToRadians(half_angle) )) );
-    assert( IsNear(rotation.real.i(), std::sin( DegreesToRadians(half_angle) )) );
-    assert( IsNear(rotation.real.j(), 0.0f) );
-    assert( IsNear(rotation.real.k(), 0.0f) );
+    assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().i(), std::sin( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().j(), 0.0f) );
+    assert( IsNear(rotation.real().k(), 0.0f) );
 
     // Translation is 0
-    assert( rotation.dual.isZero() );
+    assert( rotation.dual().isZero());
 }
 
 void CreateRotationAndTestYAxis(float degrees_of_rotation)
@@ -43,13 +43,13 @@ void CreateRotationAndTestYAxis(float degrees_of_rotation)
     DualQuaternionf rotation = CoordinateSystemf::make_rotation( DegreesToRadians(degrees_of_rotation), CoordinateSystemf::unit_y_axis() );
 
     // Rotation is 45 deg angle in right-hand coordinate system
-    assert( IsNear(rotation.real.w(), std::cos( DegreesToRadians(half_angle) )) );
-    assert( IsNear(rotation.real.i(), 0.0f) );
-    assert( IsNear(rotation.real.j(), std::sin( DegreesToRadians(half_angle) )) );
-    assert( IsNear(rotation.real.k(), 0.0f) );
+    assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().i(), 0.0f) );
+    assert( IsNear(rotation.real().j(), std::sin( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().k(), 0.0f) );
 
     // Translation is 0
-    assert( rotation.dual.isZero() );
+    assert( rotation.dual().isZero() );
 }
 
 void CreateRotationAndTestZAxis(float degrees_of_rotation)
@@ -58,13 +58,13 @@ void CreateRotationAndTestZAxis(float degrees_of_rotation)
     DualQuaternionf rotation = CoordinateSystemf::make_rotation( DegreesToRadians(degrees_of_rotation), CoordinateSystemf::unit_z_axis() );
 
     // Rotation is 45 deg angle in right-hand coordinate system
-    assert( IsNear(rotation.real.w(), std::cos( DegreesToRadians(half_angle) )) );
-    assert( IsNear(rotation.real.i(), 0.0f) );
-    assert( IsNear(rotation.real.j(), 0.0f) );
-    assert( IsNear(rotation.real.k(), std::sin( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
+    assert( IsNear(rotation.real().i(), 0.0f) );
+    assert( IsNear(rotation.real().j(), 0.0f) );
+    assert( IsNear(rotation.real().k(), std::sin( DegreesToRadians(half_angle) )) );
 
     // Translation is 0
-    assert( rotation.dual.isZero() );
+    assert( rotation.dual().isZero() );
 }
 
 }
@@ -79,14 +79,14 @@ void VerifyOriginRepresentation()
     DualQuaternionf origin = CoordinateSystemf::make_origin();
 
     // Rotation part
-    assert( IsNear(origin.real.norm(), 1.0f) );
-    assert( IsNear(origin.real.w(), 1.0f) );
-    assert( IsNear(origin.real.i(), 0.0f) );
-    assert( IsNear(origin.real.j(), 0.0f) );
-    assert( IsNear(origin.real.k(), 0.0f) );
+    assert( IsNear(origin.real().norm(), 1.0f));
+    assert( IsNear(origin.real().w(), 1.0f) );
+    assert( IsNear(origin.real().i(), 0.0f) );
+    assert( IsNear(origin.real().j(), 0.0f) );
+    assert( IsNear(origin.real().k(), 0.0f) );
 
     // Translation Part
-    assert( origin.dual.isZero() );
+    assert( origin.dual().isZero());
 }
 
 void VerifyZeroRotationRepresentation()
@@ -97,40 +97,40 @@ void VerifyZeroRotationRepresentation()
     DualQuaternionf no_rotation = CoordinateSystemf::make_rotation(0.0f, CoordinateSystemf::unit_x_axis());
 
     // Rotation part is a unit quaternion
-    assert( IsNear(no_rotation.real.norm(), 1.0f) );
-    assert( IsNear(no_rotation.real.w(), 1.0f) );
-    assert( IsNear(no_rotation.real.i(), 0.0f) );
-    assert( IsNear(no_rotation.real.j(), 0.0f) );
-    assert( IsNear(no_rotation.real.k(), 0.0f) );
+    assert( IsNear(no_rotation.real().norm(), 1.0f) );
+    assert( IsNear(no_rotation.real().w(), 1.0f) );
+    assert( IsNear(no_rotation.real().i(), 0.0f) );
+    assert( IsNear(no_rotation.real().j(), 0.0f) );
+    assert( IsNear(no_rotation.real().k(), 0.0f) );
 
     // Translation Part
-    assert( no_rotation.dual.isZero() );
+    assert( no_rotation.dual().isZero() );
 
     // Rotate 0 around Y axis
     no_rotation = CoordinateSystemf::make_rotation(0.0f, CoordinateSystemf::unit_y_axis());
 
     // Rotation part is a unit quaternion
-    assert( IsNear(no_rotation.real.norm(), 1.0f) );
-    assert( IsNear(no_rotation.real.w(), 1.0f) );
-    assert( IsNear(no_rotation.real.i(), 0.0f) );
-    assert( IsNear(no_rotation.real.j(), 0.0f) );
-    assert( IsNear(no_rotation.real.k(), 0.0f) );
+    assert( IsNear(no_rotation.real().norm(), 1.0f) );
+    assert( IsNear(no_rotation.real().w(), 1.0f) );
+    assert( IsNear(no_rotation.real().i(), 0.0f) );
+    assert( IsNear(no_rotation.real().j(), 0.0f) );
+    assert( IsNear(no_rotation.real().k(), 0.0f) );
 
     // Translation Part
-    assert( no_rotation.dual.isZero() );
+    assert( no_rotation.dual().isZero() );
 
     // Rotate 0 around Z axis
     no_rotation = CoordinateSystemf::make_rotation(0.0f, CoordinateSystemf::unit_z_axis());
 
     // Rotation part is a unit quaternion
-    assert( IsNear(no_rotation.real.norm(), 1.0f) );
-    assert( IsNear(no_rotation.real.w(), 1.0f) );
-    assert( IsNear(no_rotation.real.i(), 0.0f) );
-    assert( IsNear(no_rotation.real.j(), 0.0f) );
-    assert( IsNear(no_rotation.real.k(), 0.0f) );
+    assert( IsNear(no_rotation.real().norm(), 1.0f) );
+    assert( IsNear(no_rotation.real().w(), 1.0f) );
+    assert( IsNear(no_rotation.real().i(), 0.0f) );
+    assert( IsNear(no_rotation.real().j(), 0.0f) );
+    assert( IsNear(no_rotation.real().k(), 0.0f) );
 
     // Translation Part
-    assert( no_rotation.dual.isZero() );
+    assert( no_rotation.dual().isZero() );
 }
 
 void TranslatingOriginOnlyAlongX()
@@ -145,15 +145,15 @@ void TranslatingOriginOnlyAlongX()
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);
 
     // Rotation part should be a "1" as a quaternion
-    assert( result.real.isUnit() );
-    assert( IsNear(result.real.w(), 1.0f) );
-    assert( IsNear(result.real.i(), 0.0f) );
-    assert( IsNear(result.real.j(), 0.0f) );
-    assert( IsNear(result.real.k(), 0.0f) );
+    assert( result.real().isUnit());
+    assert( IsNear(result.real().w(), 1.0f) );
+    assert( IsNear(result.real().i(), 0.0f) );
+    assert( IsNear(result.real().j(), 0.0f) );
+    assert( IsNear(result.real().k(), 0.0f) );
 
     // Translation part
-    assert( result.dual.w() == 0.0f ); // This should always be 0
-    assert( result.dual == encoded_translation );
+    assert( result.dual().w() == 0.0f ); // This should always be 0
+    assert( result.dual() == encoded_translation );
 
     assert( IsNear(output_translation.x, x_translation.x) );
     assert( IsNear(output_translation.y, x_translation.y) );
@@ -172,15 +172,15 @@ void TranslatingOriginOnlyAlongY()
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);
 
     // Rotation part should be a "1" as a quaternion
-    assert( result.real.isUnit() );
-    assert( IsNear(result.real.w(), 1.0f) );
-    assert( IsNear(result.real.i(), 0.0f) );
-    assert( IsNear(result.real.j(), 0.0f) );
-    assert( IsNear(result.real.k(), 0.0f) );
+    assert( result.real().isUnit() );
+    assert( IsNear(result.real().w(), 1.0f) );
+    assert( IsNear(result.real().i(), 0.0f) );
+    assert( IsNear(result.real().j(), 0.0f) );
+    assert( IsNear(result.real().k(), 0.0f) );
 
     // Translation part
-    assert( IsNear(result.dual.w(), 0.0f) ); // This should always be 0
-    assert( result.dual == encoded_translation );
+    assert( IsNear(result.dual().w(), 0.0f) ); // This should always be 0
+    assert( result.dual() == encoded_translation );
 
     assert( IsNear(output_translation.x, y_translation.x) );
     assert( IsNear(output_translation.y, y_translation.y) );
@@ -199,15 +199,15 @@ void TranslatingOriginOnlyAlongZ()
     Vector3Df       output_translation = CoordinateSystemf::translation_of(result);
 
     // Rotation part should be a "1" as a quaternion
-    assert( result.real.isUnit() );
-    assert( IsNear(result.real.w(), 1.0f) );
-    assert( IsNear(result.real.i(), 0.0f) );
-    assert( IsNear(result.real.j(), 0.0f) );
-    assert( IsNear(result.real.k(), 0.0f) );
+    assert( result.real().isUnit());
+    assert( IsNear(result.real().w(), 1.0f) );
+    assert( IsNear(result.real().i(), 0.0f) );
+    assert( IsNear(result.real().j(), 0.0f) );
+    assert( IsNear(result.real().k(), 0.0f) );
 
     // Translation part
-    assert( IsNear(result.dual.w(), 0.0f) ); // This should always be 0
-    assert( result.dual == encoded_translation );
+    assert( IsNear(result.dual().w(), 0.0f) ); // This should always be 0
+    assert( result.dual() == encoded_translation );
 
     assert( IsNear(output_translation.x, z_translation.x) );
     assert( IsNear(output_translation.y, z_translation.y) );
