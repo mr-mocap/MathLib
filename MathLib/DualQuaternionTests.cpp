@@ -70,14 +70,14 @@ void UnitCondition()
 
     Quaternionf q_rotation{ Quaternionf::make_rotation( DegreesToRadians(45.0f), 1.0f, 0.0f, 0.0f ) };
     DualQuaternionf a{ DualQuaternionf::make_coordinate_system( q_rotation, 10.0f, 10.0f, 10.0f ) };
-    DualQuaternionf conjugate_real{ a.real().conjugate(), a.dual()};
-    DualQuaternionf conjugate_dual{ a.dual().conjugate(), a.real()};
-    DualQuaternionf sum = conjugate_real + conjugate_dual;
+    Quaternionf conjugate_real{ a.real().conjugate() * a.dual()};
+    Quaternionf conjugate_dual{ a.dual().conjugate() * a.real()};
+    Quaternionf sum = conjugate_real + conjugate_dual;
 
 
     assert( a.magnitude() == Dualf{ 1.0f } );
     assert( a.is_unit() );
-    //assert( sum == DualQuaternionf::zero() );
+    assert( sum == Quaternionf::zero() );
 }
 
 void HowToCombineASeparateRotationAndTranslation()
