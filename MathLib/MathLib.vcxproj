@@ -163,7 +163,6 @@
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
     <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
-    <ClInclude Include="include\math\CoordinateSystem.hpp" />
     <ClInclude Include="include\math\Dual.hpp" />
     <ClInclude Include="include\math\DualQuaternion.hpp" />
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp" />

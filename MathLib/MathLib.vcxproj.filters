@@ -62,9 +62,6 @@
     <ClInclude Include="DualQuaternionTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\CoordinateSystem.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\Conversions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
