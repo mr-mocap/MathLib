@@ -88,6 +88,7 @@ public:
      *  @see make_pure
      */
     constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
+    constexpr static Quaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
 
     ///@{
     /** Enocde a rotation into a Quaternion

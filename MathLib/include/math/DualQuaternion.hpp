@@ -94,6 +94,15 @@ public:
                                 };
     }
 
+    constexpr static DualQuaternion<T> make_translation(const Vector3D<T> &translation)
+    {
+        // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
+        // so we just use "0.5 * t".
+        return DualQuaternion<T>{ Quaternion<T>::identity(),
+                                  T{0.5} * Quaternion<T>::encode_point(translation)
+                                };
+    }
+
     /** Encode both the @p rotation and translation together
      *
      *  @param rotation The rotation to inject
@@ -174,7 +183,7 @@ public:
     const Quaternion<T> &dual() const { return _frame_of_reference.dual; }
 
     const Quaternion<T> &rotation()    const { return real(); }
-          Vector3D<T>    translation() const { return T{2} * dual() * rotation().conjugate(); }
+          Vector3D<T>    translation() const { return Quaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
 
     template <class T>
     friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left, const DualQuaternion<T> &right);
