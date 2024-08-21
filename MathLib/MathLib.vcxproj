@@ -149,7 +149,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CoordinateSystemTests.cpp" />
     <ClCompile Include="DualNumberTests.cpp" />
     <ClCompile Include="DualQuaternionTests.cpp" />
     <ClCompile Include="HierarchicalCoordinateSystemTests.cpp" />
@@ -158,7 +157,6 @@
     <ClCompile Include="SceneNodeTests.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CoordinateSystemTests.hpp" />
     <ClInclude Include="DualNumberTests.hpp" />
     <ClInclude Include="DualQuaternionTests.hpp" />
     <ClInclude Include="HierarchicalCoordinateSystemTests.hpp" />

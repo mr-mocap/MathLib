@@ -2,7 +2,7 @@
 
 #include "math/ApproximatelyEqualTo.hpp"
 #include "math/Conjugate.hpp"
-#include "math/types.hpp"
+#include "math/Vector.hpp"
 #include <cassert>
 
 /** @file
@@ -55,7 +55,7 @@ public:
     const T &k() const { return _k; }
 
     // Extracts the imaginary part of a Quaternion as a 3-tuple
-    constexpr triple<T> imaginary() { return { _i, _j, _k }; }
+    constexpr Vector3D<T> imaginary() { return { _i, _j, _k }; }
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
     bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
@@ -75,7 +75,7 @@ public:
      *        is 0.
      */
     constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
-    constexpr static Quaternion<T> make_pure(const triple<T> &t) { return Quaternion<T>{ T{}, std::get<0>(t), std::get<1>(t), std::get<2>(t) }; }
+    constexpr static Quaternion<T> make_pure(const Vector3D<T> &t) { return Quaternion<T>{ T{}, t.x, t.y, t.z }; }
 
     /** Encode a 3D point as a pure Quaternion
      *  
@@ -89,6 +89,7 @@ public:
      */
     constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
 
+    ///@{
     /** Enocde a rotation into a Quaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
@@ -114,6 +115,17 @@ public:
     /** Enocde a rotation into a Quaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
+     *  @param axis    The axis to rotate around
+     *  
+     *  @post output.isUnit() == true
+     */
+    constexpr static Quaternion<T> make_rotation(T radians, const Vector3D<T>& axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
+    ///@}
+
+#if 0
+    /** Enocde a rotation into a Quaternion
+     *  
+     *  @param radians The amount of rotation to apply (in radians)
      *  @param axis    The vector representing the axis of rotation
      *  
      *  @post output.isUnit() == true
@@ -130,6 +142,7 @@ public:
                                           sin_theta * std::get<2>(axis) }
                          );
     }
+#endif
 protected:
     T _w{};
     T _i{};

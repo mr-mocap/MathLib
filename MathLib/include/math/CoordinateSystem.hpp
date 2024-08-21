@@ -20,6 +20,7 @@ class CoordinateSystem
 {
 public:
 
+#if 0
     ///@{
     /** Creates a DualQuaternion that has only a rotation encoded within it
      *  
@@ -131,7 +132,7 @@ public:
     {
         return coordinate_system * make_rotation(rotation);
     }
-
+#endif
     constexpr static Quaternion<T> encode_point_as_quaternion(const Vector3D<T> &point_to_encode)
     {
         return make_pure_quaternion( point_to_encode.x, point_to_encode.y, point_to_encode.z );

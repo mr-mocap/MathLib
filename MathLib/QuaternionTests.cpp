@@ -352,14 +352,14 @@ void MakePureQuaternionSetsRealComponentToZero()
 {
     std::cout << __func__ << std::endl;
 
-    assert( Quaternionf::make_pure( std::make_tuple( 1.0f, 2.0f, 3.0f ) ).real() == 0.0f );
+    assert( Quaternionf::make_pure( { 1.0f, 2.0f, 3.0f } ).real() == 0.0f );
 }
 
 void MakePureQuaternionSetsImaginaryVectorToInputParameters()
 {
     std::cout << __func__ << std::endl;
 
-    Quaternionf pure_q = Quaternionf::make_pure( triple<float>{1.0f, 2.0f, 3.0f} );
+    Quaternionf pure_q = Quaternionf::make_pure( {1.0f, 2.0f, 3.0f} );
 
     assert( pure_q.i() == 1.0f );
     assert( pure_q.j() == 2.0f );
@@ -370,11 +370,11 @@ void ImaginaryReturnsIJK()
 {
     std::cout << __func__ << std::endl;
 
-    Quaternionf pure_q = Quaternionf::make_pure( triple<float>{1.0f, 2.0f, 3.0f} );
+    Quaternionf pure_q = Quaternionf::make_pure( {1.0f, 2.0f, 3.0f} );
 
-    assert( std::get<0>(pure_q.imaginary()) == 1.0f );
-    assert( std::get<1>(pure_q.imaginary()) == 2.0f );
-    assert( std::get<2>(pure_q.imaginary()) == 3.0f );
+    assert( pure_q.imaginary().x == 1.0f );
+    assert( pure_q.imaginary().y == 2.0f );
+    assert( pure_q.imaginary().z == 3.0f );
 }
 
 void DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues()

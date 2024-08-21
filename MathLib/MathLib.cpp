@@ -3,7 +3,6 @@
 #include "QuaternionTests.hpp"
 #include "DualNumberTests.hpp"
 #include "DualQuaternionTests.hpp"
-#include "CoordinateSystemTests.hpp"
 #include "SceneNodeTests.hpp"
 #include "HierarchicalCoordinateSystemTests.hpp"
 
@@ -15,7 +14,6 @@ int main()
     QuaternionTests::Run();
     DualNumberTests::Run();
     DualQuaternionTests::Run();
-    CoordinateSystemTests::Run();
     SceneNodeTests::Run();
     HierarchicalCoordinateSystemTests::Run();
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/CoordinateSystem.hpp"
+#include "math/DualQuaternion.hpp"
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -82,7 +82,7 @@ public:
         return Vector3D<Type>::zero();
     }
 protected:
-    DualQuaternion<Type>           _coordinate_system = CoordinateSystem<Type>::make_origin();
+    DualQuaternion<Type>           _coordinate_system;
     std::weak_ptr<SceneNode<Type>> _parent;
     SceneNodeList<Type>            _children;
 
