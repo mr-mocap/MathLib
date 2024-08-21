@@ -3,6 +3,7 @@
 #include "math/Dual.hpp"
 #include "math/Quaternion.hpp"
 #include "math/Conjugate.hpp"
+#include "math/Vector.hpp"
 #include <cassert>
 
 /** @file
@@ -24,6 +25,12 @@ class DualQuaternion
 {
 public:
     DualQuaternion() = default;
+
+    /** Constructs a DualQuaternion directly from the two given quaternions
+     *
+     *  @param rotation    The Quaternion to place into the real() part
+     *  @param translation The Quaternion to place into the dual() part
+     */
     explicit constexpr DualQuaternion(const Quaternion<T> &rotation, const Quaternion<T> &translation) : _frame_of_reference{rotation, translation} { }
     explicit constexpr DualQuaternion(const Quaternion<T> &rotation,
                                       const T translation_x,
@@ -34,6 +41,11 @@ public:
     {
         assert( real().isUnit() );
     }
+
+    /** Constructs a DualQuaternion directly from a Dual<Quaternion>
+     *  
+     *  @param underlying_representation The Dual number that will ultimately be used as the internal representation
+     */
     explicit constexpr DualQuaternion(const Dual<Quaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
 
     /** Create a DualQuaternion representing no rotation and no translation
@@ -42,6 +54,8 @@ public:
      */
     constexpr static DualQuaternion<T> identity() { return DualQuaternion{}; }
 
+    /** Create a DualQuaternion that is all zeros
+     */
     constexpr static DualQuaternion<T> zero() { return DualQuaternion{ Quaternion<T>::zero(), Quaternion<T>::zero() }; }
 
     /** Creates a DualQuaternion containing a rotation only
@@ -159,8 +173,8 @@ public:
     const Quaternion<T> &real() const { return _frame_of_reference.real; }
     const Quaternion<T> &dual() const { return _frame_of_reference.dual; }
 
-    const Quaternion<T> &rotation() const { return real(); }
-    const Quaternion<T> &translation() const { return dual(); }
+    const Quaternion<T> &rotation()    const { return real(); }
+          Vector3D<T>    translation() const { return T{2} * dual() * rotation().conjugate(); }
 
     template <class T>
     friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left, const DualQuaternion<T> &right);

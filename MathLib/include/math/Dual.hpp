@@ -22,18 +22,32 @@ public:
     using value_type = T;
 
     Dual() = default;
-    explicit constexpr Dual(const value_type r) : real(r) { }
-    explicit constexpr Dual(const value_type r, const value_type e) : real(r), dual(e) { }
-    explicit constexpr Dual(const std::tuple<value_type, value_type> tuple) : real(std::get<0>(tuple)), dual(std::get<1>(tuple)) { }
+    explicit constexpr Dual(const T r) : real(r) { }
+    explicit constexpr Dual(const T r, const T e) : real(r), dual(e) { }
+    explicit constexpr Dual(const std::tuple<T, T> tuple) : real(std::get<0>(tuple)), dual(std::get<1>(tuple)) { }
 
     constexpr static Dual<T> identity() { return Dual{ T{1}, T{0} }; }
     constexpr static Dual<T> zero() { return Dual{}; }
 
     constexpr Dual<T> conjugate() const { return Dual{ real, ::conjugate(dual) }; }
-    constexpr value_type magnitude() const { return real; }
+    constexpr T       magnitude() const { return real; }
 
-    value_type real{};
-    value_type dual{};
+    /** Creates a pure Dual with @c input
+     *  
+     *  @param input
+     *  
+     *  @post output.real == 0
+     *        output.dual == @c input
+     *  
+     *  @note A pure Dual is one which has the real component set to 0
+     */
+    constexpr static Dual<T> make_pure(T input)
+    {
+        return Dual<T>{ T{}, input };
+    }
+
+    T real{};
+    T dual{};
 };
 
 /** Compares two Dual inputs equal, component-wise, to within a tolerance
@@ -271,21 +285,6 @@ template<class T>
 constexpr T accumulate(const Dual<T> &input)
 {
     return T{input.real + input.dual};
-}
-
-/** Creates a pure Dual with @c input
- *  
- *  @param input
- *  
- *  @post output.real == 0
- *        output.dual == @c input
- *  
- *  @note A pure Dual is one which has the real component set to 0
- */
-template<class T>
-constexpr Dual<T> make_pure_dual(T input)
-{
-    return Dual<T>{ T{}, input };
 }
 
 ///@{

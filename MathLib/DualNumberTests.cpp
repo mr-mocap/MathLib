@@ -41,21 +41,14 @@ void MakePureDualSetsRealComponentToZero()
 {
     std::cout << __func__ << std::endl;
 
-    assert( make_pure_dual(3.0f).real == 0.0f );
+    assert( Dualf::make_pure(3.0f).real == 0.0f );
 }
 
 void MakePureDualSetsDualComponentToGivenValue()
 {
     std::cout << __func__ << std::endl;
 
-    assert( make_pure_dual(3.3f).dual == 3.3f );
-}
-
-void MakePureDualSetsDualComponentToInputParameter()
-{
-    std::cout << __func__ << std::endl;
-
-    assert( make_pure_dual(3.0f).dual == 3.0f );
+    assert( Dualf::make_pure(3.3f).dual == 3.3f );
 }
 
 void DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues()
@@ -88,7 +81,6 @@ void Run()
     ZeroDualIsAsExpected();
     MakePureDualSetsRealComponentToZero();
     MakePureDualSetsDualComponentToGivenValue();
-    MakePureDualSetsDualComponentToInputParameter();
     DualScalarSquareRootTimesItselfIsTheOriginalNumber();
 
     std::cout << "PASSED!" << std::endl;
