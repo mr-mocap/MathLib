@@ -211,20 +211,20 @@ public:
     const Quaternion<T> &rotation()    const { return real(); }
           Vector3D<T>    translation() const { return Quaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
 
-    template <class T>
-    friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left, const DualQuaternion<T> &right);
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator +(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
 
-    template <class T>
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left, const DualQuaternion<T> &right);
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
 
-    template <class T>
-    friend constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion);
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const Type scalar, const DualQuaternion<Type> &dual_quaternion);
 
-    template <class T>
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar);
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &dual_quaternion, const Type scalar);
 
-    template <class T>
-    friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar);
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator /(const DualQuaternion<Type> &dual_quaternion, const Dual<Type> &dual_scalar);
 
     /** Create the normalized version of a DualQuaternion
      *  
@@ -268,8 +268,8 @@ public:
         return rotation_magnitude_is_one() && rotation_and_translation_are_orthogonal();
     }
 
-    template<class T>
-    friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, float tolerance);
+    template<class Type>
+    friend constexpr bool approximately_equal_to(const DualQuaternion<Type> &value_to_test, const DualQuaternion<Type> &value_it_should_be, float tolerance);
 
 protected:
     Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation

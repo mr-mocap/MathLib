@@ -365,3 +365,6 @@ FodyWeavers.xsd
 # Doxygen-generated data
 MathLib/Documentation/html/
 MathLib/Documentation/latex/
+
+# Files built by g++
+*.o

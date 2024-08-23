@@ -297,15 +297,15 @@ void RotateOnlyAroundAMainAxis()
 
     // X axis
     for (float degrees : input_rotations)
-        CreateRotationAndTestXAxis(90.0f);
+        CreateRotationAndTestXAxis(degrees);
 
     // Y axis
     for (float degrees : input_rotations)
-        CreateRotationAndTestYAxis(90.0f);
+        CreateRotationAndTestYAxis(degrees);
 
     // Z axis
     for (float degrees : input_rotations)
-        CreateRotationAndTestZAxis(90.0f);
+        CreateRotationAndTestZAxis(degrees);
 }
 
 void TranslationIsTheInverseOfMakeTranslation()
