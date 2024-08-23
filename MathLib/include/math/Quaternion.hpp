@@ -55,7 +55,7 @@ public:
     const T &k() const { return _k; }
 
     // Extracts the imaginary part of a Quaternion as a 3-tuple
-    constexpr Vector3D<T> imaginary() { return { _i, _j, _k }; }
+    constexpr Vector3D<T> imaginary() const { return { _i, _j, _k }; }
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
     bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
@@ -123,27 +123,6 @@ public:
     constexpr static Quaternion<T> make_rotation(T radians, const Vector3D<T>& axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
     ///@}
 
-#if 0
-    /** Enocde a rotation into a Quaternion
-     *  
-     *  @param radians The amount of rotation to apply (in radians)
-     *  @param axis    The vector representing the axis of rotation
-     *  
-     *  @post output.isUnit() == true
-     */
-    constexpr static Quaternion<T> make_rotation(T radians, triple<T> axis)
-    {
-        T half_angle = radians * T{0.5};
-        T cos_theta = cos( half_angle );
-        T sin_theta = sin( half_angle );
-
-        return normalized( Quaternion<T>{ cos_theta,
-                                          sin_theta * std::get<0>(axis),
-                                          sin_theta * std::get<1>(axis),
-                                          sin_theta * std::get<2>(axis) }
-                         );
-    }
-#endif
 protected:
     T _w{};
     T _i{};

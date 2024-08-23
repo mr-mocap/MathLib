@@ -17,7 +17,7 @@ void DefaultConstructedState()
     assert( scene.root().children().empty() );
 }
 
-void CreatingAChildAddsToItsChildren()
+void CreatingAChildAddsToTheNodesChildren()
 {
     std::cout << __func__ << std::endl;
 
@@ -26,7 +26,7 @@ void CreatingAChildAddsToItsChildren()
     assert( scene.root().parent().expired() );
     assert( scene.root().children().empty() );
 
-    auto wp = scene.root().createChildNode( { 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( DegreesToRadians(120.0f), { 1.0f, 1.0f, 1.0f } ) );
+    auto wp = scene.root().createChildNode( { 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( 120.0_deg_f, { 1.0f, 1.0f, 1.0f } ) );
 
     assert( scene.root().children().size() == 1 );
     assert( wp.lock() == scene.root().children().back() );
@@ -37,17 +37,32 @@ void ConvertingALocalCoordinateToAGlobalCoordinate()
 {
     std::cout << __func__ << std::endl;
 
-#if 0
-    HierarchicalCoordinateSystemf scene;
-    auto translation_only = scene.root().createChildNode( { 2.0f, 0.0f, 0.0f } );
-    auto rotation_only = scene.root().createChildNode( Vector3Df::zero(), Quaternionf::make_rotation( DegreesToRadians(45.0f), 0.0f, 0.0f, 1.0f ) );
-    //auto translation_and_rotation = scene.root().createChildNode();
-    Vector3Df translation_only_test_point{ 1.0f, 2.0f, 3.0f };
+    // One child node that has only a translation
+    {
+        HierarchicalCoordinateSystemf scene;
 
-    Vector3Df translation_point_to_global_space = translation_only.localToWorld( translation_only_test_point );
+        std::shared_ptr<SceneNodef> translation_only{ scene.root().createChildNode( { 2.0f, 0.0f, 0.0f } ) };
+        Vector3Df translation_only_test_point{ 0.0f, 2.0f, 3.0f };
+        Vector3Df translation_point_to_global_space{ translation_only->localToWorld(translation_only_test_point) };
+        Vector3Df expected_global_point{ 2.0f, 2.0f, 3.0f };
 
-    assert( translation_point_to_global_space == Vector3Df{ 3.0f, 2.0f, 3.0f } );
-#endif
+        assert( translation_point_to_global_space != translation_only_test_point );
+        assert( translation_point_to_global_space == expected_global_point );
+    }
+
+    // One child node that has only a rotation
+    {
+        HierarchicalCoordinateSystemf scene;
+
+        Quaternionf rotation{ Quaternionf::make_rotation( 30.0_deg_f, Vector3Df::unit_x() ) };
+        std::shared_ptr<SceneNodef> rotation_only{ scene.root().createChildNode(Vector3Df::zero(), rotation ) };
+        Vector3Df test_point{ 0.0f, 2.0f, 3.0f };
+        Vector3Df point_to_global_space{ rotation_only->localToWorld(test_point) };
+        Vector3Df expected_global_point{ (rotation * Quaternionf::encode_point( test_point ) * rotation.conjugate()).imaginary() };
+
+        assert( point_to_global_space != test_point );
+        assert( point_to_global_space == expected_global_point );
+    }
 }
 
 void Run()
@@ -55,7 +70,8 @@ void Run()
     std::cout << "Running HierarchicalCoordinateSystem Tests..." << std::endl;
 
     DefaultConstructedState();
-    CreatingAChildAddsToItsChildren();
+    CreatingAChildAddsToTheNodesChildren();
+    ConvertingALocalCoordinateToAGlobalCoordinate();
 
     std::cout << "PASSED!" << std::endl;
 }

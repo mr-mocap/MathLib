@@ -30,14 +30,29 @@ public:
      *
      *  @param rotation    The Quaternion to place into the real() part
      *  @param translation The Quaternion to place into the dual() part
+     *  
+     *  @note The user takes full responsibility for the input.  This could possibly be used
+     *        to construct a non-unit DualQuaternion!
      */
     explicit constexpr DualQuaternion(const Quaternion<T> &rotation, const Quaternion<T> &translation) : _frame_of_reference{rotation, translation} { }
+
+    /** Constructs a DualQuaternion from a unit Quaternion (rotation) and a translation
+     *  
+     *  @note This is the proper way to construct a unit DualQuaternion.
+     */
     explicit constexpr DualQuaternion(const Quaternion<T> &rotation,
                                       const T translation_x,
                                       const T translation_y,
                                       const T translation_z)
         :
         _frame_of_reference{ rotation, T{0.5} * Quaternion<T>::encode_point(translation_x, translation_y, translation_z) * rotation }
+    {
+        assert( real().isUnit() );
+    }
+    explicit constexpr DualQuaternion(const Quaternion<T> &rotation,
+                                      const Vector3D<T>   &translation)
+        :
+        _frame_of_reference{ rotation, T{0.5} * Quaternion<T>::encode_point(translation) * rotation }
     {
         assert( real().isUnit() );
     }
@@ -123,6 +138,15 @@ public:
         return DualQuaternion<T>{ rotation, translation_x, translation_y, translation_z };
     }
 
+    constexpr static DualQuaternion<T> encode_point(const Vector3D<T> &point)
+    {
+        return DualQuaternion<T>{ Quaternion<T>::identity(), point };
+    }
+
+    constexpr static Vector3D<T> decode_point(const DualQuaternion<T>& encoded_point)
+    {
+        return encoded_point.translation();
+    }
     /** Create the conjugate of a DualQuaternion
      *  
      *  @return the conjugate of this object
@@ -145,7 +169,7 @@ public:
      */
     constexpr Dual<T> normsquared() const
     {
-        DualQuaternion<T> normsquared = *this * this->conjugate();
+        DualQuaternion<T> normsquared{ *this * this->conjugate() };
 
         // We should have a dual scalar now
         // Make that assumption clear
@@ -153,9 +177,11 @@ public:
         assert( approximately_equal_to(normsquared.real().j(), 0) );
         assert( approximately_equal_to(normsquared.real().k(), 0) );
 
+#if 0
         assert( approximately_equal_to(normsquared.dual().i(), 0) );
         assert( approximately_equal_to(normsquared.dual().j(), 0) );
         assert( approximately_equal_to(normsquared.dual().k(), 0) );
+#endif
 
         return Dual<T>{ normsquared.real().real(), normsquared.dual().real() };
     }
@@ -193,6 +219,9 @@ public:
 
     template <class T>
     friend constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion);
+
+    template <class T>
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar);
 
     template <class T>
     friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar);

@@ -78,8 +78,32 @@ public:
 
     Vector3D<Type> localToWorld(const Vector3D<Type> &local_coordinate) const
     {
-        //CoordinateSystem<Type>::encode_point_as_quaternion( local_coordinates )
-        return Vector3D<Type>::zero();
+#if 1
+        DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
+
+        // NOTE: From here on out, we cuse the algebraically-simplified form of multiplying it out with DualQuaternions...
+        Quaternion<Type> encoded_point{ Quaternion<Type>::encode_point( local_coordinate ) };
+        Quaternion<Type> encoded_translation{ Quaternion<Type>::encode_point( transforms_to_parent.translation() ) };
+        DualQuaternion<Type> result{ Quaternion<Type>::identity(), transforms_to_parent.real() * encoded_point * transforms_to_parent.real().conjugate() + encoded_translation };
+
+        return result.dual().imaginary();
+#else
+        // General case using only DualQuaternion operations.
+        // TODO: Why doesn't this work?
+        DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
+        DualQuaternion<Type> encoded_point{ DualQuaternion<Type>::encode_point(local_coordinate) };
+        DualQuaternion<Type> result{ transforms_to_parent * encoded_point * transforms_to_parent.conjugate() };
+
+        return result.translation();
+#endif
+    }
+
+    DualQuaternion<Type> concatenatedTransforms() const
+    {
+        if (_parent.expired())
+            return _coordinate_system;
+        else
+            return _parent.lock()->concatenatedTransforms() * _coordinate_system;
     }
 protected:
     DualQuaternion<Type>           _coordinate_system;
