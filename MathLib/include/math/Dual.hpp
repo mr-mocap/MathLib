@@ -24,8 +24,15 @@ public:
     explicit constexpr Dual(const T r) : real(r) { }
     explicit constexpr Dual(const T r, const T e) : real(r), dual(e) { }
 
+    /** @name DualConstants
+     *  
+     *  Constants
+     *  
+     *  @{
+     */
     constexpr static Dual<T> identity() { return Dual{ T{1}, T{0} }; }
     constexpr static Dual<T> zero() { return Dual{}; }
+    /// @}
 
     constexpr Dual<T> conjugate() const { return Dual{ real, ::conjugate(dual) }; }
     constexpr T       magnitude() const { return real; }
@@ -68,6 +75,11 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
 }
 /// @}
 
+/** @name DualOperators
+ *  
+ *  @{
+ */
+
 /** Defines equality of two Duals
  *  
  *  @note Uses approximately_equal_to under-the-hood
@@ -102,7 +114,7 @@ constexpr Dual<T> operator *(Dual<T> left, Dual<T> right)
                    left.real * right.dual + right.real * left.dual);
 }
 
-///@{
+/// @{
 /** Defines scaling a Dual
  *  
  */
@@ -129,7 +141,7 @@ constexpr Dual<T> operator *(Dual<T> d, double scalar)
 {
     return d * Dual<T>( T(scalar) );
 }
-///@}
+/// @}
 
 /** Defines division of Duals
  *  
@@ -141,7 +153,7 @@ constexpr Dual<T> operator /(Dual<T> left, Dual<T> right)
         (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
 }
 
-///@{
+/// @{
 /** Defines dividing a Dual by a scalar
  */
 template<class T>
@@ -167,9 +179,9 @@ constexpr Dual<T> operator /(Dual<T> d, double scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
-///@}
+/// @}
 
-///@{
+/// @{
 /** Defines addition of Duals
  */
 template<class T>
@@ -201,9 +213,9 @@ constexpr Dual<T> operator +(Dual<T> d, double scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
-///@}
+/// @}
 
-///@{
+/// @{
 /** Defines subtraction of Duals
  */
 template<class T>
@@ -235,7 +247,9 @@ constexpr Dual<T> operator -(Dual<T> d, double scalar)
 {
     return d - Dual<T>( T(scalar) );
 }
-///@}
+/// @}
+
+/// @}
 
 /** Calculates the dot-product of two Duals
  *  
@@ -288,7 +302,12 @@ constexpr T accumulate(const Dual<T> &input)
     return T{input.real + input.dual};
 }
 
-/// @{
+/** @name DualTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 using Dualf = Dual<float>;
 using Duald = Dual<double>;
 using Dualld = Dual<long double>;

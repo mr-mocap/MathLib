@@ -15,37 +15,64 @@
 template <class Type>
 struct Vector2D
 {
+    /** @name Vector2DConstants
+     *  
+     *  Constants
+     *  
+     *  @{
+     */
     static constexpr Vector2D<Type> unit_x() { return Vector2D{ Type{1}, Type{0} }; }
     static constexpr Vector2D<Type> unit_y() { return Vector2D{ Type{0}, Type{1} }; }
 
     constexpr static Vector2D<Type> zero() { return Vector2D{}; }
+    /// @}
 
     Type x{};
     Type y{};
 };
 
+/** @name Vector2DOperators
+ *  
+ *  Operators
+ *  
+ *  @{
+ */
 template <class Type>
 bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
 }
+/// @}
 
 /** A simple 3D vector class
  */
 template <class Type>
 struct Vector3D
 {
+    /** @name Vector3DConstants
+     *  
+     *  Constants
+     *  
+     *  @{
+     */
     static constexpr Vector3D<Type> unit_x() { return Vector3D{ Type{1}, Type{0}, Type{0} }; }
     static constexpr Vector3D<Type> unit_y() { return Vector3D{ Type{0}, Type{1}, Type{0} }; }
     static constexpr Vector3D<Type> unit_z() { return Vector3D{ Type{0}, Type{0}, Type{1} }; }
 
     constexpr static Vector3D<Type> zero() { return Vector3D{}; }
+    /// @}
 
     Type x{};
     Type y{};
     Type z{};
 };
 
+/** @name Vector3DOperators
+ *  
+ *  Operators
+ *  
+ *  @{
+ */
 template <class Type>
 bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
@@ -53,9 +80,15 @@ bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
            approximately_equal_to(left.y, right.y) &&
            approximately_equal_to(left.z, right.z);
 }
+/// @}
 
 
-///@{
+/** @name Vector2DTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 /** Specialized types of the Vector2D class
  */
 using Vector2Df = Vector2D<float>;
@@ -63,7 +96,12 @@ using Vector2Dd = Vector2D<double>;
 using Vector2Dld = Vector2D<long double>;
 ///@}
 
-///@{
+/** @name Vector3DTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 /** Specialized types of the Vector3D class
  */
 using Vector3Df = Vector3D<float>;

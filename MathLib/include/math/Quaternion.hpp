@@ -27,15 +27,22 @@ public:
     explicit constexpr Quaternion(T real_number) : _w(real_number) { }
     explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
-    // Quaternion representation of the real number 1
+    /** @name QuaternionConstants
+     *  
+     *  Constants
+     *  
+     *  @{
+     */
+    /// Quaternion representation of the real number 1
     constexpr static Quaternion<T> identity() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
 
-    // Quaternion representation of the real number 0
+    /// Quaternion representation of the real number 0
     constexpr static Quaternion<T> zero() { return Quaternion{}; }
     constexpr static Quaternion<T> unit_real() { return identity(); }
     constexpr static Quaternion<T> unit_i() { return Quaternion{ T{}, T{1}, T{},  T{} }; }
     constexpr static Quaternion<T> unit_j() { return Quaternion{ T{}, T{},  T{1}, T{} }; }
     constexpr static Quaternion<T> unit_k() { return Quaternion{ T{}, T{},  T{},  T{1} }; }
+    /// @}
 
     Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
 
@@ -47,6 +54,12 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
+    /** @name QuaternionElementAccess
+     *  
+     *  Element Access
+     *  
+     *  @{
+     */
     const T &w() const { return _w; }
     const T &real() const { return _w; }
 
@@ -54,8 +67,9 @@ public:
     const T &j() const { return _j; }
     const T &k() const { return _k; }
 
-    // Extracts the imaginary part of a Quaternion as a 3-tuple
+    /// Extracts the imaginary part of a Quaternion as a Vector3D
     constexpr Vector3D<T> imaginary() const { return { _i, _j, _k }; }
+    /// @}
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
     bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
@@ -66,6 +80,7 @@ public:
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
 
+    /// @{
     /** Construct a pure Quaternion
      *  
      *  @post output.w() == 0
@@ -76,7 +91,9 @@ public:
      */
     constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
     constexpr static Quaternion<T> make_pure(const Vector3D<T> &t) { return Quaternion<T>{ T{}, t.x, t.y, t.z }; }
+    /// @}
 
+    /// @{
     /** Encode a 3D point as a pure Quaternion
      *  
      *  @post output.w() == 0
@@ -89,8 +106,9 @@ public:
      */
     constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
     constexpr static Quaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
+    /// @}
 
-    ///@{
+    /// @{
     /** Enocde a rotation into a Quaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
@@ -121,7 +139,7 @@ public:
      *  @post output.isUnit() == true
      */
     constexpr static Quaternion<T> make_rotation(T radians, const Vector3D<T>& axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
-    ///@}
+    /// @}
 
 protected:
     T _w{};
@@ -153,6 +171,13 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
 }
 /// @}
+
+/** @name QuaternionOperators
+ *  
+ *  Operators
+ *  
+ *  @{
+ */
 
 /** Defines equality of two Quaternions
  *  
@@ -288,6 +313,7 @@ constexpr Quaternion<T> operator -(Quaternion<T> q)
 {
     return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
 }
+/// @}
 
 /** Calculates the dot product of two Quaternions
  *  
@@ -402,7 +428,12 @@ constexpr T accumulate(Quaternion<T> input)
     return T{input.real() + input.i() + input.j() + input.k()};
 }
 
-/// @{
+/** @name QuaternionTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 using Quaternionf = Quaternion<float>;
 using Quaterniond = Quaternion<double>;
 using Quaternionld = Quaternion<long double>;

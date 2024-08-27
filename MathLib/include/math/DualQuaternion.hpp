@@ -297,6 +297,13 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
 }
 /// @}
 
+/** @name DualQuaternionOperators
+ *  
+ *  Operators
+ * 
+ *  @{
+ */
+
 /** Defines equality of two DualQuaternions
  *  
  *  @note Uses approximately_equal_to under-the-hood
@@ -391,6 +398,7 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
 {
     return DualQuaternion<T>{ (dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
 }
+/// @}
 
 /** Generates a linear blend between two DualQuaternion objects
  *  
@@ -407,7 +415,12 @@ constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const Dual
 }
 
 
-/// @{
+/** @name DualQuaternionTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 using DualQuaternionf = DualQuaternion<float>;
 using DualQuaterniond = DualQuaternion<double>;
 using DualQuaternionld = DualQuaternion<long double>;

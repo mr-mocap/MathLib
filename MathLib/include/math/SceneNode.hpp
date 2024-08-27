@@ -13,8 +13,15 @@
 
 template <class T> class SceneNode;
 
+/** @name SceneNodeTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 template <class T>
 using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
+/// @}
 
 
 /** Represents a transformation node in a hierarcy, or acyclic graph, structure
@@ -147,7 +154,10 @@ protected:
 };
 
 
-/// @{
+/** @name SceneNodeTypeAliases
+ *
+ *  @{
+ */
 using SceneNodef = SceneNode<float>;
 using SceneNoded = SceneNode<double>;
 using SceneNodeld = SceneNode<long double>;

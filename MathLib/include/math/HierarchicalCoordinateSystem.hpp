@@ -26,7 +26,12 @@ private:
 };
 
 
-/// @{
+/** @name HierarchicalCoordinateSystemTypeAliases
+ *
+ *  Type Aliases
+ *  
+ *  @{
+ */
 using HierarchicalCoordinateSystemf = HierarchicalCoordinateSystem<float>;
 using HierarchicalCoordinateSystemd = HierarchicalCoordinateSystem<double>;
 using HierarchicalCoordinateSystemld = HierarchicalCoordinateSystem<long double>;

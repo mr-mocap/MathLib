@@ -50,31 +50,13 @@
     <ClInclude Include="include\math\Quaternion.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\types.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DualNumberTests.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QuaternionTests.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DualQuaternionTests.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\Conversions.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\math\SceneNode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SceneNodeTests.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\Vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HierarchicalCoordinateSystemTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp">
