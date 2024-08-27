@@ -149,12 +149,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DualNumberTests.cpp" />
-    <ClCompile Include="DualQuaternionTests.cpp" />
-    <ClCompile Include="HierarchicalCoordinateSystemTests.cpp" />
     <ClCompile Include="MathLib.cpp" />
-    <ClCompile Include="QuaternionTests.cpp" />
-    <ClCompile Include="SceneNodeTests.cpp" />
+    <ClCompile Include="Tests\DualNumberTests.cpp" />
+    <ClCompile Include="Tests\DualQuaternionTests.cpp" />
+    <ClCompile Include="Tests\HierarchicalCoordinateSystemTests.cpp" />
+    <ClCompile Include="Tests\QuaternionTests.cpp" />
+    <ClCompile Include="Tests\SceneNodeTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DualNumberTests.hpp" />
@@ -172,6 +172,11 @@
     <ClInclude Include="include\math\Vector.hpp" />
     <ClInclude Include="QuaternionTests.hpp" />
     <ClInclude Include="SceneNodeTests.hpp" />
+    <ClInclude Include="Tests\DualNumberTests.hpp" />
+    <ClInclude Include="Tests\DualQuaternionTests.hpp" />
+    <ClInclude Include="Tests\HierarchicalCoordinateSystemTests.hpp" />
+    <ClInclude Include="Tests\QuaternionTests.hpp" />
+    <ClInclude Include="Tests\SceneNodeTests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

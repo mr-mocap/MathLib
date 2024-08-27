@@ -18,19 +18,19 @@
     <ClCompile Include="MathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DualNumberTests.cpp">
+    <ClCompile Include="Tests\DualNumberTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QuaternionTests.cpp">
+    <ClCompile Include="Tests\DualQuaternionTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DualQuaternionTests.cpp">
+    <ClCompile Include="Tests\HierarchicalCoordinateSystemTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SceneNodeTests.cpp">
+    <ClCompile Include="Tests\QuaternionTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HierarchicalCoordinateSystemTests.cpp">
+    <ClCompile Include="Tests\SceneNodeTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,6 +78,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\DualNumberTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\DualQuaternionTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\HierarchicalCoordinateSystemTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\QuaternionTests.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\SceneNodeTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

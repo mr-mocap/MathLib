@@ -23,7 +23,6 @@ public:
     Dual() = default;
     explicit constexpr Dual(const T r) : real(r) { }
     explicit constexpr Dual(const T r, const T e) : real(r), dual(e) { }
-    explicit constexpr Dual(const std::tuple<T, T> tuple) : real(std::get<0>(tuple)), dual(std::get<1>(tuple)) { }
 
     constexpr static Dual<T> identity() { return Dual{ T{1}, T{0} }; }
     constexpr static Dual<T> zero() { return Dual{}; }
