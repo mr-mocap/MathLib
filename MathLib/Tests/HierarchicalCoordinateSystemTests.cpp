@@ -5,8 +5,26 @@
 #include <iostream>
 
 
+/** @file
+ * 
+ *  @hideincludegraph
+ */
+
+/** @defgroup HierarchicalCoordinateSystemTestsPage HierarchicalCoordinateSystem Unit Tests
+ * 
+ *  Here are all the unit tests used to exercise the HierarchicalCoordinateSystem class
+ * 
+ *  @ingroup UnitTests
+ * 
+ *  @{
+ */
+
+/** Contains the unit tests for HierarchicalCoordinateSystem
+ * 
+ */
 namespace HierarchicalCoordinateSystemTests
 {
+
 void DefaultConstructedState()
 {
     std::cout << __func__ << std::endl;
@@ -65,6 +83,9 @@ void ConvertingALocalCoordinateToAGlobalCoordinate()
     }
 }
 
+/** Run all of the unit tests in this namespace
+ * 
+ */
 void Run()
 {
     std::cout << "Running HierarchicalCoordinateSystem Tests..." << std::endl;
@@ -76,3 +97,4 @@ void Run()
     std::cout << "PASSED!" << std::endl;
 }
 }
+/// @}

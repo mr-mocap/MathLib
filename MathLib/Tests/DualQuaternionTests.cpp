@@ -9,20 +9,36 @@
 #include <math.h>
 
 
-namespace DualQuaternionTests
-{
+/** @file
+ * 
+ *  @hideincludegraph
+ */
 
+
+/** Determines if two values are close to each other within some tolerance
+ * 
+ */
 static bool IsNear(float value_to_test, float value_it_should_be, float epsilon = 0.0002f)
 {
     return approximately_equal_to(value_to_test, value_it_should_be, epsilon);
 }
 
-
-/** @addtogroup DualQuaternionTests
- *   
- *  @ingroup Tests
+/** @defgroup DualQuaternionTests Dual Quaternion Unit Tests
+ * 
+ *  Here are all the unit tests used to exercise the DualQuaternion class
+ * 
+ *  @ingroup UnitTests
+ * 
+ *  @{
  */
-/// @{
+
+
+/** Contains the unit tests for DualQuaternion
+ * 
+ */
+namespace DualQuaternionTests
+{
+
 void PureRotationHasZeroTranslation()
 {
     std::cout << __func__ << std::endl;
@@ -316,7 +332,6 @@ void TranslationIsTheInverseOfMakeTranslation()
     
     assert( DualQuaternionf::make_translation(vector).translation() == vector);
 }
-/// @}
 
 void TestTranslations()
 {
@@ -332,8 +347,9 @@ void TestRotations()
     RotateOnlyAroundAMainAxis();
 }
 
-/// @}
-
+/** Run all of the unit tests in this namespace
+ * 
+ */
 void Run()
 {
     std::cout << "Running Dual Quaternion Tests..." << std::endl;
@@ -351,3 +367,4 @@ void Run()
     std::cout << "PASSED!" << std::endl;
 }
 }
+/// @}

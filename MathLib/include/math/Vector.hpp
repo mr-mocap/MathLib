@@ -4,6 +4,9 @@
 
 /** @file
  *  
+ *  Contains the definition of 2D and 3D vector classes
+ *
+ *  @hideincludegraph
  */
 
 

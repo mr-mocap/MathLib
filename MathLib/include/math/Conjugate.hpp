@@ -3,6 +3,7 @@
 
 /** @file
  *  
+ *  @hideincludegraph
  */
 
 /** @addtogroup Conjugate
@@ -13,7 +14,12 @@
  *  
  */
 
-/**  This is the general template case
+/** @name General Template Case
+ *  
+ *  @{
+ */
+
+/**  Computes the conjugate of the input
  * 
  *   @note This will just call @c input.conjugate()
  */
@@ -22,10 +28,12 @@ constexpr T conjugate(T input)
 {
     return input.conjugate();
 }
+/// @}
 
 /** @name Specializations
  * 
  *  These are the basic default template specializations for @c conjugate()
+ *  from above
  */
 /// @{
 template<>

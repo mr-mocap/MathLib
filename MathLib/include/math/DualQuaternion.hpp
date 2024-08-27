@@ -8,7 +8,7 @@
 
 /** @file
  *  
- *  Defines a DualQuaternion and contains functions for manipulating them.
+ *  Defines a DualQuaternion and contains functions for manipulating them
  */
 
 
@@ -275,7 +275,11 @@ protected:
     Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 };
 
-/** Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
+/** @addtogroup Equality
+ * 
+ *  @{
+ * 
+ *  Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
  *  
  *  @param value_to_test
  *  @param value_it_should_be 
@@ -291,6 +295,7 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
     // Just use the underlying Dual number's version of the same function...
     return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
 }
+/// @}
 
 /** Defines equality of two DualQuaternions
  *  

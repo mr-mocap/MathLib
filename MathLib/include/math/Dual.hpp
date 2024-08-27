@@ -2,7 +2,6 @@
 
 #include "math/ApproximatelyEqualTo.hpp"
 #include "math/Conjugate.hpp"
-#include "math/types.hpp"
 #include <cassert>
 
 
@@ -50,15 +49,17 @@ public:
     T dual{};
 };
 
-/** Compares two Dual inputs equal, component-wise, to within a tolerance
+/** @addtogroup Equality
+ * 
+ *  @{
  *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
+ *  Compare two values for equality with a tolerance
  *  
- *  @return @c true if they are equal
- *  
- *  @see approximately_equal_to
+ *  @param input     The first value to compare
+ *  @param near_to   The second value to compare
+ *  @param tolerance The minimum value for being considered equal
+ * 
+ *  @return @c true if the two are equal within @c tolerance , @c false otherwise
  */
 template<class T>
 constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T> &value_it_should_be, float tolerance = 0.0002f)
@@ -66,6 +67,7 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
     return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
            approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
 }
+/// @}
 
 /** Defines equality of two Duals
  *  
@@ -287,8 +289,8 @@ constexpr T accumulate(const Dual<T> &input)
     return T{input.real + input.dual};
 }
 
-///@{
+/// @{
 using Dualf = Dual<float>;
 using Duald = Dual<double>;
 using Dualld = Dual<long double>;
-///@}
+/// @}

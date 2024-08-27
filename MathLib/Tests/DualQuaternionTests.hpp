@@ -2,6 +2,5 @@
 
 namespace DualQuaternionTests
 {
-    /// @addtogroup Tests
     void Run();
 }

@@ -1,0 +1,13 @@
+/** @page Tests Tests
+ *
+ *  This is a list of all the unit tests.
+ *
+ *  - @subpage DualNumberTests
+ *  - @subpage QuaternionTests
+ *  - @subpage DualQuaternionTests
+ *  - @subpage SceneNodeTests
+ *  - @subpage HierarchicalCoordinateSystemTests
+ */
+
+ /** @defgroup UnitTests Tests
+  */

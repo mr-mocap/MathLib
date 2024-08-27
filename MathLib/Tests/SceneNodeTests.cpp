@@ -6,9 +6,29 @@
 #include <iostream>
 
 
+/** @file
+ * 
+ *  @hideincludegraph
+ */
+
+/** @defgroup SceneNodeTests SceneNode Unit Tests
+ * 
+ *  Here are all the unit tests used to exercise the SceneNode class
+ * 
+ *  @ingroup UnitTests
+ * 
+ *  @{
+ */
+
+/** Contains the unit tests for SceneNode
+ * 
+ */
 namespace SceneNodeTests
 {
 
+/** Verifies the default constructed state of a SceneNode
+ * 
+ */
 void DefaultConstructedState()
 {
     std::cout << __func__ << std::endl;
@@ -19,6 +39,9 @@ void DefaultConstructedState()
     assert( node->children().empty() ); // No children
 }
 
+/** Verify that you can create a child node of a given SceneNode
+ * 
+ */
 void CanCreateChildNode()
 {
     std::cout << __func__ << std::endl;
@@ -54,6 +77,9 @@ void CanCreateChildNode()
     }
 }
 
+/** Verify that you can detach a child of a SceneNode
+ * 
+ */
 void DetachChild()
 {
     std::cout << __func__ << std::endl;
@@ -73,6 +99,9 @@ void DetachChild()
     assert( child_node->parent().use_count() == 0 );
 }
 
+/** Verify that you can attach a SceneNode as a child of another SceneNode
+ * 
+ */
 void AttachChild()
 {
     std::cout << __func__ << std::endl;
@@ -92,6 +121,9 @@ void AttachChild()
     assert(  child_node->parent().lock() == node );
 }
 
+/** Run all of the unit tests in this namespace
+ * 
+ */
 void Run()
 {
     std::cout << "Running SceneNode Tests..." << std::endl;
@@ -104,3 +136,4 @@ void Run()
     std::cout << "PASSED!" << std::endl;
 }
 }
+/// @}

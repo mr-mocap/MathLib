@@ -5,6 +5,21 @@
 #include <iostream>
 
 
+/** @file
+ * 
+ *  @hideincludegraph
+ */
+
+/** @defgroup QuaternionTests Quaternion Unit Tests
+ * 
+ *  Here are all the unit tests used to exercise the Quaternion class
+ * 
+ *  @ingroup UnitTests
+ * 
+ *  @{
+ */
+
+
 static bool IsNear(float value_to_test, float value_it_should_be, float epsilon = 0.0002f)
 {
     return approximately_equal_to(value_to_test, value_it_should_be, epsilon);
@@ -15,13 +30,12 @@ static bool IsNear(Quaternionf value_to_test, Quaternionf value_it_should_be, fl
     return approximately_equal_to(value_to_test, value_it_should_be, epsilon);
 }
 
+/** Contains the unit tests for Quaternion
+ * 
+ */
 namespace QuaternionTests
 {
 
-/** @addtogroup QuaternionTests
- *   
- *  @ingroup Tests
- */
 /// @{
 void UnitQuaternionIsAsExpected()
 {
@@ -245,8 +259,6 @@ void KIEqualsJ()
 {
     std::cout << __func__ << std::endl;
 
-    Quaternionf result = Quaternionf::unit_k() * Quaternionf::unit_i();
-
     assert( (Quaternionf::unit_k() * Quaternionf::unit_i()) == Quaternionf::unit_j() );
 }
 
@@ -255,7 +267,6 @@ void IKEqualsNegativeJ()
     std::cout << __func__ << std::endl;
 
     Quaternionf negative_j{ 0.0, 0.0, -1.0, 0.0 };
-    Quaternionf result = Quaternionf::unit_i() * Quaternionf::unit_k();
 
     assert( (Quaternionf::unit_i() * Quaternionf::unit_k()) == negative_j );
 }
@@ -529,6 +540,9 @@ void PerformTwoConsecutiveRotations()
 }
 /// @}
 
+/** Run all of the unit tests in this namespace
+ * 
+ */
 void Run()
 {
     std::cout << "Running Quaternion Tests..." << std::endl;
@@ -575,3 +589,4 @@ void Run()
 }
 
 }
+/// @}

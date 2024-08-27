@@ -1,10 +1,10 @@
 #include <iostream>
 #include <cstdlib>
-#include "QuaternionTests.hpp"
-#include "DualNumberTests.hpp"
-#include "DualQuaternionTests.hpp"
-#include "SceneNodeTests.hpp"
-#include "HierarchicalCoordinateSystemTests.hpp"
+#include "Tests/QuaternionTests.hpp"
+#include "Tests/DualNumberTests.hpp"
+#include "Tests/DualQuaternionTests.hpp"
+#include "Tests/SceneNodeTests.hpp"
+#include "Tests/HierarchicalCoordinateSystemTests.hpp"
 
 
 int main()

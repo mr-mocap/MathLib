@@ -4,6 +4,11 @@
 #include <memory>
 
 
+/** @file
+ * 
+ *  Contains the definition of the HierarchicalCoordinateSystem class
+ */
+
 template <class Type>
 class HierarchicalCoordinateSystem
 {
@@ -21,6 +26,8 @@ private:
 };
 
 
+/// @{
 using HierarchicalCoordinateSystemf = HierarchicalCoordinateSystem<float>;
 using HierarchicalCoordinateSystemd = HierarchicalCoordinateSystem<double>;
 using HierarchicalCoordinateSystemld = HierarchicalCoordinateSystem<long double>;
+/// @}

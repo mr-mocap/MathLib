@@ -8,7 +8,7 @@
 /** @file
  *  
  *  Contains the definition of the Quaternion class along with
- *  various helper functions.
+ *  various helper functions
  */
 
 /** A mathematical quaternion
@@ -130,7 +130,11 @@ protected:
     T _k{};
 };
 
-/** Compares two Quaternion inputs equal, component-wise, to within a tolerance
+/** @addtogroup Equality
+ * 
+ *  @{
+ * 
+ *  Compares two Quaternion inputs equal, component-wise, to within a tolerance
  *  
  *  @param value_to_test
  *  @param value_it_should_be 
@@ -148,6 +152,7 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
            approximately_equal_to(value_to_test.j(), value_it_should_be.j(), tolerance) &&
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
 }
+/// @}
 
 /** Defines equality of two Quaternions
  *  
@@ -397,8 +402,8 @@ constexpr T accumulate(Quaternion<T> input)
     return T{input.real() + input.i() + input.j() + input.k()};
 }
 
-///@{
+/// @{
 using Quaternionf = Quaternion<float>;
 using Quaterniond = Quaternion<double>;
 using Quaternionld = Quaternion<long double>;
-///@}
+/// @}

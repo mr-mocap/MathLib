@@ -6,19 +6,46 @@
 #include <algorithm>
 
 
+/** @file
+ * 
+ *  Contains the definition of the SceneNode class
+ */
+
 template <class T> class SceneNode;
 
 template <class T>
 using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
 
 
-template <class Type>
+/** Represents a transformation node in a hierarcy, or acyclic graph, structure
+ *   
+ *   @tparam Type Use a basic type here for specializing the class for float, double, or long double.
+ *           Defaults to float.
+ * 
+ *  @see SceneNodef
+ *       SceneNoded
+ *       SceneNodeld
+ */
+template <class Type = float>
 class SceneNode : public std::enable_shared_from_this<SceneNode<Type>>
 {
     struct Private { explicit Private() = default; };
 
 public:
+    /** Default constructor
+     * 
+     *  @note I only want some other class to be able to create these, which
+     *        is why I am using this curious technique.  However, it also needs to
+     *        be public because of std::make_shared().
+     */
     SceneNode(Private) { }
+
+    /** Construct with the given translation and rotation
+     * 
+     *  @note This is also meant to not be called by the user.
+     * 
+     *  @see createChildNode
+     */
     SceneNode(Private ,
               std::weak_ptr<SceneNode>  parent,
               const Vector3D<Type>     &translation,
@@ -120,6 +147,8 @@ protected:
 };
 
 
+/// @{
 using SceneNodef = SceneNode<float>;
 using SceneNoded = SceneNode<double>;
 using SceneNodeld = SceneNode<long double>;
+/// @}

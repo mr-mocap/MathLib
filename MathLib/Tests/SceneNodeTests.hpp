@@ -2,6 +2,5 @@
 
 namespace SceneNodeTests
 {
-    /// @addtogroup Tests
     void Run();
 }
