@@ -11,14 +11,14 @@
 
 
 /** A simple 2D vector class
+ *
+ *  @headerfile "math/Vector.hpp"
+ * 
  */
-template <class Type>
+template <class Type = float>
 struct Vector2D
 {
-    /** @name Vector2DConstants
-     *  
-     *  Constants
-     *  
+    /** @name Constants
      *  @{
      */
     static constexpr Vector2D<Type> unit_x() { return Vector2D{ Type{1}, Type{0} }; }
@@ -31,28 +31,87 @@ struct Vector2D
     Type y{};
 };
 
-/** @name Vector2DOperators
- *  
- *  Operators
- *  
+/** @name Operators
  *  @{
+ */
+/** Defines equality of two Vector2D objects
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ * 
+ *  @relates Vector2D
  */
 template <class Type>
 bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
 }
+
+/** Defines inequality of two Vector2D objects
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return !(left == right);
+}
+
+/** Defines addition of two Vector2D objects
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return Vector2D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+}
+
+/** Defines subtraction of two Vector2D objects
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return Vector2D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+}
+
+/** Defines multiplication of two Vector2D objects
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return Vector2D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
+}
+
+/** Defines division of two Vector2D objects
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return Vector2D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
+}
 /// @}
 
 /** A simple 3D vector class
+ *
+ *  @headerfile "math/Vector.hpp"
+ * 
  */
-template <class Type>
+template <class Type = float>
 struct Vector3D
 {
-    /** @name Vector3DConstants
-     *  
-     *  Constants
-     *  
+    /** @name Constants
      *  @{
      */
     static constexpr Vector3D<Type> unit_x() { return Vector3D{ Type{1}, Type{0}, Type{0} }; }
@@ -67,11 +126,16 @@ struct Vector3D
     Type z{};
 };
 
-/** @name Vector3DOperators
- *  
- *  Operators
- *  
+/** @name Operators
  *  @{
+ */
+/** Defines equality of two Vector3D objects
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ * 
+ *  @relates Vector3D
  */
 template <class Type>
 bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -80,29 +144,73 @@ bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
            approximately_equal_to(left.y, right.y) &&
            approximately_equal_to(left.z, right.z);
 }
+
+/** Defines inequality of two Vector3D objects
+ *  
+ *  @note Uses approximately_equal_to under-the-hood
+ *  
+ *  @see approximately_equal_to
+ * 
+ *  @relates Vector3D
+ */
+template <class Type>
+bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return !(left == right);
+}
+
+/** Defines addition of two Vector3D objects
+ * 
+ *  @relates Vector3D
+ */
+template <class Type>
+Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+}
+
+/** Defines subtraction of two Vector3D objects
+ * 
+ *  @relates Vector3D
+ */
+template <class Type>
+Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+}
+
+/** Defines multiplication of two Vector3D objects
+ * 
+ *  @relates Vector3D
+ */
+template <class Type>
+Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
+}
+
+/** Defines division of two Vector3D objects
+ * 
+ *  @relates Vector3D
+ */
+template <class Type>
+Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
+}
 /// @}
 
 
-/** @name Vector2DTypeAliases
- *
- *  Type Aliases
- *  
+/** @name Vector2D Type Aliases
  *  @{
- */
-/** Specialized types of the Vector2D class
  */
 using Vector2Df = Vector2D<float>;
 using Vector2Dd = Vector2D<double>;
 using Vector2Dld = Vector2D<long double>;
 ///@}
 
-/** @name Vector3DTypeAliases
- *
- *  Type Aliases
- *  
+/** @name Vector3D Type Aliases
  *  @{
- */
-/** Specialized types of the Vector3D class
  */
 using Vector3Df = Vector3D<float>;
 using Vector3Dd = Vector3D<double>;

@@ -7,9 +7,15 @@
 /** @file
  * 
  *  Contains the definition of the HierarchicalCoordinateSystem class
+ *
+ *  @hideincludegraph
  */
 
-template <class Type>
+/** 
+ * 
+ *  @headerfile "math/HierarchicalCoordinateSystem.hpp"
+ */
+template <class Type = float>
 class HierarchicalCoordinateSystem
 {
 public:
@@ -26,10 +32,10 @@ private:
 };
 
 
-/** @name HierarchicalCoordinateSystemTypeAliases
- *
- *  Type Aliases
- *  
+/** @name TypeAliases
+ * 
+ *  Specialized types of the HierarchicalCoordinateSystem class
+ * 
  *  @{
  */
 using HierarchicalCoordinateSystemf = HierarchicalCoordinateSystem<float>;

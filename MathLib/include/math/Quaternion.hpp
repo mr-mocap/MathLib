@@ -9,6 +9,8 @@
  *  
  *  Contains the definition of the Quaternion class along with
  *  various helper functions
+ *
+ *  @hideincludegraph
  */
 
 /** A mathematical quaternion
@@ -16,8 +18,10 @@
  *  @note A quaternion is a 4-dimensional object that is an extension
  *        of the complex number system.
  *        Its main use is for encoding rotation in 3-dimensional space.
+ *
+ *  @headerfile "math/Quaternion.hpp"
  */
-template <class T>
+template <class T = float>
 class Quaternion
 {
 public:
@@ -27,10 +31,7 @@ public:
     explicit constexpr Quaternion(T real_number) : _w(real_number) { }
     explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
-    /** @name QuaternionConstants
-     *  
-     *  Constants
-     *  
+    /** @name Constants
      *  @{
      */
     /// Quaternion representation of the real number 1
@@ -54,10 +55,7 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
-    /** @name QuaternionElementAccess
-     *  
-     *  Element Access
-     *  
+    /** @name Element Access
      *  @{
      */
     const T &w() const { return _w; }
@@ -80,7 +78,9 @@ public:
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
 
-    /// @{
+    /** @name Convenience Creation Functions
+     *  @{
+     */
     /** Construct a pure Quaternion
      *  
      *  @post output.w() == 0
@@ -90,10 +90,17 @@ public:
      *        is 0.
      */
     constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
-    constexpr static Quaternion<T> make_pure(const Vector3D<T> &t) { return Quaternion<T>{ T{}, t.x, t.y, t.z }; }
-    /// @}
 
-    /// @{
+    /** Construct a pure Quaternion
+     *  
+     *  @post output.w() == 0
+     *        output.real() == 0
+
+     *  @note A pure Quaternion is one in which the w, or real, component
+     *        is 0.
+     */
+    constexpr static Quaternion<T> make_pure(const Vector3D<T> &t) { return Quaternion<T>{ T{}, t.x, t.y, t.z }; }
+
     /** Encode a 3D point as a pure Quaternion
      *  
      *  @post output.w() == 0
@@ -105,10 +112,19 @@ public:
      *  @see make_pure
      */
     constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
-    constexpr static Quaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
-    /// @}
 
-    /// @{
+    /** Encode a 3D point as a pure Quaternion
+     *  
+     *  @post output.w() == 0
+     *        output.real() == 0
+
+     *  @note A pure Quaternion is one in which the w, or real, component
+     *        is 0.
+     *  
+     *  @see make_pure
+     */
+    constexpr static Quaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
+
     /** Enocde a rotation into a Quaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
@@ -141,7 +157,7 @@ public:
     constexpr static Quaternion<T> make_rotation(T radians, const Vector3D<T>& axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
     /// @}
 
-protected:
+private:
     T _w{};
     T _i{};
     T _j{};
@@ -172,10 +188,7 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
 }
 /// @}
 
-/** @name QuaternionOperators
- *  
- *  Operators
- *  
+/** @name Operators
  *  @{
  */
 
@@ -184,6 +197,8 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
  *  @note Uses approximately_equal_to under-the-hood
  *  
  *  @see approximately_equal_to
+ * 
+ *  @relates Quaternion
  */
 template<class T>
 constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
@@ -196,6 +211,8 @@ constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
  *  @note Uses operator ==()
  *  
  *  @see approximately_equal_to
+ * 
+ *  @relates Quaternion
  */
 template<class T>
 constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
@@ -205,6 +222,7 @@ constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
 
 /** Defines multiplication of a Quaternion and a scalar
  *  
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
@@ -214,6 +232,7 @@ constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
 
 /** Defines multiplication of a scalar and a Quaternion
  *  
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
@@ -224,6 +243,8 @@ constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
 /** Defines division of a Quaternion by a scalar
  *  
  *  @return the new Quaternion
+ *
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
@@ -234,6 +255,8 @@ constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
 /** Defines division of a scalar by a Quaternion
  *  
  *  @return the new Quaternion
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
@@ -244,6 +267,8 @@ constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
 /** Defines division of a Quaternion by a Quaternion
  *  
  *  @return the new Quaternion
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
@@ -254,6 +279,8 @@ constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
 /** Defines addition of a Quaternion and a Quaternion
  *  
  *  @return the new Quaternion
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
@@ -267,6 +294,8 @@ constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
 /** Defines subtraction of a Quaternion and a Quaternion
  *  
  *  @return the new Quaternion
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
@@ -280,6 +309,8 @@ constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
 /** Defines multiplication of a Quaternion and a Quaternion
  *  
  *  @return the new Quaternion
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
@@ -307,6 +338,8 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
 /** Defines negation of a Quaternion
  *  
  *  Performs a component-wise negation of the input
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> operator -(Quaternion<T> q)
@@ -320,6 +353,8 @@ constexpr Quaternion<T> operator -(Quaternion<T> q)
  *  @note In this case, the Quaternions are just treated as
  *        separate 4-tuples and the dot product of those are
  *        calculated.
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr T dot(Quaternion<T> left, Quaternion<T> right)
@@ -344,6 +379,8 @@ constexpr T dot(Quaternion<T> left, Quaternion<T> right)
  *  @note This is a passive rotation, meaning that the coordinate system is
  *        rotated with respect to the point.
  *        This is also known as a local rotation.
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> passively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
@@ -357,6 +394,8 @@ constexpr Quaternion<T> passively_rotate_encoded_point(const Quaternion<T> &rota
 /**
  *  
  *  @see passively_rotate_encoded_point
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> locally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
@@ -378,6 +417,8 @@ constexpr Quaternion<T> locally_rotate_encoded_point(const Quaternion<T> &rotati
  *  @note This is an active rotation, meaning that the point is rotated with
  *        respect to the coordinate system.
  *        This is also known as a global rotation.
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> actively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
@@ -391,6 +432,8 @@ constexpr Quaternion<T> actively_rotate_encoded_point(const Quaternion<T> &rotat
 /**
  *  
  *  @see actively_rotate_encoded_point
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> globally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
@@ -398,6 +441,13 @@ constexpr Quaternion<T> globally_rotate_encoded_point(const Quaternion<T> &rotat
     return actively_rotate_encoded_point(rotation, encoded_point);
 }
 
+/** Performs a concatenation of two rotations
+ *  
+ *  @param rotation_1 The first rotation to perform
+ *  @param rotation_2 The second rotation to perform
+ * 
+ *  @relates Quaternion
+ */
 template <class T>
 constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const Quaternion<T> &rotation_2)
 {
@@ -409,6 +459,8 @@ constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const
  *  @param input The Quaternion to normalize
  *  
  *  @return The normalized version of @p input
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr Quaternion<T> normalized(Quaternion<T> input)
@@ -420,7 +472,11 @@ constexpr Quaternion<T> normalized(Quaternion<T> input)
 
 /** Sums up the components of @p input
  *  
- *  @input The Quaternion to operate on
+ *  @param input The Quaternion to operate on
+ * 
+ *  @return The sum of all the components
+ * 
+ *  @relates Quaternion
  */
 template <class T>
 constexpr T accumulate(Quaternion<T> input)
@@ -428,10 +484,10 @@ constexpr T accumulate(Quaternion<T> input)
     return T{input.real() + input.i() + input.j() + input.k()};
 }
 
-/** @name QuaternionTypeAliases
- *
- *  Type Aliases
- *  
+/** @name Type Aliases
+ * 
+ *  Specialized types of the HierarchicalCoordinateSystem class
+ * 
  *  @{
  */
 using Quaternionf = Quaternion<float>;

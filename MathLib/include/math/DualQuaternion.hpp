@@ -9,6 +9,8 @@
 /** @file
  *  
  *  Defines a DualQuaternion and contains functions for manipulating them
+ *
+ *  @hideincludegraph
  */
 
 
@@ -17,10 +19,12 @@
  *  Here, we just compose the ideas of the Dual and Quaternion classes
  *  together to create a DualQuaternion class.
  *
+ *  @headerfile "math/DualQuaternion.hpp"
+ * 
  *  @see Dual
  *  @see Quaternion
  */
-template <class T>
+template <class T = float>
 class DualQuaternion
 {
 public:
@@ -63,6 +67,10 @@ public:
      */
     explicit constexpr DualQuaternion(const Dual<Quaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
 
+    /** @name Constants
+     *  @{
+     */
+
     /** Create a DualQuaternion representing no rotation and no translation
      *  
      *  @return A DualQuaternion representing no rotation or translation
@@ -72,7 +80,11 @@ public:
     /** Create a DualQuaternion that is all zeros
      */
     constexpr static DualQuaternion<T> zero() { return DualQuaternion{ Quaternion<T>::zero(), Quaternion<T>::zero() }; }
+    /// @}
 
+    /** @name Convenience Creation Functions
+     *  @{
+     */
     /** Creates a DualQuaternion containing a rotation only
      *  
      *  @param rotation The rotation to apply, expressed as a Quaternion
@@ -109,6 +121,15 @@ public:
                                 };
     }
 
+    /** Create a DualQuaternion containing a translation only
+     * 
+     *  @param translation The translation to apply
+     *  
+     *  @return A DualQuaternion representing a translation only
+     *  
+     *  @post result.real == Quaternion::identity()
+     *        result.dual.isPure()
+     */
     constexpr static DualQuaternion<T> make_translation(const Vector3D<T> &translation)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
@@ -142,11 +163,13 @@ public:
     {
         return DualQuaternion<T>{ Quaternion<T>::identity(), point };
     }
+    /// @}
 
     constexpr static Vector3D<T> decode_point(const DualQuaternion<T>& encoded_point)
     {
         return encoded_point.translation();
     }
+
     /** Create the conjugate of a DualQuaternion
      *  
      *  @return the conjugate of this object
@@ -211,21 +234,6 @@ public:
     const Quaternion<T> &rotation()    const { return real(); }
           Vector3D<T>    translation() const { return Quaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator +(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
-
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
-
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const Type scalar, const DualQuaternion<Type> &dual_quaternion);
-
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &dual_quaternion, const Type scalar);
-
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator /(const DualQuaternion<Type> &dual_quaternion, const Dual<Type> &dual_scalar);
-
     /** Create the normalized version of a DualQuaternion
      *  
      *  @return A DualQuaternion that is the normalized version of the object
@@ -268,11 +276,26 @@ public:
         return rotation_magnitude_is_one() && rotation_and_translation_are_orthogonal();
     }
 
+private:
+    Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
+
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator +(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
+
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
+
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const Type scalar, const DualQuaternion<Type> &dual_quaternion);
+
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &dual_quaternion, const Type scalar);
+
+    template <class Type>
+    friend constexpr DualQuaternion<Type> operator /(const DualQuaternion<Type> &dual_quaternion, const Dual<Type> &dual_scalar);
+
     template<class Type>
     friend constexpr bool approximately_equal_to(const DualQuaternion<Type> &value_to_test, const DualQuaternion<Type> &value_it_should_be, float tolerance);
-
-protected:
-    Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 };
 
 /** @addtogroup Equality
@@ -288,6 +311,8 @@ protected:
  *  @return @c true if they are equal
  *  
  *  @see approximately_equal_to
+ * 
+ *  @relates DualQuaternion
  */
 template<class T>
 constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, float tolerance = 0.0002f)
@@ -297,10 +322,7 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
 }
 /// @}
 
-/** @name DualQuaternionOperators
- *  
- *  Operators
- * 
+/** @name Operators
  *  @{
  */
 
@@ -309,6 +331,8 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
  *  @note Uses approximately_equal_to under-the-hood
  *  
  *  @see approximately_equal_to
+ * 
+ *  @relates DualQuaternion
  */
 template<class T>
 constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
@@ -321,6 +345,8 @@ constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T
  *  @note Uses operator ==()
  *  
  *  @see approximately_equal_to
+ * 
+ *  @relates DualQuaternion
  */
 template<class T>
 constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
@@ -331,6 +357,8 @@ constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
 /** Defines addition
  *  
  *  We basically just add the underlying Dual numbers
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -344,6 +372,8 @@ constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
@@ -357,6 +387,8 @@ constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &
  *  @param dual_quaternion The DualQuaternion to scale
  *  
  *  @return The scaled DualQuaternion
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
@@ -370,6 +402,8 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
@@ -380,6 +414,8 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
 /** Defines multiplication of two DualQuaternions
  *
  *  @return The resulting DualQuaternion
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -392,6 +428,8 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const
  *  @param dual_scalar The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
@@ -405,6 +443,8 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
  *  @param beginning  The start state
  *  @param end        The ending state
  *  @param percentage The percentage blend between the two (typically [0..1])
+ * 
+ *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, float percentage)
@@ -415,10 +455,10 @@ constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const Dual
 }
 
 
-/** @name DualQuaternionTypeAliases
- *
- *  Type Aliases
- *  
+/** @name Type Aliases
+ * 
+ *  Specialized types of the DualQuaternion class
+ * 
  *  @{
  */
 using DualQuaternionf = DualQuaternion<float>;

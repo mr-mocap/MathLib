@@ -368,3 +368,6 @@ MathLib/Documentation/latex/
 
 # Files built by g++
 *.o
+
+# Makefile outputs
+code_tests

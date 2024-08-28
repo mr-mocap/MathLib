@@ -9,25 +9,22 @@
 /** @file
  * 
  *  Contains the definition of the SceneNode class
+ *
+ *  @hideincludegraph
  */
 
 template <class T> class SceneNode;
 
-/** @name SceneNodeTypeAliases
- *
- *  Type Aliases
- *  
- *  @{
- */
-template <class T>
+template <class T = float>
 using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
-/// @}
 
 
 /** Represents a transformation node in a hierarcy, or acyclic graph, structure
  *   
  *   @tparam Type Use a basic type here for specializing the class for float, double, or long double.
  *           Defaults to float.
+ * 
+ *  @headerfile "math/SceneNode.hpp"
  * 
  *  @see SceneNodef
  *       SceneNoded
@@ -64,6 +61,9 @@ public:
     }
     ~SceneNode() = default;
 
+    /** @name Creation Functions
+     *  @{
+     */
     /** Creates a default-constructed SceneNode
      *
      *  @return shared_ptr<SceneNode>
@@ -72,6 +72,7 @@ public:
     {
         return std::make_shared<SceneNode<Type>>(Private{});
     }
+    /// @}
 
     std::weak_ptr<SceneNode<Type>> parent() const { return _parent; }
 
@@ -139,7 +140,7 @@ public:
         else
             return _parent.lock()->concatenatedTransforms() * _coordinate_system;
     }
-protected:
+private:
     DualQuaternion<Type>           _coordinate_system;
     std::weak_ptr<SceneNode<Type>> _parent;
     SceneNodeList<Type>            _children;
@@ -154,8 +155,10 @@ protected:
 };
 
 
-/** @name SceneNodeTypeAliases
- *
+/** @name Type Aliases
+ * 
+ *  Specialized types of the SceneNode class
+ * 
  *  @{
  */
 using SceneNodef = SceneNode<float>;
