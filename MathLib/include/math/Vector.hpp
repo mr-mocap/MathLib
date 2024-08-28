@@ -69,7 +69,7 @@ bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
 template <class Type>
 Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
-    return Vector2D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+    return Vector2D<Type>{ left.x + right.x, left.y + right.y };
 }
 
 /** Defines subtraction of two Vector2D objects
@@ -79,7 +79,7 @@ Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &righ
 template <class Type>
 Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
-    return Vector2D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+    return Vector2D<Type>{ left.x - right.x, left.y - right.y };
 }
 
 /** Defines multiplication of two Vector2D objects
@@ -89,7 +89,7 @@ Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &righ
 template <class Type>
 Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
-    return Vector2D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
+    return Vector2D<Type>{ left.x * right.x, left.y * right.y };
 }
 
 /** Defines division of two Vector2D objects
@@ -99,9 +99,36 @@ Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &righ
 template <class Type>
 Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
-    return Vector2D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
+    return Vector2D<Type>{ left.x / right.x, left.y / right.y };
 }
 /// @}
+
+/** Calculates the dot-product of two Vector2D objects
+ *  
+ *  @return The dot-product of the two inputs
+ *  
+ *  @relates Vector2D
+ */
+template<class T>
+constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
+{
+    return left.x * right.x +
+           left.y * right.y;
+}
+
+/** Sums up the components of @p input
+ *  
+ *  @param input The Vector2D to operate on
+ * 
+ *  @return The sum of all the components
+ * 
+ *  @relates Vector2D
+ */
+template <class T>
+constexpr T accumulate(const Vector2D<T> &input)
+{
+    return input.x + input.y;
+}
 
 /** A simple 3D vector class
  *
@@ -199,6 +226,34 @@ Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &righ
     return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
 }
 /// @}
+
+/** Calculates the dot-product of two Vector3D objects
+ *  
+ *  @return The dot-product of the two inputs
+ *  
+ *  @relates Vector3D
+ */
+template<class T>
+constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
+{
+    return left.x * right.x +
+           left.y * right.y +
+           left.z * right.z;
+}
+
+/** Sums up the components of @p input
+ *  
+ *  @param input The Vector3D to operate on
+ * 
+ *  @return The sum of all the components
+ * 
+ *  @relates Vector3D
+ */
+template <class T>
+constexpr T accumulate(const Vector3D<T> &input)
+{
+    return input.x + input.y + input.z;
+}
 
 
 /** @name Vector2D Type Aliases
