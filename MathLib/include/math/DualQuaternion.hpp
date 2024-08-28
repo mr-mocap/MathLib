@@ -28,6 +28,8 @@ template <class T = float>
 class DualQuaternion
 {
 public:
+    using value_type = T;
+
     DualQuaternion() = default;
 
     /** Constructs a DualQuaternion directly from the two given quaternions
@@ -456,8 +458,6 @@ constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const Dual
 
 
 /** @name Type Aliases
- * 
- *  Specialized types of the DualQuaternion class
  * 
  *  @{
  */

@@ -368,8 +368,6 @@ constexpr T accumulate(const Dual<T> &input)
 
 /** @name Type Aliases
  * 
- *  Specialized types of the Dual class
- * 
  *  @{
  */
 using Dualf = Dual<float>;

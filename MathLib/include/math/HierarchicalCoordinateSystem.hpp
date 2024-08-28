@@ -32,9 +32,7 @@ private:
 };
 
 
-/** @name TypeAliases
- * 
- *  Specialized types of the HierarchicalCoordinateSystem class
+/** @name Type Aliases
  * 
  *  @{
  */

@@ -157,8 +157,6 @@ private:
 
 /** @name Type Aliases
  * 
- *  Specialized types of the SceneNode class
- * 
  *  @{
  */
 using SceneNodef = SceneNode<float>;

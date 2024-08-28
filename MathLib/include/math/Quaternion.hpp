@@ -486,8 +486,6 @@ constexpr T accumulate(Quaternion<T> input)
 
 /** @name Type Aliases
  * 
- *  Specialized types of the HierarchicalCoordinateSystem class
- * 
  *  @{
  */
 using Quaternionf = Quaternion<float>;
