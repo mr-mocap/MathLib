@@ -49,28 +49,28 @@ public:
     Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
     Quaternion<T> pow(const T exponent) const
     {
-        Quaternion<T> normalized_value{ normalized(*this) };
+        assert( isUnit() );
         Vector3D<T>   vector{ normalized_value.imaginary() };
         T magnitude{ vector.magnitude() };
 
+        T magnitude{ imaginary().magnitude() };
+
         // Are we a purely real number?
         if ( approximately_equal_to(magnitude, T{0}) )
-        {
-            return Quaternion{ std::pow( normalized_value.w(), exponent ) }; // Yes, so only compute the real part
-        }
+            return Quaternion{ std::pow( w(), exponent ) }; // Yes, so only compute the real part
 
         // Calculate the angle
-        T theta{ std::atan2(magnitude, normalized_value.w()) };
+        T theta{ std::atan2(magnitude, w()) };
         T new_theta{ exponent * theta };
         T coefficient{ std::sin(new_theta) / magnitude };
 
         // NOW we can calculate to the power of "exponent"...
-        T temp{ normalized_value.w() * normalized_value.w() + magnitude * magnitude };
+        T temp{ w() * w() + magnitude * magnitude };
 
         return Quaternion<T>{ std::cos(new_theta),
-                              coefficient * normalized_value.i(),
-                              coefficient * normalized_value.j(),
-                              coefficient * normalized_value.k() } * std::pow(temp, exponent);
+                              coefficient * i(),
+                              coefficient * j(),
+                              coefficient * k() } * std::pow(temp, exponent);
     }
 
     Quaternion<T> exp() const
