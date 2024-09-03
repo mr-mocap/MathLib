@@ -77,5 +77,11 @@
     <ClInclude Include="Tests\SceneNodeTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Exponential.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Trigonometric.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

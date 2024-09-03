@@ -157,6 +157,7 @@
     <ClCompile Include="Tests\SceneNodeTests.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Exponential.hpp" />
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
     <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp" />
     <ClInclude Include="include\math\Quaternion.hpp" />
     <ClInclude Include="include\math\SceneNode.hpp" />
+    <ClInclude Include="include\math\Trigonometric.hpp" />
     <ClInclude Include="include\math\Vector.hpp" />
     <ClInclude Include="Tests\DualNumberTests.hpp" />
     <ClInclude Include="Tests\DualQuaternionTests.hpp" />

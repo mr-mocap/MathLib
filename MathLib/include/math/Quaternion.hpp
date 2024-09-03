@@ -4,6 +4,7 @@
 #include "math/Conjugate.hpp"
 #include "math/Vector.hpp"
 #include <cassert>
+#include <cmath>
 
 /** @file
  *  
@@ -45,6 +46,45 @@ public:
     /// @}
 
     Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
+    Quaternion<T> pow(const T exponent) const
+    {
+        Quaternion<T> normalized_value{ normalized(*this) };
+        Vector3D<T>   vector{ normalized_value.imaginary() };
+        T magnitude{ vector.magnitude() };
+
+        // Are we a purely real number?
+        if ( approximately_equal_to(magnitude, T{0}) )
+        {
+            return Quaternion{ std::pow( normalized_value.w(), exponent ) }; // Yes, so only compute the real part
+        }
+
+        // Calculate the angle
+        T theta{ std::atan2(magnitude, normalized_value.w()) };
+        T new_theta{ exponent * theta };
+        T coefficient{ std::sin(new_theta) / magnitude };
+
+        // NOW we can calculate to the power of "exponent"...
+        T temp{ normalized_value.w() * normalized_value.w() + magnitude * magnitude };
+
+        return Quaternion<T>{ std::cos(new_theta),
+                              coefficient * normalized_value.i(),
+                              coefficient * normalized_value.j(),
+                              coefficient * normalized_value.k() } * std::pow(temp, exponent);
+    }
+
+    Quaternion<T> exp() const
+    {
+        T e_to_the_x{ std::exp( w() ) };
+        T vector_part_magnitude{ imaginary().magnitude() };
+        T cos_v{ std::cos(vector_part_magnitude) };
+        T sin_v{ (vector_part_magnitude > T{0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0} };
+
+        return Quaternion{ cos_v,
+                           sin_v * i(),
+                           sin_v * j(),
+                           sin_v * k() } * e_to_the_x;
+    }
+
 
     T    normSquared() const { return accumulate(*this * conjugate()); }
     T    norm() const { return std::sqrt( normSquared() ); }
@@ -426,6 +466,14 @@ template <class T>
 constexpr T accumulate(Quaternion<T> input)
 {
     return T{input.real() + input.i() + input.j() + input.k()};
+}
+
+template <class T>
+constexpr Quaternion<T> slerp(const Quaternion<T> &begin, const Quaternion<T> &end, const T percent)
+{
+    Quaternion<T> combined{ begin.conjugate() * end };
+
+    return begin * combined.pow(percent);
 }
 
 /** @name QuaternionTypeAliases

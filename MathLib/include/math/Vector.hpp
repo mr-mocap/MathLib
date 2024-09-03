@@ -27,6 +27,12 @@ struct Vector2D
     constexpr static Vector2D<Type> zero() { return Vector2D{}; }
     /// @}
 
+    constexpr Type normSquared() const { return (x * x) + (y * y); }
+    constexpr Type norm() const { return std::sqrt( normSquared() ); }
+
+    constexpr Type magnitudeSquared() const { return normSquared(); }
+    constexpr Type magnitude() const { return norm(); }
+
     Type x{};
     Type y{};
 };
@@ -43,6 +49,27 @@ bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
     return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
 }
 /// @}
+
+/** Sums up the components of @p input
+ *  
+ *  @input The Vector2D to operate on
+ */
+template <class T>
+constexpr T accumulate(const Vector2D<T> &input)
+{
+    return T{input.x + input.y};
+}
+
+/** Calculate the dot product of two Vector2D objects
+ *
+ *  @param left  The first vector
+ *  @param right The second vector
+ */
+template <class T>
+constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
+{
+    return (left.x * right.x) + (left.y * right.y);
+}
 
 /** A simple 3D vector class
  */
@@ -61,6 +88,13 @@ struct Vector3D
 
     constexpr static Vector3D<Type> zero() { return Vector3D{}; }
     /// @}
+
+    constexpr Type normSquared() const { return (x * x) + (y * y) + (z * z); }
+    constexpr Type norm() const { return std::sqrt( normSquared() ); }
+
+    constexpr Type magnitudeSquared() const { return normSquared(); }
+    constexpr Type magnitude() const { return norm(); }
+
 
     Type x{};
     Type y{};
@@ -81,6 +115,27 @@ bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
            approximately_equal_to(left.z, right.z);
 }
 /// @}
+
+/** Sums up the components of @p input
+ *  
+ *  @input The Vector3D to operate on
+ */
+template <class T>
+constexpr T accumulate(const Vector3D<T> &input)
+{
+    return T{input.x + input.y + input.z};
+}
+
+/** Calculate the dot product of two Vector3D objects
+ *
+ *  @param left  The first vector
+ *  @param right The second vector
+ */
+template <class T>
+constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
+{
+    (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
+}
 
 
 /** @name Vector2DTypeAliases

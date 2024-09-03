@@ -538,6 +538,57 @@ void PerformTwoConsecutiveRotations()
         assert( IsNear(transformed_point.k(), 0.0f) );
     }
 }
+
+void TestPow()
+{
+    float angle = 90.0_deg_f;
+    Quaternionf rotation = Quaternionf::make_rotation( angle, Vector3Df::unit_z() );
+    Quaternionf exp0 = rotation.pow(0.0f);
+    Quaternionf exp_0_5 = rotation.pow(0.5f);
+    Quaternionf exp1 = rotation.pow(1.0f);
+    Quaternionf exp_2_0 = rotation.pow(2.0f);
+    Quaternionf two_rotations_multiplied{ rotation * rotation };
+
+    assert( exp0 == Quaternionf::identity() );
+    assert( exp_0_5 == Quaternionf::make_rotation(angle * 0.5f, Vector3Df::unit_z()) );
+    assert( exp1 == rotation );
+    assert( exp_2_0 == Quaternionf::make_rotation(angle * 2.0f, Vector3Df::unit_z()) );
+
+    // Check that a quaternion squared via pow() is identical to multiplying by itself
+    assert( exp_2_0 == two_rotations_multiplied );
+}
+
+void TestExp()
+{
+    assert( Quaternionf{1.0f}.exp().w() == std::exp(1.0f) );
+    assert( Quaternionf{1.0f}.exp().imaginary() == Vector3Df::zero() );
+
+    assert( Quaternionf{2.0f}.exp().w() == std::exp(2.0f) );
+    assert( Quaternionf{2.0f}.exp().imaginary() == Vector3Df::zero() );
+
+    assert( Quaternionf{3.2f}.exp().w() == std::exp(3.2f) );
+    assert( Quaternionf{3.2f}.exp().imaginary() == Vector3Df::zero() );
+}
+
+void TestSlerp()
+{
+    Quaternionf begin = Quaternionf::identity();
+    Quaternionf end = Quaternionf::make_rotation( 90.0_deg_f, Vector3Df::unit_z() );
+    float step = 1.0f / 9.0f;
+
+    // with only the endpoints
+    {
+        Quaternionf slerp_begin = slerp(begin, end, 0.0f);
+        Quaternionf slerp_end = slerp(begin, end, 1.0f);
+
+        assert( slerp_begin == begin );
+        assert( slerp_end == end );
+    }
+
+    {
+    }
+}
+
 /// @}
 
 /** Run all of the unit tests in this namespace
@@ -584,6 +635,9 @@ void Run()
     ARotationIsStoredAsTheHalfAngle();
     MakingARotationIsAccurate();
     PerformTwoConsecutiveRotations();
+    TestPow();
+    TestExp();
+    TestSlerp();
 
     std::cout << "PASSED!" << std::endl;
 }
