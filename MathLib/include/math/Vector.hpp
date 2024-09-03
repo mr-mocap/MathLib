@@ -30,7 +30,7 @@ struct Vector2D
     /// @}
 
     constexpr value_type normSquared() const { return (x * x) + (y * y); }
-    constexpr value_type norm() const { return std::sqrt( normSquared() ); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
 
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
@@ -153,7 +153,7 @@ struct Vector3D
     /// @}
 
     constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z); }
-    constexpr value_type norm() const { return std::sqrt( normSquared() ); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
 
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
