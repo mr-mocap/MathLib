@@ -18,6 +18,8 @@
 template <class Type = float>
 struct Vector2D
 {
+    using value_type = Type;
+
     /** @name Constants
      *  @{
      */
@@ -27,14 +29,14 @@ struct Vector2D
     constexpr static Vector2D<Type> zero() { return Vector2D{}; }
     /// @}
 
-    constexpr Type normSquared() const { return (x * x) + (y * y); }
-    constexpr Type norm() const { return std::sqrt( normSquared() ); }
+    constexpr value_type normSquared() const { return (x * x) + (y * y); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); }
 
-    constexpr Type magnitudeSquared() const { return normSquared(); }
-    constexpr Type magnitude() const { return norm(); }
+    constexpr value_type magnitudeSquared() const { return normSquared(); }
+    constexpr value_type magnitude() const { return norm(); }
 
-    Type x{};
-    Type y{};
+    value_type x{};
+    value_type y{};
 };
 
 /** @name Operators
@@ -116,7 +118,7 @@ Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &righ
 template <class T>
 constexpr T accumulate(const Vector2D<T> &input)
 {
-    return T{input.x + input.y};
+    return input.x + input.y;
 }
 
 /** Calculate the dot product of two Vector2D objects
@@ -138,6 +140,8 @@ constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
 template <class Type = float>
 struct Vector3D
 {
+    using value_type = Type;
+
     /** @name Constants
      *  @{
      */
@@ -148,16 +152,16 @@ struct Vector3D
     constexpr static Vector3D<Type> zero() { return Vector3D{}; }
     /// @}
 
-    constexpr Type normSquared() const { return (x * x) + (y * y) + (z * z); }
-    constexpr Type norm() const { return std::sqrt( normSquared() ); }
+    constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); }
 
-    constexpr Type magnitudeSquared() const { return normSquared(); }
-    constexpr Type magnitude() const { return norm(); }
+    constexpr value_type magnitudeSquared() const { return normSquared(); }
+    constexpr value_type magnitude() const { return norm(); }
 
 
-    Type x{};
-    Type y{};
-    Type z{};
+    value_type x{};
+    value_type y{};
+    value_type z{};
 };
 
 /** @name Operators
@@ -234,27 +238,6 @@ Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &righ
 }
 /// @}
 
-/** Sums up the components of @p input
- *  
- *  @input The Vector3D to operate on
- */
-template <class T>
-constexpr T accumulate(const Vector3D<T> &input)
-{
-    return T{input.x + input.y + input.z};
-}
-
-/** Calculate the dot product of two Vector3D objects
- *
- *  @param left  The first vector
- *  @param right The second vector
- */
-template <class T>
-constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
-{
-    (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
-}
-
 
 /** Sums up the components of @p input
  *  
@@ -268,6 +251,17 @@ template <class T>
 constexpr T accumulate(const Vector3D<T> &input)
 {
     return input.x + input.y + input.z;
+}
+
+/** Calculate the dot product of two Vector3D objects
+ *
+ *  @param left  The first vector
+ *  @param right The second vector
+ */
+template <class T>
+constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
+{
+    return (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
 }
 
 

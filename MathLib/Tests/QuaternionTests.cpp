@@ -547,7 +547,9 @@ void TestPow()
     Quaternionf exp_0_5 = rotation.pow(0.5f);
     Quaternionf exp1 = rotation.pow(1.0f);
     Quaternionf exp_2_0 = rotation.pow(2.0f);
+    Quaternionf exp_3_0 = rotation.pow(3.0f);
     Quaternionf two_rotations_multiplied{ rotation * rotation };
+    Quaternionf three_rotations_multiplied{ rotation * rotation * rotation };
 
     assert( exp0 == Quaternionf::identity() );
     assert( exp_0_5 == Quaternionf::make_rotation(angle * 0.5f, Vector3Df::unit_z()) );
@@ -556,6 +558,8 @@ void TestPow()
 
     // Check that a quaternion squared via pow() is identical to multiplying by itself
     assert( exp_2_0 == two_rotations_multiplied );
+
+    assert( exp_3_0 == three_rotations_multiplied );
 }
 
 void TestExp()
