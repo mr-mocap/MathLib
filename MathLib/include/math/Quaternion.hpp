@@ -50,8 +50,6 @@ public:
     Quaternion<T> pow(const T exponent) const
     {
         assert( isUnit() );
-        Vector3D<T>   vector{ normalized_value.imaginary() };
-        T magnitude{ vector.magnitude() };
 
         T magnitude{ imaginary().magnitude() };
 
