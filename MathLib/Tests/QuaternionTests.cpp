@@ -576,9 +576,9 @@ void TestExp()
 
 void TestSlerp()
 {
+    Vector3Df   z{ Vector3Df::unit_z() };
     Quaternionf begin = Quaternionf::identity();
-    Quaternionf end = Quaternionf::make_rotation( 90.0_deg_f, Vector3Df::unit_z() );
-    float step = 1.0f / 9.0f;
+    Quaternionf end = Quaternionf::make_rotation( 90.0_deg_f, z );
 
     // with only the endpoints
     {
@@ -589,7 +589,25 @@ void TestSlerp()
         assert( slerp_end == end );
     }
 
+    // 0 to 90 in 10 deg increments
     {
+        float step_deg = 10.0f;
+        float step_percentage = 1.0f / 9.0f;
+
+        assert( slerp(begin, end, step_percentage * 0.0f) == begin );
+
+        assert( slerp(begin, end, step_percentage * 0.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 0.0f), z) );
+        assert( slerp(begin, end, step_percentage * 1.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 1.0f), z) );
+        assert( slerp(begin, end, step_percentage * 2.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 2.0f), z) );
+        assert( slerp(begin, end, step_percentage * 3.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 3.0f), z) );
+        assert( slerp(begin, end, step_percentage * 4.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 4.0f), z) );
+        assert( slerp(begin, end, step_percentage * 5.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 5.0f), z) );
+        assert( slerp(begin, end, step_percentage * 6.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 6.0f), z) );
+        assert( slerp(begin, end, step_percentage * 7.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 7.0f), z) );
+        assert( slerp(begin, end, step_percentage * 8.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 8.0f), z) );
+        assert( slerp(begin, end, step_percentage * 9.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 9.0f), z) );
+
+        assert( slerp(begin, end, step_percentage * 9.0f) == end );
     }
 }
 
