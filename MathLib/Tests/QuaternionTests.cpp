@@ -1,6 +1,7 @@
 #include "QuaternionTests.hpp"
 #include "math/Quaternion.hpp"
 #include "math/Conversions.hpp"
+#include "math/Exponential.hpp"
 #include <cassert>
 #include <iostream>
 
@@ -574,6 +575,22 @@ void TestExp()
     assert( Quaternionf{3.2f}.exp().imaginary() == Vector3Df::zero() );
 }
 
+void ExpAndLogAreInversesOfEachOther()
+{
+    auto a{ Quaternionf::identity() };
+    auto b{ Quaternionf::make_rotation(36.3_deg_f, Vector3Df::unit_y()) };
+    auto c{ Quaternionf::make_rotation(90.0_deg_f, Vector3Df{1.0f, 1.0f, 1.0f}) };
+
+    assert( log( exp(a) ) == a );
+    assert( exp( log(a) ) == a );
+
+    assert( log( exp(b) ) == b );
+    assert( exp( log(b) ) == b );
+
+    assert( log( exp(c) ) == c );
+    assert( exp( log(c) ) == c );
+}
+
 void TestSlerp()
 {
     Vector3Df   z{ Vector3Df::unit_z() };
@@ -659,6 +676,7 @@ void Run()
     PerformTwoConsecutiveRotations();
     TestPow();
     TestExp();
+    ExpAndLogAreInversesOfEachOther();
     TestSlerp();
 
     std::cout << "PASSED!" << std::endl;

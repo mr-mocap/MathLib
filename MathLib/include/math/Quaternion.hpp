@@ -86,18 +86,20 @@ public:
 
     Quaternion<T> log() const
     {
-        assert( isUnit() );
-
-        T theta{ std::acos(w()) };
         T magnitude_of_imaginary_part{ imaginary().magnitude() };
 
         // Are we purely a real number?
         if ( magnitude_of_imaginary_part == T{0} )
             return Quaternion{ std::log( w() ) }; // YES, so just set the w() component (the others will be zero)
 
+        T this_norm{ norm() };
+        T theta{ std::acos( w() / this_norm ) };
         T coefficient{ theta / magnitude_of_imaginary_part };
 
-        return Quaternion{ T{0}, coefficient * i(), coefficient * j(), coefficient * k() };
+        return Quaternion{ std::log(this_norm),
+                           coefficient * i(),
+                           coefficient * j(),
+                           coefficient * k() };
     }
 
     T    normSquared() const { return accumulate(*this * conjugate()); }
