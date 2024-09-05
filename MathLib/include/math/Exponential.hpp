@@ -24,7 +24,7 @@
  *   @note This will just call @c input.exp()
  */
 template<class T>
-constexpr T exp(T input)
+T exp(T input)
 {
     return input.exp();
 }
@@ -37,21 +37,73 @@ constexpr T exp(T input)
  */
 /// @{
 template<>
-constexpr float exp<float>(float input)
+float exp<float>(float input)
 {
     return std::exp(input);
 }
 
 template<>
-constexpr double exp<double>(double input)
+double exp<double>(double input)
 {
     return std::exp(input);
 }
 
 template<>
-constexpr long double exp<long double>(long double input)
+long double exp<long double>(long double input)
 {
     return std::exp(input);
+}
+/// @}
+
+/// @}
+
+
+/** @addtogroup Log
+ * 
+ *  @{
+ *  
+ *  Create the log form of the input
+ *  
+ */
+
+/** @name General Template Case
+ *  
+ *  @{
+ */
+
+/**  Computes the log of the input
+ * 
+ *   @note This will just call @c input.log()
+ */
+template<class T>
+T log(T input)
+{
+    return input.log();
+}
+/// @}
+
+/** @name Specializations
+ * 
+ *  These are the basic default template specializations for @c log()
+ *  from above
+ */
+/// @{
+template<>
+float log<float>(float input)
+{
+    return std::log(input);
+}
+
+template<>
+double log<double>(double input)
+{
+    return std::log(input);
+}
+
+template<>
+long double log<long double>(long double input)
+{
+    return std::log(input);
 }
 /// @}
 
