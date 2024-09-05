@@ -17,7 +17,7 @@
  *  
  *  @headerfile "math/Dual.hpp"
  */
-template<class T = float>
+template<class T>
 class Dual
 {
 public:

@@ -24,7 +24,7 @@
  *  @see Dual
  *  @see Quaternion
  */
-template <class T = float>
+template <class T>
 class DualQuaternion
 {
 public:

@@ -15,7 +15,7 @@
  *  @headerfile "math/Vector.hpp"
  * 
  */
-template <class Type = float>
+template <class Type>
 struct Vector2D
 {
     using value_type = Type;
@@ -137,7 +137,7 @@ constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
  *  @headerfile "math/Vector.hpp"
  * 
  */
-template <class Type = float>
+template <class Type>
 struct Vector3D
 {
     using value_type = Type;
