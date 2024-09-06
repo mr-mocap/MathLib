@@ -29,7 +29,7 @@ public:
     using value_type = T;
 
     Quaternion() = default;
-    explicit constexpr Quaternion(T real_number) : _w(real_number) { }
+    explicit constexpr Quaternion(T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
     explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
     /** @name Constants
@@ -46,7 +46,9 @@ public:
     constexpr static Quaternion<T> unit_k() { return Quaternion{ T{}, T{},  T{},  T{1} }; }
     /// @}
 
-    Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
+    constexpr Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
+
+    /// Computes this Quaternion raised to a real power
     Quaternion<T> pow(const T exponent) const
     {
         assert( isUnit() );
@@ -71,9 +73,16 @@ public:
                               coefficient * k() } * std::pow(temp, exponent);
     }
 
+    /** Computes the exponential form of this Quaternion
+     *
+     *  @note It is possible for this routine to output a non-unit Quaternion
+     *        when given a unit Quaternion as input.  It is for this reason that
+     *        the implementation of log() has been adjusted to automatically handle
+     *        non-unit Quaternions.
+     */
     Quaternion<T> exp() const
     {
-        T e_to_the_x{ std::exp( w() ) };
+        T e_to_the_w{ std::exp( w() ) };
         T vector_part_magnitude{ imaginary().magnitude() };
         T cos_v{ std::cos(vector_part_magnitude) };
         T sin_v{ (vector_part_magnitude > T{0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0} };
@@ -81,15 +90,20 @@ public:
         return Quaternion{ cos_v,
                            sin_v * i(),
                            sin_v * j(),
-                           sin_v * k() } * e_to_the_x;
+                           sin_v * k() } * e_to_the_w;
     }
 
+    /** Computes the log base e of this Quaternion
+     *  
+     *  @note We handle non-unit Quaternions in this version so that we can satisfy the relationship:
+     *        log( exp( x ) ) == x
+     */
     Quaternion<T> log() const
     {
         T magnitude_of_imaginary_part{ imaginary().magnitude() };
 
         // Are we purely a real number?
-        if ( magnitude_of_imaginary_part == T{0} )
+        if ( approximately_equal_to(magnitude_of_imaginary_part, T{0}) )
             return Quaternion{ std::log( w() ) }; // YES, so just set the w() component (the others will be zero)
 
         T this_norm{ norm() };
