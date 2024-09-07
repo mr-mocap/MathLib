@@ -114,7 +114,7 @@ public:
      *  @post result.real == Quaternion::identity()
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_translation(T translation_x, T translation_y, T translation_z)
+    constexpr static DualQuaternion<T> make_translation(const T translation_x, const T translation_y, const T translation_z)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
@@ -154,7 +154,10 @@ public:
      *  @post result.real == @p rotation.
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation, T translation_x, T translation_y, T translation_z)
+    constexpr static DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation,
+                                                              const            T   translation_x,
+                                                              const            T   translation_y,
+                                                              const            T   translation_z)
     {
         assert( rotation.isUnit() );
 
@@ -317,7 +320,7 @@ private:
  *  @relates DualQuaternion
  */
 template<class T>
-constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, float tolerance = 0.0002f)
+constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, const float tolerance = 0.0002f)
 {
     // Just use the underlying Dual number's version of the same function...
     return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
@@ -351,7 +354,7 @@ constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T
  *  @relates DualQuaternion
  */
 template<class T>
-constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
+constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
 {
     return !(left == right);
 }
@@ -440,6 +443,19 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
 }
 /// @}
 
+/** Creates the normalized form of a DualQuaternion
+ *  
+ *  @param input The DualQuaternion to normalize
+ *  
+ *  @return The normalized version of @p input
+ * 
+ *  @relates DualQuaternion
+ */
+template <class T>
+constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
+{
+    return input.normalized();
+}
 /** Generates a linear blend between two DualQuaternion objects
  *  
  *  @param beginning  The start state
@@ -449,11 +465,11 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
  *  @relates DualQuaternion
  */
 template <class T>
-constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, float percentage)
+constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const float percentage)
 {
-    auto blended =  beginning + (end - beginning) * percentage;
+    auto blended = beginning + (end - beginning) * percentage;
 
-    return normalized(blended);
+    return blended.normalized();
 }
 
 

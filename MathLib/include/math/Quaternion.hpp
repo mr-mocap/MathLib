@@ -22,15 +22,15 @@
  *
  *  @headerfile "math/Quaternion.hpp"
  */
-template <class T = float>
+template <class T>
 class Quaternion
 {
 public:
     using value_type = T;
 
     Quaternion() = default;
-    explicit constexpr Quaternion(T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
-    explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
+    explicit constexpr Quaternion(const T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
+    explicit constexpr Quaternion(const T w, const T i, const T j, const T k) : _w(w), _i(i), _j(j), _k(k) { }
 
     /** @name Constants
      *  @{
@@ -122,6 +122,13 @@ public:
     T    magnitudeSquared() const { return normSquared(); }
     T    magnitude() const { return norm(); }
 
+    constexpr Quaternion<T> normalized() const
+    {
+        assert( Quaternion<T>{*this / magnitude()}.isUnit() ); // Verify that we actually return a unit-length Quaternion
+
+        return *this / this->magnitude();
+    }
+
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
     /** @name Element Access
@@ -139,10 +146,10 @@ public:
     /// @}
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
-    bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
+    bool isUnit(const T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
 
     bool isZero() const { return approximately_equal_to( magnitude(), T{} ); }
-    bool isZero(T tolerance) const { return approximately_equal_to( magnitude(), T{}, tolerance ); }
+    bool isZero(const T tolerance) const { return approximately_equal_to( magnitude(), T{}, tolerance ); }
 
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
@@ -158,7 +165,7 @@ public:
      *  @note A pure Quaternion is one in which the w, or real, component
      *        is 0.
      */
-    constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
+    constexpr static Quaternion<T> make_pure(const T x, const T y, const T z) { return Quaternion<T>{ T{}, x, y, z }; }
 
     /** Construct a pure Quaternion
      *  
@@ -180,7 +187,7 @@ public:
      *  
      *  @see make_pure
      */
-    constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
+    constexpr static Quaternion<T> encode_point(const T x, const T y, const T z) { return make_pure(x, y, z); }
 
     /** Encode a 3D point as a pure Quaternion
      *  
@@ -203,17 +210,16 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(T radians, T axis_x, T axis_y, T axis_z)
+    constexpr static Quaternion<T> make_rotation(const T radians, const T axis_x, const T axis_y, const T axis_z)
     {
         T half_angle = radians * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
 
-        return normalized( Quaternion<T>{ cos_theta,
-                                          sin_theta * axis_x,
-                                          sin_theta * axis_y,
-                                          sin_theta * axis_z }
-                         );
+        return Quaternion<T>{ cos_theta,
+                              sin_theta * axis_x,
+                              sin_theta * axis_y,
+                              sin_theta * axis_z }.normalized();
     }
 
     /** Enocde a rotation into a Quaternion
@@ -223,7 +229,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(T radians, const Vector3D<T>& axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
+    constexpr static Quaternion<T> make_rotation(const T radians, const Vector3D<T> &axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
     /// @}
 
 private:
@@ -248,7 +254,7 @@ private:
  *  @see approximately_equal_to
  */
 template <class T>
-constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, float tolerance = 0.0002f)
+constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, const float tolerance = 0.0002f)
 {
     return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
            approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
@@ -270,7 +276,7 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
  *  @relates Quaternion
  */
 template<class T>
-constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
+constexpr bool operator ==(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return approximately_equal_to(left, right);
 }
@@ -284,7 +290,7 @@ constexpr bool operator ==(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template<class T>
-constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
+constexpr bool operator !=(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return !(left == right);
 }
@@ -294,7 +300,7 @@ constexpr bool operator !=(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
+constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, const T scalar)
 {
     return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
 }
@@ -304,7 +310,7 @@ constexpr Quaternion<T> operator *(Quaternion<T> quaternion, T scalar)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
+constexpr Quaternion<T> operator *(const T scalar, const Quaternion<T> &quaternion)
 {
     return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
 }
@@ -316,7 +322,7 @@ constexpr Quaternion<T> operator *(T scalar, Quaternion<T> quaternion)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
+constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const T scalar)
 {
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
 }
@@ -328,7 +334,7 @@ constexpr Quaternion<T> operator /(Quaternion<T> quaternion, T scalar)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
+constexpr Quaternion<T> operator /(const T scalar, const Quaternion<T> &quaternion)
 {
     return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
@@ -340,7 +346,7 @@ constexpr Quaternion<T> operator /(T scalar, Quaternion<T> quaternion)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
+constexpr Quaternion<T> operator /(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return left * right.inverse();
 }
@@ -352,7 +358,7 @@ constexpr Quaternion<T> operator /(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
+constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return Quaternion<T>{left.w() + right.w(),
                          left.i() + right.i(),
@@ -367,7 +373,7 @@ constexpr Quaternion<T> operator +(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
+constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return Quaternion<T>{left.w() - right.w(),
                          left.i() - right.i(),
@@ -382,7 +388,7 @@ constexpr Quaternion<T> operator -(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
+constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return Quaternion<T>{left.w() * right.w() - (left.i() * right.i() +
                                                  left.j() * right.j() +
@@ -411,7 +417,7 @@ constexpr Quaternion<T> operator *(Quaternion<T> left, Quaternion<T> right)
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> operator -(Quaternion<T> q)
+constexpr Quaternion<T> operator -(const Quaternion<T> &q)
 {
     return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
 }
@@ -426,7 +432,7 @@ constexpr Quaternion<T> operator -(Quaternion<T> q)
  *  @relates Quaternion
  */
 template <class T>
-constexpr T dot(Quaternion<T> left, Quaternion<T> right)
+constexpr T dot(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return left.w() * right.w() +
            left.i() * right.i() +
@@ -532,11 +538,9 @@ constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const
  *  @relates Quaternion
  */
 template <class T>
-constexpr Quaternion<T> normalized(Quaternion<T> input)
+constexpr Quaternion<T> normalized(const Quaternion<T> &input)
 {
-    assert( Quaternion<T>{input / input.norm()}.isUnit() );
-
-    return input / input.norm();
+    return input.normalized();
 }
 
 /** Sums up the components of @p input
@@ -548,7 +552,7 @@ constexpr Quaternion<T> normalized(Quaternion<T> input)
  *  @relates Quaternion
  */
 template <class T>
-constexpr T accumulate(Quaternion<T> input)
+constexpr T accumulate(const Quaternion<T> &input)
 {
     return T{input.real() + input.i() + input.j() + input.k()};
 }

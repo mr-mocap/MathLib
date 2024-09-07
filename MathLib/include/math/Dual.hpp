@@ -24,8 +24,8 @@ public:
     using value_type = T;
 
     Dual() = default;
-    explicit constexpr Dual(const T r) : real(r) { }
-    explicit constexpr Dual(const T r, const T e) : real(r), dual(e) { }
+    explicit constexpr Dual(const T &r) : real(r) { }
+    explicit constexpr Dual(const T &r, const T &e) : real(r), dual(e) { }
 
     /** @name Constants
      *  @{
@@ -49,7 +49,7 @@ public:
      *  
      *  @note A pure Dual is one which has the real component set to 0
      */
-    constexpr static Dual<T> make_pure(T input)
+    constexpr static Dual<T> make_pure(const T &input)
     {
         return Dual<T>{ T{}, input };
     }
@@ -94,7 +94,7 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
  *  @relates Dual
  */
 template<class T>
-constexpr bool operator ==(Dual<T> left, Dual<T> right)
+constexpr bool operator ==(const Dual<T> &left, const Dual<T> &right)
 {
     return approximately_equal_to(left, right);
 }
@@ -108,7 +108,7 @@ constexpr bool operator ==(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr bool operator !=(Dual<T> left, Dual<T> right)
+constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
 {
     return !(left == right);
 }
@@ -118,7 +118,7 @@ constexpr bool operator !=(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator *(Dual<T> left, Dual<T> right)
+constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real * right.real,
                    left.real * right.dual + right.real * left.dual);
@@ -129,25 +129,25 @@ constexpr Dual<T> operator *(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator *(float scalar, Dual<T> d)
+constexpr Dual<T> operator *(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) * d;
 }
 
 template<class T>
-constexpr Dual<T> operator *(Dual<T> d, float scalar)
+constexpr Dual<T> operator *(const Dual<T> &d, const float scalar)
 {
     return d * Dual<T>( T(scalar) );
 }
 
 template<class T>
-constexpr Dual<T> operator *(double scalar, Dual<T> d)
+constexpr Dual<T> operator *(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) * d;
 }
 
 template<class T>
-constexpr Dual<T> operator *(Dual<T> d, double scalar)
+constexpr Dual<T> operator *(const Dual<T> &d, const double scalar)
 {
     return d * Dual<T>( T(scalar) );
 }
@@ -157,7 +157,7 @@ constexpr Dual<T> operator *(Dual<T> d, double scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator /(Dual<T> left, Dual<T> right)
+constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real * right.real / (right.real * right.real),
         (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
@@ -168,7 +168,7 @@ constexpr Dual<T> operator /(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator /(float scalar, Dual<T> d)
+constexpr Dual<T> operator /(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) / d;
 }
@@ -178,7 +178,7 @@ constexpr Dual<T> operator /(float scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator /(Dual<T> d, float scalar)
+constexpr Dual<T> operator /(const Dual<T> &d, const float scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
@@ -188,7 +188,7 @@ constexpr Dual<T> operator /(Dual<T> d, float scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator /(double scalar, Dual<T> d)
+constexpr Dual<T> operator /(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) / d;
 }
@@ -198,7 +198,7 @@ constexpr Dual<T> operator /(double scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator /(Dual<T> d, double scalar)
+constexpr Dual<T> operator /(const Dual<T> &d, const double scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
@@ -208,7 +208,7 @@ constexpr Dual<T> operator /(Dual<T> d, double scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator +(Dual<T> left, Dual<T> right)
+constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real + right.real, left.dual + right.dual);
 }
@@ -218,7 +218,7 @@ constexpr Dual<T> operator +(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator +(float scalar, Dual<T> d)
+constexpr Dual<T> operator +(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) + d;
 }
@@ -228,7 +228,7 @@ constexpr Dual<T> operator +(float scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator +(Dual<T> d, float scalar)
+constexpr Dual<T> operator +(const Dual<T> &d, const float scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
@@ -238,7 +238,7 @@ constexpr Dual<T> operator +(Dual<T> d, float scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator +(double scalar, Dual<T> d)
+constexpr Dual<T> operator +(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) + d;
 }
@@ -248,7 +248,7 @@ constexpr Dual<T> operator +(double scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator +(Dual<T> d, double scalar)
+constexpr Dual<T> operator +(const Dual<T> &d, const double scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
@@ -258,7 +258,7 @@ constexpr Dual<T> operator +(Dual<T> d, double scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator -(Dual<T> left, Dual<T> right)
+constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real - right.real, left.dual - right.dual);
 }
@@ -268,7 +268,7 @@ constexpr Dual<T> operator -(Dual<T> left, Dual<T> right)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator -(float scalar, Dual<T> d)
+constexpr Dual<T> operator -(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) - d;
 }
@@ -278,7 +278,7 @@ constexpr Dual<T> operator -(float scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator -(Dual<T> d, float scalar)
+constexpr Dual<T> operator -(const Dual<T> &d, const float scalar)
 {
     return d - Dual<T>( T(scalar) );
 }
@@ -288,7 +288,7 @@ constexpr Dual<T> operator -(Dual<T> d, float scalar)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator -(double scalar, Dual<T> d)
+constexpr Dual<T> operator -(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) - d;
 }
@@ -298,7 +298,7 @@ constexpr Dual<T> operator -(double scalar, Dual<T> d)
  *  @relates Dual
  */
 template<class T>
-constexpr Dual<T> operator -(Dual<T> d, double scalar)
+constexpr Dual<T> operator -(const Dual<T> &d, const double scalar)
 {
     return d - Dual<T>( T(scalar) );
 }

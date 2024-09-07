@@ -32,6 +32,8 @@ struct Vector2D
     constexpr value_type normSquared() const { return (x * x) + (y * y); }
     constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
 
+    constexpr Vector2D<Type> normalized() const { return *this / norm(); }
+
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
 
@@ -75,7 +77,7 @@ bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
  *  @relates Vector2D
  */
 template <class Type>
-Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
+constexpr Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return Vector2D<Type>{ left.x + right.x, left.y + right.y };
 }
@@ -85,7 +87,7 @@ Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &righ
  *  @relates Vector2D
  */
 template <class Type>
-Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
+constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return Vector2D<Type>{ left.x - right.x, left.y - right.y };
 }
@@ -95,7 +97,7 @@ Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &righ
  *  @relates Vector2D
  */
 template <class Type>
-Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &right)
+constexpr Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return Vector2D<Type>{ left.x * right.x, left.y * right.y };
 }
@@ -105,7 +107,7 @@ Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &righ
  *  @relates Vector2D
  */
 template <class Type>
-Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
+constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return Vector2D<Type>{ left.x / right.x, left.y / right.y };
 }
@@ -130,6 +132,20 @@ template <class T>
 constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
 {
     return (left.x * right.x) + (left.y * right.y);
+}
+
+/** Creates the normalized form of a Vector2D
+ *  
+ *  @param input The Vector2D to normalize
+ *  
+ *  @return The normalized version of @p input
+ * 
+ *  @relates Vector2D
+ */
+template <class T>
+constexpr Vector2D<T> normalized(const Vector2D<T> &input)
+{
+    return input.normalized();
 }
 
 /** A simple 3D vector class
@@ -157,6 +173,8 @@ struct Vector3D
 
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
+
+    constexpr Vector3D<Type> normalized() const { return *this / magnitude(); }
 
 
     value_type x{};
@@ -202,7 +220,7 @@ bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
  *  @relates Vector3D
  */
 template <class Type>
-Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &right)
+constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
     return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
 }
@@ -212,7 +230,7 @@ Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &righ
  *  @relates Vector3D
  */
 template <class Type>
-Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &right)
+constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
     return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
 }
@@ -222,7 +240,7 @@ Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &righ
  *  @relates Vector3D
  */
 template <class Type>
-Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &right)
+constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
     return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
 }
@@ -232,7 +250,7 @@ Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &righ
  *  @relates Vector3D
  */
 template <class Type>
-Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
+constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
     return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
 }
@@ -262,6 +280,20 @@ template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
 {
     return (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
+}
+
+/** Creates the normalized form of a Vector3D
+ *  
+ *  @param input The Vector3D to normalize
+ *  
+ *  @return The normalized version of @p input
+ * 
+ *  @relates Vector3D
+ */
+template <class T>
+constexpr Vector3D<T> normalized(const Vector3D<T> &input)
+{
+    return input.normalized();
 }
 
 
