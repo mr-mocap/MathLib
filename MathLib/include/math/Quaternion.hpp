@@ -131,6 +131,16 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
+    T angle() const
+    {
+        return T{2} * std::atan2( imaginary().magnitude(), w() );
+    }
+
+    constexpr Vector3D<T> axis() const
+    {
+        return imaginary().normalized();
+    }
+
     /** @name Element Access
      *  @{
      */
@@ -541,6 +551,32 @@ template <class T>
 constexpr Quaternion<T> normalized(const Quaternion<T> &input)
 {
     return input.normalized();
+}
+
+/** Computes the phase-angle (in radians of a Quaternion
+ *
+ *  @note This is meant to mirror the behavior of std::arg( std::complex )
+ *
+ *  @relates Quaternion
+ */
+template <class T>
+T arg(const Quaternion<T> &input)
+{
+    return input.angle();
+}
+
+/** Constructs a unit Quaternion from the given axis and angle
+ *
+ *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
+ *
+ *  @relates Quaternion
+ */
+template <class T>
+Quaternion<T> polar(const Vector3D<T> &axis, const T angle = T{0})
+{
+    assert( axis.magnitude() == T{1} );
+
+    return Quaternion<T>::make_rotation( angle, axis );
 }
 
 /** Sums up the components of @p input
