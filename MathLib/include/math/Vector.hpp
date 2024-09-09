@@ -281,6 +281,8 @@ constexpr T accumulate(const Vector3D<T> &input)
  *
  *  @param left  The first vector
  *  @param right The second vector
+ * 
+ *  @relates Vector3D
  */
 template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
