@@ -164,6 +164,9 @@ public:
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
 
+    bool isNaN() const { return std::isnan(_w) || std::isnan(_i) || std::isnan(_j) || std::isnan(_k); }
+    bool isInf() const { return std::isinf(_w) || std::isinf(_i) || std::isinf(_j) || std::isinf(_k); }
+
     /** @name Convenience Creation Functions
      *  @{
      */

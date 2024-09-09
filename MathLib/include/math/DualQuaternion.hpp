@@ -281,6 +281,9 @@ public:
         return rotation_magnitude_is_one() && rotation_and_translation_are_orthogonal();
     }
 
+    bool isNaN() const { return _frame_of_reference.real.isNaN() || _frame_of_reference.dual.isNaN(); }
+    bool isInf() const { return _frame_of_reference.real.isInf() || _frame_of_reference.dual.isInf(); }
+
 private:
     Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 

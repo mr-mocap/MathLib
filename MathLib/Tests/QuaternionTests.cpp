@@ -542,6 +542,8 @@ void PerformTwoConsecutiveRotations()
 
 void TestPow()
 {
+    std::cout << __func__ << std::endl;
+
     float angle = 90.0_deg_f;
     Quaternionf rotation = Quaternionf::make_rotation( angle, Vector3Df::unit_z() );
     Quaternionf exp0 = rotation.pow(0.0f);
@@ -565,6 +567,8 @@ void TestPow()
 
 void TestExp()
 {
+    std::cout << __func__ << std::endl;
+
     assert( Quaternionf{1.0f}.exp().w() == std::exp(1.0f) );
     assert( Quaternionf{1.0f}.exp().imaginary() == Vector3Df::zero() );
 
@@ -577,6 +581,8 @@ void TestExp()
 
 void ExpAndLogAreInversesOfEachOther()
 {
+    std::cout << __func__ << std::endl;
+
     auto a{ Quaternionf::identity() };
     auto b{ Quaternionf::make_rotation(36.3_deg_f, Vector3Df::unit_y()) };
     auto c{ Quaternionf::make_rotation(90.0_deg_f, Vector3Df{1.0f, 1.0f, 1.0f}) };
@@ -593,6 +599,8 @@ void ExpAndLogAreInversesOfEachOther()
 
 void TestSlerp()
 {
+    std::cout << __func__ << std::endl;
+
     Vector3Df   z{ Vector3Df::unit_z() };
     Quaternionf begin = Quaternionf::identity();
     Quaternionf end = Quaternionf::make_rotation( 90.0_deg_f, z );
@@ -628,6 +636,38 @@ void TestSlerp()
     }
 }
 
+void IsNaNIsTrueWhenAtLeastOneMemberIsNaN()
+{
+    std::cout << __func__ << std::endl;
+
+    assert( Quaternionf(NAN).isNaN() );
+    assert( Quaternionf(NAN, 0.0f, 0.0f, 0.0f).isNaN() );
+    assert( Quaternionf(3.2f, NAN, 0.0f, 0.0f).isNaN() );
+    assert( Quaternionf(3.2f, 0.0f, NAN, 0.0f).isNaN() );
+    assert( Quaternionf(3.2f, 0.0f, 0.0f, NAN).isNaN() );
+    assert( !Quaternionf(3.2f, 4.6f, 0.0f, 1.1f).isNaN() );
+}
+
+void IsInfIsTrueWhenAtLeastOneMemberIsInf()
+{
+    std::cout << __func__ << std::endl;
+
+    assert( Quaternionf(INFINITY).isInf() );
+    assert( Quaternionf(INFINITY, 0.0f, 0.0f, 0.0f).isInf() );
+    assert( Quaternionf(3.2f, INFINITY, 0.0f, 0.0f).isInf() );
+    assert( Quaternionf(3.2f, 0.0f, INFINITY, 0.0f).isInf() );
+    assert( Quaternionf(3.2f, 0.0f, 0.0f, INFINITY).isInf() );
+    assert( !Quaternionf(3.2f, 4.6f, 0.0f, 1.1f).isInf() );
+}
+
+void DivideByZeroProducesInf()
+{
+    std::cout << __func__ << std::endl;
+
+    Quaternionf result{ Quaternionf::identity() / 0.0f };
+
+    assert( result.isInf() );
+}
 /// @}
 
 /** Run all of the unit tests in this namespace
@@ -678,6 +718,9 @@ void Run()
     TestExp();
     ExpAndLogAreInversesOfEachOther();
     TestSlerp();
+    IsNaNIsTrueWhenAtLeastOneMemberIsNaN();
+    IsInfIsTrueWhenAtLeastOneMemberIsInf();
+    DivideByZeroProducesInf();
 
     std::cout << "PASSED!" << std::endl;
 }

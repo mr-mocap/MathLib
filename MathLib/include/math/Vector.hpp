@@ -37,6 +37,10 @@ struct Vector2D
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
 
+    bool isNaN() const { return std::isnan(x) || std::isnan(y); }
+
+    bool isInf() const { return std::isinf(x) || std::isinf(y); }
+
     value_type x{};
     value_type y{};
 };
@@ -176,6 +180,8 @@ struct Vector3D
 
     constexpr Vector3D<Type> normalized() const { return *this / magnitude(); }
 
+    bool isNaN() const { return std::isnan(x) || std::isnan(y) || std::isnan(z); }
+    bool isInf() const { return std::isinf(x) || std::isinf(y) || std::isinf(z); }
 
     value_type x{};
     value_type y{};

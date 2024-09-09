@@ -55,6 +55,16 @@ public:
     }
     /// @}
 
+    bool isNaN() const
+    {
+        return std::isnan(real) || std::isnan(dual);
+    }
+
+    bool isInf() const
+    {
+        return std::isinf(real) || std::isinf(dual);
+    }
+
     T real{};
     T dual{};
 };
