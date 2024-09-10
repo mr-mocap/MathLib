@@ -147,6 +147,7 @@ Degree<T> operator +(const Degree<T> left, const Degree<T> right)
     return Degree<T>{ left.value() + right.value() };
 }
 
+template <class T>
 Degree<T> operator -(const Degree<T> left, const Degree<T> right)
 {
     return Degree<T>{ left.value() - right.value() };
@@ -186,6 +187,12 @@ template <class T>
 Degree<T> operator /(const Degree<T> left, const T right)
 {
     return Degree<T>{ left.value() / right };
+}
+
+template <class T>
+Degree<T> operator -(const Degree<T> input)
+{
+    return Degree{ -input.value() };
 }
 /// @}
 

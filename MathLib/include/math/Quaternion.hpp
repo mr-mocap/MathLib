@@ -519,7 +519,7 @@ T arg(const Quaternion<T> &input)
  *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
  */
 template <class T>
-Quaternion<T> polar(const Vector3D<T> &axis, const T angle = T{0})
+Quaternion<T> polar(const Vector3D<T> &axis, const Radian<T> angle = Radian<T>{})
 {
     assert( axis.magnitude() == T{1} );
 
