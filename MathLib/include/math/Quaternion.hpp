@@ -3,6 +3,7 @@
 #include "math/ApproximatelyEqualTo.hpp"
 #include "math/Conjugate.hpp"
 #include "math/Vector.hpp"
+#include "math/Angle.hpp"
 #include <cassert>
 #include <cmath>
 
@@ -223,9 +224,9 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const T radians, const T axis_x, const T axis_y, const T axis_z)
+    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const T axis_x, const T axis_y, const T axis_z)
     {
-        T half_angle = radians * T{0.5};
+        T half_angle = radians.value() * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
 
@@ -242,7 +243,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const T radians, const Vector3D<T> &axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
+    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const Vector3D<T> &axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
     /// @}
 
 private:

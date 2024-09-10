@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MathLib.cpp" />
+    <ClCompile Include="Tests\AngleTests.cpp" />
     <ClCompile Include="Tests\DualNumberTests.cpp" />
     <ClCompile Include="Tests\DualQuaternionTests.cpp" />
     <ClCompile Include="Tests\HierarchicalCoordinateSystemTests.cpp" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exponential.hpp" />
+    <ClInclude Include="include\math\Angle.hpp" />
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
     <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
@@ -168,6 +170,7 @@
     <ClInclude Include="include\math\SceneNode.hpp" />
     <ClInclude Include="include\math\Trigonometric.hpp" />
     <ClInclude Include="include\math\Vector.hpp" />
+    <ClInclude Include="Tests\AngleTests.hpp" />
     <ClInclude Include="Tests\DualNumberTests.hpp" />
     <ClInclude Include="Tests\DualQuaternionTests.hpp" />
     <ClInclude Include="Tests\HierarchicalCoordinateSystemTests.hpp" />

@@ -49,7 +49,7 @@ void CanCreateChildNode()
     // Via weak_ptr
     {
         std::shared_ptr<SceneNodef> node = SceneNodef::make();
-        std::weak_ptr<SceneNodef> child_node = node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( DegreesToRadians(45.0f), 1.0f, 0.0f, 0.0f ));
+        std::weak_ptr<SceneNodef> child_node = node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( Degreef{45.0f}, 1.0f, 0.0f, 0.0f ));
 
         assert( !child_node.expired() );
         assert( !child_node.lock()->parent().expired() );
@@ -64,7 +64,7 @@ void CanCreateChildNode()
     // Via shared_ptr
     {
         std::shared_ptr<SceneNodef> node = SceneNodef::make();
-        std::shared_ptr<SceneNodef> child_node{ node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( DegreesToRadians(45.0f), 1.0f, 0.0f, 0.0f )) };
+        std::shared_ptr<SceneNodef> child_node{ node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( Degreef{45.0f}, 1.0f, 0.0f, 0.0f )) };
 
         assert(  child_node );
         assert( !child_node->parent().expired() );
@@ -85,7 +85,7 @@ void DetachChild()
     std::cout << __func__ << std::endl;
 
     std::shared_ptr<SceneNodef> node = SceneNodef::make();
-    std::shared_ptr<SceneNodef> child_node{ node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( DegreesToRadians(45.0f), 1.0f, 0.0f, 0.0f )) };
+    std::shared_ptr<SceneNodef> child_node{ node->createChildNode({ 1.0f, 2.0f, 3.0f }, Quaternionf::make_rotation( Degreef{45.0f}, 1.0f, 0.0f, 0.0f )) };
 
     assert( std::ranges::find( node->children(), child_node ) != node->children().end() ); // child_node IS in node->children()
     assert( !child_node->parent().expired() );

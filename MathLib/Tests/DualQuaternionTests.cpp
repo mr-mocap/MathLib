@@ -121,7 +121,7 @@ void HowToCombineASeparateRotationAndTranslation()
 void CreateRotationAndTestXAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( DegreesToRadians(degrees_of_rotation), Vector3Df::unit_x() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_x() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
@@ -136,7 +136,7 @@ void CreateRotationAndTestXAxis(float degrees_of_rotation)
 void CreateRotationAndTestYAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( DegreesToRadians(degrees_of_rotation), Vector3Df::unit_y() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_y() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
@@ -151,7 +151,7 @@ void CreateRotationAndTestYAxis(float degrees_of_rotation)
 void CreateRotationAndTestZAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( DegreesToRadians(degrees_of_rotation), Vector3Df::unit_z() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_z() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     assert( IsNear(rotation.real().w(), std::cos( DegreesToRadians(half_angle) )) );
@@ -230,7 +230,7 @@ void TranslatingOriginOnlyAlongX()
 
     Vector3Df       x_translation{ 5.0f, 0.0f, 0.0f };
     DualQuaternionf origin;
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0_deg_f, x_translation.x, x_translation.y, x_translation.z} * Quaternionf::identity();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, x_translation.x, x_translation.y, x_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = origin * DualQuaternionf::make_translation(x_translation);
     Vector3Df       output_translation = result.translation();
@@ -257,7 +257,7 @@ void TranslatingOriginOnlyAlongY()
 
     Vector3Df       y_translation{ 0.0f, 17.2f, 0.0f };
     DualQuaternionf origin;
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0_deg_f, y_translation.x, y_translation.y, y_translation.z} * Quaternionf::identity();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, y_translation.x, y_translation.y, y_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = origin * DualQuaternionf::make_translation(y_translation);
     Vector3Df       output_translation = result.translation();
@@ -284,7 +284,7 @@ void TranslatingOriginOnlyAlongZ()
 
     Vector3Df       z_translation{ 0.0f, 0.0f, -32.0f };
     DualQuaternionf origin;
-    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0_deg_f, z_translation.x, z_translation.y, z_translation.z} * Quaternionf::identity();
+    Quaternionf     encoded_translation = 0.5f * Quaternionf{0.0f, z_translation.x, z_translation.y, z_translation.z} * Quaternionf::identity();
 
     DualQuaternionf result = origin * DualQuaternionf::make_translation(z_translation);
     Vector3Df       output_translation = result.translation();

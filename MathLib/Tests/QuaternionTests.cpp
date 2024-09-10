@@ -89,7 +89,7 @@ void QuaternionAddsPerComponent()
 }
 
 void OperatorEqualsComparesMatchingComponents()
-{
+{ 
     std::cout << __func__ << std::endl;
 
     Quaternionf q_original{ 1.0, 2.0, 3.0, 4.0 };
@@ -453,7 +453,7 @@ void ARotationIsStoredAsTheHalfAngle()
     {
         float       degrees_of_rotation = 90.0f;
         float       half_angle = degrees_of_rotation / 2.0f;
-        Quaternionf rotation = Quaternionf::make_rotation( DegreesToRadians(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degree(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
 
         assert( IsNear(rotation.norm(), 1.0f) );
         assert( IsNear(rotation.w(), std::cos( DegreesToRadians(half_angle) )) );
@@ -466,7 +466,7 @@ void ARotationIsStoredAsTheHalfAngle()
     {
         float       degrees_of_rotation = 60.0f;
         float       half_angle = degrees_of_rotation / 2.0f;
-        Quaternionf rotation = Quaternionf::make_rotation( DegreesToRadians(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degree(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
 
         assert( IsNear(rotation.norm(), 1.0f) );
         assert( IsNear(rotation.w(), std::cos( DegreesToRadians(half_angle) )) );
@@ -483,7 +483,7 @@ void MakingARotationIsAccurate()
     // Rotate 90 deg around X axis.
     // A unit in Y becomes a unit in Z.
     {
-        Quaternionf rotation = Quaternionf::make_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
 
@@ -496,7 +496,7 @@ void MakingARotationIsAccurate()
     // Rotate 90 deg around Y axis.
     // A unit in X becomes a unit in -Z.
     {
-        Quaternionf rotation = Quaternionf::make_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(1.0f, 0.0f, 0.0f);
         Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
 
@@ -512,8 +512,8 @@ void PerformTwoConsecutiveRotations()
     std::cout << __func__ << std::endl;
 
     {
-        Quaternionf rotation_90_x = Quaternionf::make_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
-        Quaternionf rotation_90_y = Quaternionf::make_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = passively_rotate_encoded_point(rotation_90_x, encoded_point);
 
@@ -527,8 +527,8 @@ void PerformTwoConsecutiveRotations()
 
     // Same thing, but compose the rotations first
     {
-        Quaternionf rotation_90_x = Quaternionf::make_rotation( DegreesToRadians(90.0f), 1.0f, 0.0f, 0.0f );
-        Quaternionf rotation_90_y = Quaternionf::make_rotation( DegreesToRadians(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf composed_rotation = compose_rotations( rotation_90_x, rotation_90_y );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = passively_rotate_encoded_point(composed_rotation, encoded_point);
@@ -544,7 +544,7 @@ void TestPow()
 {
     std::cout << __func__ << std::endl;
 
-    float angle = 90.0_deg_f;
+    auto angle = 90.0_deg_f;
     Quaternionf rotation = Quaternionf::make_rotation( angle, Vector3Df::unit_z() );
     Quaternionf exp0 = rotation.pow(0.0f);
     Quaternionf exp_0_5 = rotation.pow(0.5f);
@@ -555,7 +555,7 @@ void TestPow()
     Quaternionf three_rotations_multiplied{ rotation * rotation * rotation };
 
     assert( exp0 == Quaternionf::identity() );
-    assert( exp_0_5 == Quaternionf::make_rotation(angle * 0.5f, Vector3Df::unit_z()) );
+    assert( exp_0_5 == Quaternionf::make_rotation( angle * 0.5f, Vector3Df::unit_z()) );
     assert( exp1 == rotation );
     assert( exp_2_0 == Quaternionf::make_rotation(angle * 2.0f, Vector3Df::unit_z()) );
 
@@ -616,21 +616,21 @@ void TestSlerp()
 
     // 0 to 90 in 10 deg increments
     {
-        float step_deg = 10.0f;
+        Degree step_deg{ 10.0f };
         float step_percentage = 1.0f / 9.0f;
 
         assert( slerp(begin, end, step_percentage * 0.0f) == begin );
 
-        assert( slerp(begin, end, step_percentage * 0.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 0.0f), z) );
-        assert( slerp(begin, end, step_percentage * 1.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 1.0f), z) );
-        assert( slerp(begin, end, step_percentage * 2.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 2.0f), z) );
-        assert( slerp(begin, end, step_percentage * 3.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 3.0f), z) );
-        assert( slerp(begin, end, step_percentage * 4.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 4.0f), z) );
-        assert( slerp(begin, end, step_percentage * 5.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 5.0f), z) );
-        assert( slerp(begin, end, step_percentage * 6.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 6.0f), z) );
-        assert( slerp(begin, end, step_percentage * 7.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 7.0f), z) );
-        assert( slerp(begin, end, step_percentage * 8.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 8.0f), z) );
-        assert( slerp(begin, end, step_percentage * 9.0f) == Quaternionf::make_rotation(DegreesToRadians(step_deg * 9.0f), z) );
+        assert( slerp(begin, end, step_percentage * 0.0f) == Quaternionf::make_rotation(step_deg * 0.0f, z) );
+        assert( slerp(begin, end, step_percentage * 1.0f) == Quaternionf::make_rotation(step_deg * 1.0f, z) );
+        assert( slerp(begin, end, step_percentage * 2.0f) == Quaternionf::make_rotation(step_deg * 2.0f, z) );
+        assert( slerp(begin, end, step_percentage * 3.0f) == Quaternionf::make_rotation(step_deg * 3.0f, z) );
+        assert( slerp(begin, end, step_percentage * 4.0f) == Quaternionf::make_rotation(step_deg * 4.0f, z) );
+        assert( slerp(begin, end, step_percentage * 5.0f) == Quaternionf::make_rotation(step_deg * 5.0f, z) );
+        assert( slerp(begin, end, step_percentage * 6.0f) == Quaternionf::make_rotation(step_deg * 6.0f, z) );
+        assert( slerp(begin, end, step_percentage * 7.0f) == Quaternionf::make_rotation(step_deg * 7.0f, z) );
+        assert( slerp(begin, end, step_percentage * 8.0f) == Quaternionf::make_rotation(step_deg * 8.0f, z) );
+        assert( slerp(begin, end, step_percentage * 9.0f) == Quaternionf::make_rotation(step_deg * 9.0f, z) );
 
         assert( slerp(begin, end, step_percentage * 9.0f) == end );
     }
