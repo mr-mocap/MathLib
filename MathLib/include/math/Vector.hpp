@@ -41,20 +41,47 @@ struct Vector2D
 
     bool isInf() const { return std::isinf(x) || std::isinf(y); }
 
+    /** @name Element Access
+     *  @{
+     */
     value_type x{};
     value_type y{};
+    /// @}
 };
 
-/** @name Operators
+/** @addtogroup Equality
+ * 
+ *  @relates Vector2D
+ * 
+ *  @{
+ * 
+ *  Compares two Vector2D inputs equal, component-wise, to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ */
+template <class T>
+constexpr bool approximately_equal_to(const Vector2D<T> &value_to_test, const Vector2D<T> &value_it_should_be, const float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+           approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+}
+/// @}
+
+/** @name Global Operators
+ * 
+ *  @relates Vector2D
+ * 
  *  @{
  */
 /** Defines equality of two Vector2D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
- * 
- *  @relates Vector2D
+ *  @see Equality
  */
 template <class Type>
 bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -67,8 +94,6 @@ bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
  *  @note Uses approximately_equal_to under-the-hood
  *  
  *  @see approximately_equal_to
- * 
- *  @relates Vector2D
  */
 template <class Type>
 bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -77,8 +102,6 @@ bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
 }
 
 /** Defines addition of two Vector2D objects
- * 
- *  @relates Vector2D
  */
 template <class Type>
 constexpr Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -87,8 +110,6 @@ constexpr Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<T
 }
 
 /** Defines subtraction of two Vector2D objects
- * 
- *  @relates Vector2D
  */
 template <class Type>
 constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -97,8 +118,6 @@ constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<T
 }
 
 /** Defines multiplication of two Vector2D objects
- * 
- *  @relates Vector2D
  */
 template <class Type>
 constexpr Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -107,8 +126,6 @@ constexpr Vector2D<Type> operator *(const Vector2D<Type> &left, const Vector2D<T
 }
 
 /** Defines division of two Vector2D objects
- * 
- *  @relates Vector2D
  */
 template <class Type>
 constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -117,6 +134,12 @@ constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<T
 }
 /// @}
 
+/** @name Global Functions
+ * 
+ *  @relates Vector2D
+ * 
+ *  @{
+ */
 /** Sums up the components of @p input
  *  
  *  @input The Vector2D to operate on
@@ -143,14 +166,13 @@ constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
  *  @param input The Vector2D to normalize
  *  
  *  @return The normalized version of @p input
- * 
- *  @relates Vector2D
  */
 template <class T>
 constexpr Vector2D<T> normalized(const Vector2D<T> &input)
 {
     return input.normalized();
 }
+/// @}
 
 /** A simple 3D vector class
  *
@@ -183,37 +205,61 @@ struct Vector3D
     bool isNaN() const { return std::isnan(x) || std::isnan(y) || std::isnan(z); }
     bool isInf() const { return std::isinf(x) || std::isinf(y) || std::isinf(z); }
 
+    /** @name Element Access
+     *  @{
+     */
     value_type x{};
     value_type y{};
     value_type z{};
+    /// @}
 };
 
-/** @name Operators
+/** @addtogroup Equality
+ * 
+ *  @relates Vector3D
+ * 
+ *  @{
+ * 
+ *  Compares two Vector3D inputs equal, component-wise, to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ */
+template <class T>
+constexpr bool approximately_equal_to(const Vector3D<T> &value_to_test, const Vector3D<T> &value_it_should_be, const float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+           approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+           approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
+}
+/// @}
+
+/** @name Global Operators
+ * 
+ *  @relates Vector3D
+ * 
  *  @{
  */
 /** Defines equality of two Vector3D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
- * 
- *  @relates Vector3D
+ *  @see Equality
  */
 template <class Type>
 bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
 {
-    return approximately_equal_to(left.x, right.x) &&
-           approximately_equal_to(left.y, right.y) &&
-           approximately_equal_to(left.z, right.z);
+    return approximately_equal_to(left, right);
 }
 
 /** Defines inequality of two Vector3D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
- * 
- *  @relates Vector3D
+ *  @see Equality
  */
 template <class Type>
 bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -222,8 +268,6 @@ bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
 }
 
 /** Defines addition of two Vector3D objects
- * 
- *  @relates Vector3D
  */
 template <class Type>
 constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -232,8 +276,6 @@ constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<T
 }
 
 /** Defines subtraction of two Vector3D objects
- * 
- *  @relates Vector3D
  */
 template <class Type>
 constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -242,8 +284,6 @@ constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<T
 }
 
 /** Defines multiplication of two Vector3D objects
- * 
- *  @relates Vector3D
  */
 template <class Type>
 constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -252,8 +292,6 @@ constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<T
 }
 
 /** Defines division of two Vector3D objects
- * 
- *  @relates Vector3D
  */
 template <class Type>
 constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
@@ -263,13 +301,17 @@ constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<T
 /// @}
 
 
+/** @name Global Functions
+ * 
+ *  @relates Vector3D
+ * 
+ *  @{
+ */
 /** Sums up the components of @p input
  *  
  *  @param input The Vector3D to operate on
  * 
  *  @return The sum of all the components
- * 
- *  @relates Vector3D
  */
 template <class T>
 constexpr T accumulate(const Vector3D<T> &input)
@@ -281,8 +323,6 @@ constexpr T accumulate(const Vector3D<T> &input)
  *
  *  @param left  The first vector
  *  @param right The second vector
- * 
- *  @relates Vector3D
  */
 template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
@@ -295,17 +335,19 @@ constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
  *  @param input The Vector3D to normalize
  *  
  *  @return The normalized version of @p input
- * 
- *  @relates Vector3D
  */
 template <class T>
 constexpr Vector3D<T> normalized(const Vector3D<T> &input)
 {
     return input.normalized();
 }
+/// @}
 
 
 /** @name Vector2D Type Aliases
+ *  
+ *  @relates Vector2D
+ * 
  *  @{
  */
 using Vector2Df = Vector2D<float>;
@@ -314,6 +356,9 @@ using Vector2Dld = Vector2D<long double>;
 ///@}
 
 /** @name Vector3D Type Aliases
+ *  
+ *  @relates Vector3D
+ * 
  *  @{
  */
 using Vector3Df = Vector3D<float>;

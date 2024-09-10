@@ -65,8 +65,12 @@ public:
         return std::isinf(real) || std::isinf(dual);
     }
 
+    /** @name Element Access
+     *  @{
+     */
     T real{};
     T dual{};
+    /// @}
 };
 
 /** @addtogroup Equality
@@ -91,7 +95,10 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
 }
 /// @}
 
-/** @name Operators
+/** @name Global Operators
+ * 
+ *  @relates Dual
+ * 
  *  @{
  */
 
@@ -99,9 +106,7 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
- * 
- *  @relates Dual
+ *  @see Equality
  */
 template<class T>
 constexpr bool operator ==(const Dual<T> &left, const Dual<T> &right)
@@ -113,9 +118,7 @@ constexpr bool operator ==(const Dual<T> &left, const Dual<T> &right)
  *  
  *  @note Uses operator ==()
  *  
- *  @see approximately_equal_to
- * 
- *  @relates Dual
+ *  @see Equality
  */
 template<class T>
 constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
@@ -123,10 +126,6 @@ constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
     return !(left == right);
 }
 
-/** Defines multiplication of two Dual objects
- * 
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
 {
@@ -134,10 +133,6 @@ constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
                    left.real * right.dual + right.real * left.dual);
 }
 
-/** Defines scaling a Dual
- *  
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator *(const float scalar, const Dual<T> &d)
 {
@@ -162,10 +157,6 @@ constexpr Dual<T> operator *(const Dual<T> &d, const double scalar)
     return d * Dual<T>( T(scalar) );
 }
 
-/** Defines division of Duals
- *  
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
 {
@@ -173,148 +164,97 @@ constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
         (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
 }
 
-/** Defines dividing a scalar by a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator /(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) / d;
 }
 
-/** Defines dividing a Dual by a scalar
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &d, const float scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
 
-/** Defines dividing a scalar by a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator /(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) / d;
 }
 
-/** Defines dividing a Dual by a scalar
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &d, const double scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
 
-/** Defines addition of Duals
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real + right.real, left.dual + right.dual);
 }
 
-/** Defines adding a scalar and a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator +(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) + d;
 }
 
-/** Defines adding a scalar and a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &d, const float scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
 
-/** Defines adding a scalar and a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator +(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) + d;
 }
 
-/** Defines adding a scalar and a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &d, const double scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
 
-/** Defines subtraction of Duals
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
 {
     return Dual<T>(left.real - right.real, left.dual - right.dual);
 }
 
-/** Defines subtracting a Dual from a scalar
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator -(const float scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) - d;
 }
 
-/** Defines subtracting a scalar from a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &d, const float scalar)
 {
     return d - Dual<T>( T(scalar) );
 }
 
-/** Defines subtracting a Dual from a scalar
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator -(const double scalar, const Dual<T> &d)
 {
     return Dual<T>( T(scalar) ) - d;
 }
 
-/** Defines subtracting a scalar from a Dual
- *
- *  @relates Dual
- */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &d, const double scalar)
 {
     return d - Dual<T>( T(scalar) );
 }
-
 /// @}
 
+/** @name Global Functions
+ * 
+ *  @relates Dual
+ * 
+ *  @{
+ */
 /** Calculates the dot-product of two Duals
  *  
  *  @return The dot-product of the two inputs
@@ -375,8 +315,11 @@ constexpr T accumulate(const Dual<T> &input)
 {
     return T{input.real + input.dual};
 }
+/// @}
 
 /** @name Type Aliases
+ * 
+ *  @relates Dual
  * 
  *  @{
  */

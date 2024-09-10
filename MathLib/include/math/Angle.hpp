@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/Conversions.hpp"
+#include "math/ApproximatelyEqualTo.hpp"
 
 /** @file
  *  
@@ -20,10 +21,38 @@ public:
     constexpr Radian() = default;
     explicit constexpr Radian(const T value) : _value(value) { }
 
+    /** @name Element Access
+     *  @{
+     */
     T value() const { return _value; }
+    /// @}
 private:
     T _value{};
 };
+
+/** @addtogroup Equality
+ * 
+ *  @relates Radian
+ *  
+ *  @{
+ * 
+ *  Compares two Radian inputs equal to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ *  
+ *  @see Equality
+ */
+template <class T>
+constexpr bool approximately_equal_to(const Radian<T> &value_to_test, const Radian<T> &value_it_should_be, const float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
+}
+/// @}
+
 
 
 /** Class that stores its units in degrees
@@ -45,8 +74,15 @@ public:
 
     operator Radian<T>() { return Radian<T>{DegreesToRadians(_value)}; }
 
+    /** @name Element Access
+     *  @{
+     */
     T value() const { return _value; }
+    /// @}
 
+    /** @name Operators
+     *  @{
+     */
     Degree<T> operator +=(const Degree<T> other)
     {
         _value += other.value();
@@ -70,18 +106,47 @@ public:
         _value *= other.value();
         return *this;
     }
+    /// @}
 
 private:
     T _value{};
 };
 
+/** @addtogroup Equality
+ * 
+ *  @relates Degree
+ *  
+ *  @{
+ * 
+ *  Compares two Degree inputs equal to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ *  
+ *  @see Equality
+ */
+template <class T>
+constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, const float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
+}
+/// @}
+
+/** @name Global Operators
+ * 
+ *  @relates Degree
+ * 
+ *  @{
+ */
 template <class T>
 Degree<T> operator +(const Degree<T> left, const Degree<T> right)
 {
     return Degree<T>{ left.value() + right.value() };
 }
 
-template <class T>
 Degree<T> operator -(const Degree<T> left, const Degree<T> right)
 {
     return Degree<T>{ left.value() - right.value() };
@@ -122,24 +187,24 @@ Degree<T> operator /(const Degree<T> left, const T right)
 {
     return Degree<T>{ left.value() / right };
 }
+/// @}
 
-/** @addtogroup UserDefinedLiterals User-Defined Literals
+/** @name User-Defined Literals
+ * 
+ *  @relates Degree
  * 
  *  @{
  */
-/// Creates a Degree<float> object with the given value
 constexpr Degree<float> operator ""_deg_f(long double degrees)
 {
     return Degree<float>{ static_cast<float>(degrees) };
 }
 
-/// Creates a Degree<double> object with the given value
 constexpr Degree<double> operator ""_deg(long double degrees)
 {
     return Degree<double>{ static_cast<double>(degrees) };
 }
 
-/// Creates a Degree<long double> object with the given value
 constexpr Degree<long double> operator ""_deg_ld(long double degrees)
 {
     return Degree{degrees};
@@ -149,6 +214,8 @@ constexpr Degree<long double> operator ""_deg_ld(long double degrees)
 
 /** @name Degree Type Aliases
  * 
+ *  @relates Degree
+ * 
  *  @{
  */
 using Degreef  = Degree<float>;
@@ -157,6 +224,8 @@ using Degreeld = Degree<long double>;
 /// @}
 
 /** @name Radian Type Aliases
+ * 
+ *  @relates Radian
  * 
  *  @{
  */

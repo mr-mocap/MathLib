@@ -18,7 +18,7 @@
  *  
  *  Here, we just compose the ideas of the Dual and Quaternion classes
  *  together to create a DualQuaternion class.
- *
+ * 
  *  @headerfile "math/DualQuaternion.hpp"
  * 
  *  @see Dual
@@ -308,6 +308,8 @@ private:
 
 /** @addtogroup Equality
  * 
+ *  @relates DualQuaternion
+ * 
  *  @{
  * 
  *  Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
@@ -318,9 +320,7 @@ private:
  *  
  *  @return @c true if they are equal
  *  
- *  @see approximately_equal_to
- * 
- *  @relates DualQuaternion
+ *  @see Equality
  */
 template<class T>
 constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, const float tolerance = 0.0002f)
@@ -330,7 +330,10 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
 }
 /// @}
 
-/** @name Operators
+/** @name Global Operators
+ * 
+ *  @relates DualQuaternion
+ * 
  *  @{
  */
 
@@ -338,9 +341,7 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
- * 
- *  @relates DualQuaternion
+ *  @see Equality
  */
 template<class T>
 constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
@@ -352,9 +353,7 @@ constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T
  *  
  *  @note Uses operator ==()
  *  
- *  @see approximately_equal_to
- * 
- *  @relates DualQuaternion
+ *  @see Equality
  */
 template<class T>
 constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
@@ -365,8 +364,6 @@ constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T
 /** Defines addition
  *  
  *  We basically just add the underlying Dual numbers
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -380,8 +377,6 @@ constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
@@ -395,8 +390,6 @@ constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &
  *  @param dual_quaternion The DualQuaternion to scale
  *  
  *  @return The scaled DualQuaternion
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
@@ -410,8 +403,6 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
@@ -422,8 +413,6 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
 /** Defines multiplication of two DualQuaternions
  *
  *  @return The resulting DualQuaternion
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -436,8 +425,6 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const
  *  @param dual_scalar The amount to scale by
  *  
  *  @return The scaled DualQuaternion
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
@@ -446,13 +433,17 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
 }
 /// @}
 
+/** @name Global Functions
+ * 
+ *  @relates DualQuaternion
+ * 
+ *  @{
+ */
 /** Creates the normalized form of a DualQuaternion
  *  
  *  @param input The DualQuaternion to normalize
  *  
  *  @return The normalized version of @p input
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
@@ -464,8 +455,6 @@ constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
  *  @param beginning  The start state
  *  @param end        The ending state
  *  @param percentage The percentage blend between the two (typically [0..1])
- * 
- *  @relates DualQuaternion
  */
 template <class T>
 constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const float percentage)
@@ -474,9 +463,12 @@ constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const Dual
 
     return blended.normalized();
 }
+/// @}
 
 
 /** @name Type Aliases
+ * 
+ *  @relates DualQuaternion
  * 
  *  @{
  */
