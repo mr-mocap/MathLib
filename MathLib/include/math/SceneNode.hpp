@@ -15,6 +15,10 @@
 
 template <class T> class SceneNode;
 
+/** @name Type Aliases
+ * 
+ *  @relates SceneNode
+ */
 template <class T = float>
 using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
 
@@ -30,7 +34,7 @@ using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
  *       SceneNoded
  *       SceneNodeld
  */
-template <class Type = float>
+template <class Type>
 class SceneNode : public std::enable_shared_from_this<SceneNode<Type>>
 {
     struct Private { explicit Private() = default; };
@@ -156,6 +160,8 @@ private:
 
 
 /** @name Type Aliases
+ * 
+ *  @relates SceneNode
  * 
  *  @{
  */
