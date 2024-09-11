@@ -3,6 +3,7 @@
 #include "math/Conversions.hpp"
 #include <cassert>
 #include <iostream>
+#include <format>
 
 
 /** @file
@@ -18,6 +19,62 @@
  * 
  *  @{
  */
+
+static std::shared_ptr<SceneNodef> GenerateHierarchicalSkeleton(HierarchicalCoordinateSystemf &world)
+{
+    std::shared_ptr<SceneNodef> waist{ world.root().createChildNode( Vector3Df::zero(), Quaternionf::identity(), "waist" ) };
+
+    // Lower parts
+    std::shared_ptr<SceneNodef> left_upper_leg{ waist->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_upper_leg" ) };
+    std::shared_ptr<SceneNodef> right_upper_leg{ waist->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_upper_leg" ) };
+
+    std::shared_ptr<SceneNodef> left_lower_leg{ left_upper_leg->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_lower_leg" ) };
+    std::shared_ptr<SceneNodef> right_lower_leg{ right_upper_leg->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_lower_leg" ) };
+
+    std::shared_ptr<SceneNodef> left_foot{ left_lower_leg->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_foot" ) };
+    std::shared_ptr<SceneNodef> right_foot{ right_lower_leg->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_foot" ) };
+
+    // Upper parts
+    std::shared_ptr<SceneNodef> torso_1{ waist->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "torso_1" ) };
+    std::shared_ptr<SceneNodef> torso_2{ torso_1->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "torso_2" ) };
+    std::shared_ptr<SceneNodef> torso_3{ torso_2->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "torso_3" ) };
+
+    std::shared_ptr<SceneNodef> left_upper_arm{ torso_3->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_upper_arm" ) };
+    std::shared_ptr<SceneNodef> right_upper_arm{ torso_3->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_upper_arm" ) };
+
+    std::shared_ptr<SceneNodef> left_lower_arm{ left_upper_arm->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_lower_arm" ) };
+    std::shared_ptr<SceneNodef> right_lower_arm{ right_upper_arm->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_lower_arm" ) };
+
+    std::shared_ptr<SceneNodef> left_hand{ left_lower_arm->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "left_hand" ) };
+    std::shared_ptr<SceneNodef> right_hand{ right_lower_arm->createChildNode( Vector3Df::zero(), Quaternionf::identity(), "right_hand" ) };
+
+    return waist;
+}
+
+int NumParents(std::shared_ptr<SceneNodef> node)
+{
+    if (node->parent().use_count() > 0)
+        return NumParents(node->parent().lock()) + 1;
+    else
+        return 0;
+}
+
+void PrintNode(std::shared_ptr<SceneNodef> node)
+{
+    int num_parents = NumParents(node);
+
+    for (int i = 0; i < num_parents; ++i)
+        std::cout << '\t';
+
+    std::cout << std::format("{}", node->name()) << std::endl;
+}
+
+void PrintHierarchy(std::shared_ptr<SceneNodef> root)
+{
+    PrintNode(root);
+    for (auto child : root->children())
+        PrintHierarchy(child);
+}
 
 /** Contains the unit tests for HierarchicalCoordinateSystem
  * 
@@ -83,6 +140,17 @@ void ConvertingALocalCoordinateToAGlobalCoordinate()
     }
 }
 
+void ConstructSkeleton()
+{
+    std::cout << __func__ << std::endl;
+
+    HierarchicalCoordinateSystemf world;
+
+    std::shared_ptr<SceneNodef> skeleton{ GenerateHierarchicalSkeleton(world) };
+
+    PrintHierarchy(skeleton);
+}
+
 /** Run all of the unit tests in this namespace
  * 
  */
@@ -93,6 +161,7 @@ void Run()
     DefaultConstructedState();
     CreatingAChildAddsToTheNodesChildren();
     ConvertingALocalCoordinateToAGlobalCoordinate();
+    ConstructSkeleton();
 
     std::cout << "PASSED!" << std::endl;
 }

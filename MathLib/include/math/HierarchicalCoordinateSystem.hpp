@@ -15,7 +15,7 @@
  * 
  *  @headerfile "math/HierarchicalCoordinateSystem.hpp"
  */
-template <class Type = float>
+template <class Type>
 class HierarchicalCoordinateSystem
 {
 public:
@@ -33,6 +33,8 @@ private:
 
 
 /** @name Type Aliases
+ * 
+ *  @relates HierarchicalCoordinateSystem
  * 
  *  @{
  */

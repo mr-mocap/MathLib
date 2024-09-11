@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 
 /** @file
@@ -57,10 +58,12 @@ public:
     SceneNode(Private ,
               std::weak_ptr<SceneNode>  parent,
               const Vector3D<Type>     &translation,
-              const Quaternion<Type>   &rotation)
+              const Quaternion<Type>   &rotation,
+              const std::string        &name)
         :
         _coordinate_system{ DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
-        _parent{parent}
+        _parent{parent},
+        _name{name}
     {
     }
     ~SceneNode() = default;
@@ -85,10 +88,14 @@ public:
     const DualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
           DualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
 
+    const std::string &name() const { return _name; }
+          std::string &name()       { return _name; }
+
     std::weak_ptr<SceneNode<Type>> createChildNode(const Vector3D<Type>   &translation = Vector3D<Type>::zero(),
-                                                   const Quaternion<Type> &rotation    = Quaternion<Type>::identity())
+                                                   const Quaternion<Type> &rotation    = Quaternion<Type>::identity(),
+                                                   const std::string      &name        = std::string())
     {
-        std::shared_ptr<SceneNode<Type>> new_node = make( this->weak_from_this(), translation, rotation );
+        std::shared_ptr<SceneNode<Type>> new_node = make( this->weak_from_this(), translation, rotation, name );
 
         _children.push_back( new_node );
         return new_node;
@@ -148,14 +155,15 @@ private:
     DualQuaternion<Type>           _coordinate_system;
     std::weak_ptr<SceneNode<Type>> _parent;
     SceneNodeList<Type>            _children;
+    std::string                    _name;
 
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
                                                  const Vector3D<Type>     &translation,
-                                                 const Quaternion<Type>   &rotation)
+                                                 const Quaternion<Type>   &rotation,
+                                                 const std::string        &name)
     {
-        return std::make_shared<SceneNode<Type>>(Private{}, parent, translation, rotation);
+        return std::make_shared<SceneNode<Type>>(Private{}, parent, translation, rotation, name);
     }
-
 };
 
 
