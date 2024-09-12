@@ -51,17 +51,20 @@ static std::shared_ptr<SceneNodef> GenerateHierarchicalSkeleton(HierarchicalCoor
     return waist;
 }
 
-int NumParents(std::shared_ptr<SceneNodef> node)
+int NumParents(std::shared_ptr<SceneNodef> node, std::shared_ptr<SceneNodef> relative_to)
 {
-    if (node->parent().use_count() > 0)
-        return NumParents(node->parent().lock()) + 1;
-    else
-        return 0;
+    if (node == relative_to)
+        return 0; // We are relative to this, so 0 by definition!
+
+    if (node->parent().use_count() == 0)
+        return 0; // No parent!
+
+    return NumParents(node->parent().lock(), relative_to) + 1;
 }
 
-void PrintNode(std::shared_ptr<SceneNodef> node)
+void PrintNode(std::shared_ptr<SceneNodef> node, std::shared_ptr<SceneNodef> relative_to)
 {
-    int num_parents = NumParents(node);
+    int num_parents = NumParents(node, relative_to);
 
     for (int i = 0; i < num_parents; ++i)
         std::cout << '\t';
@@ -69,11 +72,16 @@ void PrintNode(std::shared_ptr<SceneNodef> node)
     std::cout << std::format("{}", node->name()) << std::endl;
 }
 
+void PrintHierarchyRecursive(std::shared_ptr<SceneNodef> root, std::shared_ptr<SceneNodef> relative_to = nullptr)
+{
+    PrintNode(root, relative_to);
+    for (auto child : root->children())
+        PrintHierarchyRecursive(child, relative_to);
+}
+
 void PrintHierarchy(std::shared_ptr<SceneNodef> root)
 {
-    PrintNode(root);
-    for (auto child : root->children())
-        PrintHierarchy(child);
+    PrintHierarchyRecursive(root, root);
 }
 
 /** Contains the unit tests for HierarchicalCoordinateSystem
