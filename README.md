@@ -16,18 +16,18 @@ I didn't go for a full unit testing approch.  Rather I just wanted to touch the 
 it works in a few specific cases.
 
 ## Ideas
-- Conversions
--- Make a Vector3D from a Vector2D with z = 0
+1. Conversions
+   * Make a Vector3D from a Vector2D with z = 0
 
-- Classes
--- Point2D & Point3D to mirror the Vector couterparts?  Would this be too many classes with unexpected
-   interactions?
--- Plane
--- Ray
--- Sphere
+2. Classes
+   * Point2D & Point3D to mirror the Vector couterparts?  Would this be too many classes with unexpected
+     interactions?
+   * Plane
+   * Ray
+   * Sphere
 
-- Functions
--- cross product
--- Flesh out Quaternion
---- pitch, roll, yaw
---- Euler angles
+3. Functions
+   * cross product
+   * Flesh out Quaternion
+      * pitch, roll, yaw
+      * Euler angles
