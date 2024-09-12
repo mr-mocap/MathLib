@@ -14,3 +14,20 @@ a similar library out there when I was about to put this up).
 The project contains some unit testing for verifying that I did indeed implement things correctly.
 I didn't go for a full unit testing approch.  Rather I just wanted to touch the basics to make sure that
 it works in a few specific cases.
+
+## Ideas
+- Conversions
+-- Make a Vector3D from a Vector2D with z = 0
+
+- Classes
+-- Point2D & Point3D to mirror the Vector couterparts?  Would this be too many classes with unexpected
+   interactions?
+-- Plane
+-- Ray
+-- Sphere
+
+- Functions
+-- cross product
+-- Flesh out Quaternion
+--- pitch, roll, yaw
+--- Euler angles
