@@ -20,7 +20,7 @@ template <class T> class SceneNode;
  * 
  *  @relates SceneNode
  */
-template <class T = float>
+template <class T>
 using SceneNodeList = std::vector< std::shared_ptr<SceneNode<T>> >;
 
 
