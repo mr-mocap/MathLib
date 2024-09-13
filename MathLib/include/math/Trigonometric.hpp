@@ -25,5 +25,5 @@ inline T normalized_sinc(T radians)
     if ( radians == T{0} )
         return T{1};
     else
-        return sin( numbers::pi_v<T> * radians) / (numbers::pi_v<T> * radians);
+        return sin( std::numbers::pi_v<T> * radians) / (std::numbers::pi_v<T> * radians);
 }

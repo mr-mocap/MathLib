@@ -328,7 +328,7 @@ constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, co
     // Just use the underlying Dual number's version of the same function...
     return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
 }
-/// @}
+/// @}  {Equality}
 
 /** @name Global Operators
  * 
@@ -361,18 +361,27 @@ constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T
     return !(left == right);
 }
 
+/** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
+ *  @{
+ */
+
+/** @name Addition
+ *  @{
+ */
 /** Defines addition
  *  
  *  We basically just add the underlying Dual numbers
- *  
- *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
 {
     return DualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
 }
+/// @}  {Addition}
 
+/** @name Multiplication
+ *  @{
+ */
 /** Defines scaling a DualQuaternion
  *
  *  @param dual_quaternion The DualQuaternion to scale
@@ -429,7 +438,11 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const
 {
     return DualQuaternion<T>{ left_side._frame_of_reference * right_side._frame_of_reference };
 }
+/// @}  {Multiplication}
 
+/** @name Division
+ *  @{
+ */
 /** Defines division of a DualQuaternion by a Dual
  *
  *  @param dual_quaternion The DualQuaternion to scale
@@ -444,7 +457,9 @@ constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion,
 {
     return DualQuaternion<T>{ (dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
 }
-/// @}
+/// @}  {Division}
+/// @}  {DualQuaternionAlgebra}
+/// @}  {Global Operators}
 
 /** @name Global Functions
  * 
@@ -476,7 +491,7 @@ constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const Dual
 
     return blended.normalized();
 }
-/// @}
+/// @}  {GlobalFunctions}
 
 
 /** @name Type Aliases

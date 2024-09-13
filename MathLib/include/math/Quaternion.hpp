@@ -275,7 +275,7 @@ constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const 
            approximately_equal_to(value_to_test.j(), value_it_should_be.j(), tolerance) &&
            approximately_equal_to(value_to_test.k(), value_it_should_be.k(), tolerance);
 }
-/// @}
+/// @}  {Equality}
 
 /** @name Global Operators
  * 
@@ -308,9 +308,14 @@ constexpr bool operator !=(const Quaternion<T> &left, const Quaternion<T> &right
     return !(left == right);
 }
 
+/** @addtogroup QuaternionAlgebra Quaternion Algebra
+ *  @{
+ */
+
+/** @name Multiplication
+ *  @{
+ */
 /** Implements multiplication of a Quaternion by a scalar
- *  
- *  @see Quaternion Algebra
  */
 template <class T>
 constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, const T scalar)
@@ -319,8 +324,6 @@ constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, const T scal
 }
 
 /** Implements multiplication of a scalar by a Quaternion
- *  
- *  @see Quaternion Algebra
  */
 template <class T>
 constexpr Quaternion<T> operator *(const T scalar, const Quaternion<T> &quaternion)
@@ -328,77 +331,9 @@ constexpr Quaternion<T> operator *(const T scalar, const Quaternion<T> &quaterni
     return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
 }
 
-/** Defines division of a Quaternion by a scalar
- *  
- *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
- */
-template <class T>
-constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const T scalar)
-{
-    return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
-}
-
-/** Defines division of a scalar by a Quaternion
- *  
- *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
- */
-template <class T>
-constexpr Quaternion<T> operator /(const T scalar, const Quaternion<T> &quaternion)
-{
-    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
-}
-
-/** Defines division of two Quaternions
- *  
- *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
- */
-template <class T>
-constexpr Quaternion<T> operator /(const Quaternion<T> &left, const Quaternion<T> &right)
-{
-    return left * right.inverse();
-}
-
-/** Defines addition of two Quaternions
- *  
- *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
- */
-template <class T>
-constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T> &right)
-{
-    return Quaternion<T>{left.w() + right.w(),
-                         left.i() + right.i(),
-                         left.j() + right.j(),
-                         left.k() + right.k()};
-}
-
-/** Defines subtraction of two Quaternions
- *  
- *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
- */
-template <class T>
-constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T> &right)
-{
-    return Quaternion<T>{left.w() - right.w(),
-                         left.i() - right.i(),
-                         left.j() - right.j(),
-                         left.k() - right.k()};
-}
-
 /** Defines multiplication of two Quaternions
  *  
  *  @return the new Quaternion
- *  
- *  @see Quaternion Algebra
  */
 template <class T>
 constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T> &right)
@@ -422,19 +357,89 @@ constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T
                          left.k() * right.w()
     };
 }
+/// @}
 
-/** Defines negation of a Quaternions
+/** @name Division
+ *  @{
+ */
+/** Defines division of a Quaternion by a scalar
  *  
  *  @return the new Quaternion
+ */
+template <class T>
+constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const T scalar)
+{
+    return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
+}
+
+/** Defines division of a scalar by a Quaternion
  *  
- *  @see Quaternion Algebra
+ *  @return the new Quaternion
+ */
+template <class T>
+constexpr Quaternion<T> operator /(const T scalar, const Quaternion<T> &quaternion)
+{
+    return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
+}
+
+/** Defines division of two Quaternions
+ *  
+ *  @return the new Quaternion
+ */
+template <class T>
+constexpr Quaternion<T> operator /(const Quaternion<T> &left, const Quaternion<T> &right)
+{
+    return left * right.inverse();
+}
+/// @}
+
+/** @name Addition
+ *  @{
+ */
+/** Defines addition of two Quaternions
+ *  
+ *  @return the new Quaternion
+ */
+template <class T>
+constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T> &right)
+{
+    return Quaternion<T>{left.w() + right.w(),
+                         left.i() + right.i(),
+                         left.j() + right.j(),
+                         left.k() + right.k()};
+}
+/// @}
+
+/** @name Subtraction
+ *  @{
+ */
+/** Defines subtraction of two Quaternions
+ *  
+ *  @return the new Quaternion
+ */
+template <class T>
+constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T> &right)
+{
+    return Quaternion<T>{left.w() - right.w(),
+                         left.i() - right.i(),
+                         left.j() - right.j(),
+                         left.k() - right.k()};
+}
+/// @}
+
+/** Defines negation of a Quaternion
+ *  
+ *  @return the new Quaternion
+ * 
+ *  @name Negation
  */
 template <class T>
 constexpr Quaternion<T> operator -(const Quaternion<T> &q)
 {
     return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
 }
-/// @}
+/// @}  {QuaternionAlgebra}
+/// @}  {GlobalOperators}
 
 /** @name Global Functions
  * 
@@ -595,7 +600,7 @@ constexpr Quaternion<T> slerp(const Quaternion<T> &begin, const Quaternion<T> &e
 
     return begin * combined.pow(percent);
 }
-/// @}
+/// @}  {GlobalFunctions}
 
 /** @name Type Aliases
  *

@@ -93,7 +93,7 @@ bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
  *  
  *  @note Uses approximately_equal_to under-the-hood
  *  
- *  @see approximately_equal_to
+ *  @see Equality
  */
 template <class Type>
 bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
@@ -101,6 +101,13 @@ bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
     return !(left == right);
 }
 
+/** @addtogroup 2DVectorAlgebra 2D Vector Algebra
+ *  @{
+ */
+
+/** @name Addition
+ *  @{
+ */
 /** Defines addition of two Vector2D objects
  */
 template <class Type>
@@ -108,7 +115,11 @@ constexpr Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<T
 {
     return Vector2D<Type>{ left.x + right.x, left.y + right.y };
 }
+/// @}  {Addition}
 
+/** @name Subtraction
+ *  @{
+ */
 /** Defines subtraction of two Vector2D objects
  */
 template <class Type>
@@ -116,7 +127,9 @@ constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<T
 {
     return Vector2D<Type>{ left.x - right.x, left.y - right.y };
 }
+/// @}  {Subtraction}
 
+#if 0
 /** Defines multiplication of two Vector2D objects
  */
 template <class Type>
@@ -132,7 +145,9 @@ constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<T
 {
     return Vector2D<Type>{ left.x / right.x, left.y / right.y };
 }
-/// @}
+#endif
+/// @}  {GlobalOperators}
+/// @}  {2DVectorAlgebra}
 
 /** @name Global Functions
  * 
@@ -172,7 +187,7 @@ constexpr Vector2D<T> normalized(const Vector2D<T> &input)
 {
     return input.normalized();
 }
-/// @}
+/// @}  {GlobalFunctions}
 
 /** A simple 3D vector class
  *
@@ -267,6 +282,13 @@ bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
     return !(left == right);
 }
 
+/** @addtogroup 3DVectorAlgebra 3D Vector Algebra
+ *  @{
+ */
+
+/** @name Addition
+ *  @{
+ */
 /** Defines addition of two Vector3D objects
  */
 template <class Type>
@@ -274,7 +296,11 @@ constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<T
 {
     return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
 }
+/// @}  {Addition}
 
+/** @name Subtraction
+ *  @{
+ */
 /** Defines subtraction of two Vector3D objects
  */
 template <class Type>
@@ -282,7 +308,8 @@ constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<T
 {
     return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
 }
-
+/// @}  {Subtraction}
+#if 0
 /** Defines multiplication of two Vector3D objects
  */
 template <class Type>
@@ -298,7 +325,9 @@ constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<T
 {
     return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
 }
-/// @}
+#endif
+/// @}  {3DVectorAlgebra}
+/// @}  {GlobalOperators}
 
 
 /** @name Global Functions
@@ -341,7 +370,7 @@ constexpr Vector3D<T> normalized(const Vector3D<T> &input)
 {
     return input.normalized();
 }
-/// @}
+/// @}  {GlobalFunctions}
 
 
 /** @name Vector2D Type Aliases

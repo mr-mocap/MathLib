@@ -1,7 +1,6 @@
 #pragma once
 
-#include "math/Conversions.hpp"
-#include "math/ApproximatelyEqualTo.hpp"
+#include "math/Functions.hpp"
 
 /** @file
  *  
@@ -106,7 +105,7 @@ public:
         _value *= other.value();
         return *this;
     }
-    /// @}
+    /// @}  {Operators}
 
 private:
     T _value{};
@@ -194,7 +193,7 @@ Degree<T> operator -(const Degree<T> input)
 {
     return Degree{ -input.value() };
 }
-/// @}
+/// @}  {Degree}
 
 /** @name User-Defined Literals
  * 
@@ -216,7 +215,7 @@ constexpr Degree<long double> operator ""_deg_ld(long double degrees)
 {
     return Degree{degrees};
 }
-/// @}
+/// @}  {User-Defined Literals}
 
 
 /** @name Degree Type Aliases
@@ -228,7 +227,7 @@ constexpr Degree<long double> operator ""_deg_ld(long double degrees)
 using Degreef  = Degree<float>;
 using Degreed  = Degree<double>;
 using Degreeld = Degree<long double>;
-/// @}
+/// @} {Degree Type Aliases}
 
 /** @name Radian Type Aliases
  * 
@@ -239,4 +238,4 @@ using Degreeld = Degree<long double>;
 using Radianf  = Radian<float>;
 using Radiand  = Radian<double>;
 using Radianld = Radian<long double>;
-/// @}
+/// @}  {Radian Type Aliases}

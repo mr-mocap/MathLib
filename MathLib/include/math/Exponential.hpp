@@ -28,7 +28,7 @@ T exp(T input)
 {
     return input.exp();
 }
-/// @}
+/// @}  {General Template Case}
 
 /** @name Specializations
  * 
@@ -53,9 +53,8 @@ long double exp<long double>(long double input)
 {
     return std::exp(input);
 }
-/// @}
-
-/// @}
+/// @}  {Specializations}
+/// @}  {Exponential}
 
 
 /** @addtogroup Log
@@ -80,7 +79,7 @@ T log(T input)
 {
     return input.log();
 }
-/// @}
+/// @}  {General Template Case}
 
 /** @name Specializations
  * 
@@ -105,6 +104,5 @@ long double log<long double>(long double input)
 {
     return std::log(input);
 }
-/// @}
-
-/// @}
+/// @}  {Specializations}
+/// @}  {Log}

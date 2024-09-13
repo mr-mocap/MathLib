@@ -92,7 +92,7 @@ constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T
     return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
            approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
 }
-/// @}
+/// @}  {Equality}
 
 /** @name Global Operators
  * 
@@ -125,9 +125,14 @@ constexpr bool operator !=(const Dual<T> &left, const Dual<T> &right)
     return !(left == right);
 }
 
+/** @addtogroup DualAlgebra Dual Number Algebra
+ *  @{
+ */
+
+/** @name Multiplication
+ *  @{
+ */
 /** Defines multiplication of two Duals
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
@@ -137,8 +142,6 @@ constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
 }
 
 /** Defines multiplication of a single-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator *(const float scalar, const Dual<T> &d)
@@ -147,8 +150,6 @@ constexpr Dual<T> operator *(const float scalar, const Dual<T> &d)
 }
 
 /** Defines multiplication of a Dual and a single-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator *(const Dual<T> &d, const float scalar)
@@ -157,8 +158,6 @@ constexpr Dual<T> operator *(const Dual<T> &d, const float scalar)
 }
 
 /** Defines multiplication of a double-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator *(const double scalar, const Dual<T> &d)
@@ -167,18 +166,18 @@ constexpr Dual<T> operator *(const double scalar, const Dual<T> &d)
 }
 
 /** Defines multiplication of a Dual and a double-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator *(const Dual<T> &d, const double scalar)
 {
     return d * Dual<T>( T(scalar) );
 }
+/// @}
 
+/** @name Division
+ *  @{
+ */
 /** Defines division of two Duals
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
@@ -188,8 +187,6 @@ constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
 }
 
 /** Defines division of a single-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator /(const float scalar, const Dual<T> &d)
@@ -198,8 +195,6 @@ constexpr Dual<T> operator /(const float scalar, const Dual<T> &d)
 }
 
 /** Defines division of a Dual and a single-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &d, const float scalar)
@@ -208,8 +203,6 @@ constexpr Dual<T> operator /(const Dual<T> &d, const float scalar)
 }
 
 /** Defines division of a double-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator /(const double scalar, const Dual<T> &d)
@@ -218,18 +211,18 @@ constexpr Dual<T> operator /(const double scalar, const Dual<T> &d)
 }
 
 /** Defines division of a Dual and a double-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator /(const Dual<T> &d, const double scalar)
 {
     return d / Dual<T>( T(scalar) );
 }
+/// @}
 
+/** @name Addition
+ *  @{
+ */
 /** Defines addition of two Duals
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
@@ -238,8 +231,6 @@ constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
 }
 
 /** Defines addition of a single-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator +(const float scalar, const Dual<T> &d)
@@ -248,8 +239,6 @@ constexpr Dual<T> operator +(const float scalar, const Dual<T> &d)
 }
 
 /** Defines addition of a Dual and a single-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &d, const float scalar)
@@ -258,8 +247,6 @@ constexpr Dual<T> operator +(const Dual<T> &d, const float scalar)
 }
 
 /** Defines addition of a double-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator +(const double scalar, const Dual<T> &d)
@@ -268,18 +255,18 @@ constexpr Dual<T> operator +(const double scalar, const Dual<T> &d)
 }
 
 /** Defines addition of a Dual and a double-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator +(const Dual<T> &d, const double scalar)
 {
     return d + Dual<T>( T(scalar) );
 }
+/// @}
 
+/** @name Subtraction
+ *  @{
+ */
 /** Defines subtraction of two Duals
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
@@ -288,8 +275,6 @@ constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
 }
 
 /** Defines subtraction of a single-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator -(const float scalar, const Dual<T> &d)
@@ -298,8 +283,6 @@ constexpr Dual<T> operator -(const float scalar, const Dual<T> &d)
 }
 
 /** Defines subtraction of a Dual and a single-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &d, const float scalar)
@@ -308,8 +291,6 @@ constexpr Dual<T> operator -(const Dual<T> &d, const float scalar)
 }
 
 /** Defines subtraction of a double-precision scalar and a Dual
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator -(const double scalar, const Dual<T> &d)
@@ -318,15 +299,15 @@ constexpr Dual<T> operator -(const double scalar, const Dual<T> &d)
 }
 
 /** Defines subtraction of a Dual and a double-precision scalar
- *  
- *  @see Dual Number Algebra
  */
 template<class T>
 constexpr Dual<T> operator -(const Dual<T> &d, const double scalar)
 {
     return d - Dual<T>( T(scalar) );
 }
-/// @}
+/// @}  {Subtraction}
+/// @}  {DualAlgebra}
+/// @}  {GlobalOperators}
 
 /** @name Global Functions
  * 
@@ -394,7 +375,7 @@ constexpr T accumulate(const Dual<T> &input)
 {
     return T{input.real + input.dual};
 }
-/// @}
+/// @}  {GlobalFunctions}
 
 /** @name Type Aliases
  * 
