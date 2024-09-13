@@ -308,12 +308,20 @@ constexpr bool operator !=(const Quaternion<T> &left, const Quaternion<T> &right
     return !(left == right);
 }
 
+/** Implements multiplication of a Quaternion by a scalar
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, const T scalar)
 {
     return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
 }
 
+/** Implements multiplication of a scalar by a Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator *(const T scalar, const Quaternion<T> &quaternion)
 {
@@ -323,8 +331,8 @@ constexpr Quaternion<T> operator *(const T scalar, const Quaternion<T> &quaterni
 /** Defines division of a Quaternion by a scalar
  *  
  *  @return the new Quaternion
- *
- *  @relates Quaternion
+ *  
+ *  @see Quaternion Algebra
  */
 template <class T>
 constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const T scalar)
@@ -332,18 +340,36 @@ constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const T scal
     return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
 }
 
+/** Defines division of a scalar by a Quaternion
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator /(const T scalar, const Quaternion<T> &quaternion)
 {
     return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
 }
 
+/** Defines division of two Quaternions
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator /(const Quaternion<T> &left, const Quaternion<T> &right)
 {
     return left * right.inverse();
 }
 
+/** Defines addition of two Quaternions
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T> &right)
 {
@@ -353,6 +379,12 @@ constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T
                          left.k() + right.k()};
 }
 
+/** Defines subtraction of two Quaternions
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T> &right)
 {
@@ -362,6 +394,12 @@ constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T
                          left.k() - right.k()};
 }
 
+/** Defines multiplication of two Quaternions
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T> &right)
 {
@@ -385,6 +423,12 @@ constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T
     };
 }
 
+/** Defines negation of a Quaternions
+ *  
+ *  @return the new Quaternion
+ *  
+ *  @see Quaternion Algebra
+ */
 template <class T>
 constexpr Quaternion<T> operator -(const Quaternion<T> &q)
 {

@@ -165,6 +165,7 @@
     <ClInclude Include="include\math\Conversions.hpp" />
     <ClInclude Include="include\math\Dual.hpp" />
     <ClInclude Include="include\math\DualQuaternion.hpp" />
+    <ClInclude Include="include\math\Functions.hpp" />
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp" />
     <ClInclude Include="include\math\Quaternion.hpp" />
     <ClInclude Include="include\math\SceneNode.hpp" />

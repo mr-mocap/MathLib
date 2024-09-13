@@ -92,5 +92,8 @@
     <ClInclude Include="Tests\AngleTests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\math\Functions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

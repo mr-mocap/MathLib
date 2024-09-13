@@ -2,8 +2,8 @@
 
 #include "math/Dual.hpp"
 #include "math/Quaternion.hpp"
-#include "math/Conjugate.hpp"
 #include "math/Vector.hpp"
+#include "math/Functions.hpp"
 #include <cassert>
 
 /** @file
@@ -364,6 +364,8 @@ constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T
 /** Defines addition
  *  
  *  We basically just add the underlying Dual numbers
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -377,6 +379,8 @@ constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
@@ -390,6 +394,8 @@ constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &
  *  @param dual_quaternion The DualQuaternion to scale
  *  
  *  @return The scaled DualQuaternion
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
@@ -403,6 +409,8 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
  *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
@@ -413,6 +421,8 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion,
 /** Defines multiplication of two DualQuaternions
  *
  *  @return The resulting DualQuaternion
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
@@ -422,9 +432,12 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const
 
 /** Defines division of a DualQuaternion by a Dual
  *
- *  @param dual_scalar The amount to scale by
+ *  @param dual_quaternion The DualQuaternion to scale
+ *  @param dual_scalar     The amount to scale by
  *  
  *  @return The scaled DualQuaternion
+ *  
+ *  @see DualQuaternion Algebra
  */
 template <class T>
 constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
