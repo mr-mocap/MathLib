@@ -154,11 +154,31 @@ constexpr T accumulate(const Vector2D<T> &input)
  *
  *  @param left  The first vector
  *  @param right The second vector
+ * 
+ *  @return The dot product of the two input vectors
  */
 template <class T>
 constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
 {
     return (left.x * right.x) + (left.y * right.y);
+}
+
+/** Calculates a pseudo cross product between two Vector2D objects
+ * 
+ *  @param left  The first vector
+ *  @param right The second vector
+ * 
+ *  @result A scalar value representing the 2D cross product
+ * 
+ *  @note Since the 3D version of cross product comes from the calculation
+ *        of a determinant of a matrix, I define the same idea here but
+ *        using a 2 x 2 matrix instead of the 3 x 3 3D for the version (also
+ *        owing to the recursive nature of the calculation of a determinant).
+ */
+template <class T>
+constexpr T cross(const Vector2D<T> &left, const Vector2D<T> &right)
+{
+    return (left.x * right.y) - (left.y * right.x);
 }
 
 /** Creates the normalized form of a Vector2D

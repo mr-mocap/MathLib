@@ -151,11 +151,29 @@ constexpr T accumulate(const Vector3D<T> &input)
  *
  *  @param left  The first vector
  *  @param right The second vector
+ * 
+ *  @return The dot product of the two input vectors
  */
 template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
 {
     return (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
+}
+
+/** Calculates the cross product of two Vector3D objects
+ * 
+ *  @param left  The first vector
+ *  @param right The second vector
+ * 
+ *  @return The cross product of the input vectors
+ */
+template <class T>
+constexpr Vector3D<T> cross(const Vector3D<T> &left, const Vector3D<T> &right)
+{
+    return Vector3D<T>{ (left.y * right.z) - (left.z * right.y),
+                        (left.z * right.x) - (left.x * right.z),
+                        (left.x * right.y) - (left.y * right.x)
+                      };
 }
 
 /** Creates the normalized form of a Vector3D
