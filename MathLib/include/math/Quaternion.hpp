@@ -1,8 +1,7 @@
 #pragma once
 
-#include "math/ApproximatelyEqualTo.hpp"
-#include "math/Conjugate.hpp"
-#include "math/Vector.hpp"
+#include "math/Functions.hpp"
+#include "math/Vector3D.hpp"
 #include "math/Angle.hpp"
 #include <cassert>
 #include <cmath>
