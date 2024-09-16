@@ -25,6 +25,30 @@ public:
      */
     T value() const { return _value; }
     /// @}
+
+    Radian<T>& operator +=(const Radian other)
+    {
+        _value += other._value;
+        return *this;
+    }
+
+    Radian<T>& operator -=(const Radian other)
+    {
+        _value -= other._value;
+        return *this;
+    }
+
+    Radian<T>& operator *=(const Radian other)
+    {
+        _value *= other._value;
+        return *this;
+    }
+
+    Radian<T>& operator /=(const Radian other)
+    {
+        _value /= other._value;
+        return *this;
+    }
 private:
     T _value{};
 };
@@ -51,6 +75,79 @@ constexpr bool approximately_equal_to(const Radian<T> &value_to_test, const Radi
     return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
 }
 /// @}
+
+/** @name Radian Global Operators
+ * 
+ *  @relates Radian
+ * 
+ *  @{
+ */
+template <class T>
+bool operator <(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() < right.value();
+}
+
+template <class T>
+bool operator <=(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() <= right.value();
+}
+
+template <class T>
+bool operator ==(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() == right.value();
+}
+
+template <class T>
+bool operator !=(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() != right.value();
+}
+
+template <class T>
+bool operator >(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() > right.value();
+}
+
+template <class T>
+bool operator >=(const Radian<T> left, const Radian<T> right)
+{
+    return left.value() >= right.value();
+}
+
+template <class T>
+Radian<T> operator +(const Radian<T> left, const Radian<T> right)
+{
+    return Radian<T>{ left.value() + right.value() };
+}
+
+template <class T>
+Radian<T> operator -(const Radian<T> left, const Radian<T> right)
+{
+    return Radian<T>{ left.value() - right.value() };
+}
+
+template <class T>
+Radian<T> operator *(const Radian<T> left, const Radian<T> right)
+{
+    return Radian<T>{ left.value() * right.value() };
+}
+
+template <class T>
+Radian<T> operator /(const Radian<T> left, const Radian<T> right)
+{
+    return Radian<T>{ left.value() / right.value() };
+}
+
+template <class T>
+Radian<T> operator -(const Radian<T> input)
+{
+    return Radian{ -input.value() };
+}
+/// @}  {Radian Global Operators}
 
 
 
@@ -134,12 +231,48 @@ constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degr
 }
 /// @}
 
-/** @name Global Operators
+/** @name Degree Global Operators
  * 
  *  @relates Degree
  * 
  *  @{
  */
+template <class T>
+bool operator <(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() < right.value();
+}
+
+template <class T>
+bool operator <=(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() <= right.value();
+}
+
+template <class T>
+bool operator ==(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() == right.value();
+}
+
+template <class T>
+bool operator !=(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() != right.value();
+}
+
+template <class T>
+bool operator >(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() > right.value();
+}
+
+template <class T>
+bool operator >=(const Degree<T> left, const Degree<T> right)
+{
+    return left.value() >= right.value();
+}
+
 template <class T>
 Degree<T> operator +(const Degree<T> left, const Degree<T> right)
 {

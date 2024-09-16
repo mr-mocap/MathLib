@@ -57,6 +57,16 @@ void PassedToFunction()
     TestFunction( t.yx() );
 }
 
+void OperatorEqualsAndNotEquals()
+{
+    Vector2Df one{ 1.0f, 2.0f };
+    Vector2Df two{ 1.0f, 2.0f };
+    Vector2Df three{ 9.16f, 32.7f };
+
+    assert( one == two );
+    assert( one != three );
+}
+
 void AssignVector2DToVector2DRef()
 {
     std::cout << __func__ << std::endl;
@@ -167,6 +177,7 @@ void Run()
     OneInitializer();
     TwoInitializers();
     PassedToFunction();
+    OperatorEqualsAndNotEquals();
     AssignVector2DToVector2DRef();
     AssignVector2DRefToVector2DRef();
     AssignVector2DRefToVector2D();
