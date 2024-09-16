@@ -62,9 +62,6 @@
     <ClInclude Include="include\math\SceneNode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\math\Vector.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\math\HierarchicalCoordinateSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -100,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="Tests\Vector2DTests.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Vector2D.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\math\Vector3D.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -171,7 +171,8 @@
     <ClInclude Include="include\math\Quaternion.hpp" />
     <ClInclude Include="include\math\SceneNode.hpp" />
     <ClInclude Include="include\math\Trigonometric.hpp" />
-    <ClInclude Include="include\math\Vector.hpp" />
+    <ClInclude Include="include\math\Vector2D.hpp" />
+    <ClInclude Include="include\math\Vector3D.hpp" />
     <ClInclude Include="Tests\AngleTests.hpp" />
     <ClInclude Include="Tests\DualNumberTests.hpp" />
     <ClInclude Include="Tests\DualQuaternionTests.hpp" />
