@@ -36,6 +36,9 @@
     <ClCompile Include="Tests\AngleTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Vector2DTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="include\math\Functions.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\Vector2DTests.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

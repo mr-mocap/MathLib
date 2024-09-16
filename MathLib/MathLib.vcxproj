@@ -156,6 +156,7 @@
     <ClCompile Include="Tests\HierarchicalCoordinateSystemTests.cpp" />
     <ClCompile Include="Tests\QuaternionTests.cpp" />
     <ClCompile Include="Tests\SceneNodeTests.cpp" />
+    <ClCompile Include="Tests\Vector2DTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Exponential.hpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Tests\HierarchicalCoordinateSystemTests.hpp" />
     <ClInclude Include="Tests\QuaternionTests.hpp" />
     <ClInclude Include="Tests\SceneNodeTests.hpp" />
+    <ClInclude Include="Tests\Vector2DTests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
