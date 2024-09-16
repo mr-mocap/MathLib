@@ -9,6 +9,8 @@
  *  @hideincludegraph
  */
 
+template <class T>
+struct Vector2DRef;
 
 /** A simple 2D vector class
  *
@@ -19,6 +21,14 @@ template <class Type>
 struct Vector2D
 {
     using value_type = Type;
+
+    constexpr Vector2D() = default;
+    constexpr Vector2D(const Type &x_in, const Type &y_in = 0)
+        :
+        x{x_in},
+        y{y_in}
+        {
+        }
 
     /** @name Constants
      *  @{
@@ -41,11 +51,21 @@ struct Vector2D
 
     bool isInf() const { return std::isinf(x) || std::isinf(y); }
 
+    /** @name Swizzle operations
+     *  @{
+     */
+    constexpr const Vector2DRef<Type> xy() const;
+    constexpr       Vector2DRef<Type> xy();
+
+    constexpr const Vector2DRef<Type> yx() const;
+    constexpr       Vector2DRef<Type> yx();
+    /// @}
+
     /** @name Element Access
      *  @{
      */
-    value_type x{};
-    value_type y{};
+    Type x{};
+    Type y{};
     /// @}
 };
 
@@ -204,3 +224,73 @@ using Vector2Df = Vector2D<float>;
 using Vector2Dd = Vector2D<double>;
 using Vector2Dld = Vector2D<long double>;
 ///@}  {Vector2D Type Aliases}
+
+
+/** Class representing a reference to elements of a Vector2D object
+ * 
+ *  @note This class exists to support simple vector swizzle operations.
+ * 
+ *  @relates Vector2D
+ */
+template <class Type>
+struct Vector2DRef
+{
+    using value_type = Type;
+
+    /** Explicitly force the user to create these
+     * 
+     */
+    constexpr explicit Vector2DRef(Type &x_in, Type &y_in) : x{x_in}, y{y_in} { }
+
+    constexpr Vector2DRef<Type> &operator =(const Vector2DRef<Type> &input)
+    {
+        // Early exit if we try to self-assign
+        if (this == &input)
+            return *this;
+
+        x = input.x;
+        y = input.y;
+        return *this;
+    }
+
+    constexpr Vector2DRef<Type> &operator =(const Vector2D<Type> &input)
+    {
+        x = input.x;
+        y = input.y;
+        return *this;
+    }
+
+    /** Vector2D conversion operator
+     * 
+     *  This allows Vector2DRef objects to automatically be converted to Vector2D objects
+     *  for situations like passing to functions or constructors to Vector2D objects.
+     */
+    operator Vector2D<Type>() const { return Vector2D<Type>{ x, y }; }
+
+    Type &x;
+    Type &y;
+};
+
+template <class Type>
+constexpr const Vector2DRef<Type> Vector2D<Type>::xy() const
+{
+    return Vector2DRef{ x, y };
+}
+
+template <class Type>
+constexpr Vector2DRef<Type> Vector2D<Type>::xy()
+{
+    return Vector2DRef{ x, y };
+}
+
+template <class Type>
+constexpr const Vector2DRef<Type> Vector2D<Type>::yx() const
+{
+    return Vector2DRef{ y, x };
+}
+
+template <class Type>
+constexpr Vector2DRef<Type> Vector2D<Type>::yx()
+{
+    return Vector2DRef{ y, x };
+}

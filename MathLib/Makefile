@@ -7,6 +7,7 @@ CXXFLAGS=-std=c++20 -W -Wall -pedantic -I . $(INC_PARAMS) $(DEBUG_FLAGS)
 
 TEST_OBJS = MathLib.o \
             Tests/AngleTests.o \
+			Tests/Vector2DTests.o \
             Tests/DualNumberTests.o \
             Tests/QuaternionTests.o \
             Tests/DualQuaternionTests.o \

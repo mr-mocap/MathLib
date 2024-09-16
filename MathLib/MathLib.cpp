@@ -6,6 +6,7 @@
 #include "Tests/SceneNodeTests.hpp"
 #include "Tests/HierarchicalCoordinateSystemTests.hpp"
 #include "Tests/AngleTests.hpp"
+#include "Tests/Vector2DTests.hpp"
 
 
 int main()
@@ -18,6 +19,7 @@ int main()
     DualQuaternionTests::Run();
     SceneNodeTests::Run();
     HierarchicalCoordinateSystemTests::Run();
+    Vector2DTests::Run();
 
     std::cout << "All tests passed!\n";
 
