@@ -9,9 +9,6 @@
  * 
  */
 
-template <class T>
-struct Vector3DRef;
-
 /** A simple 3D Vector class
  * 
  *  @headerfile "math/Vector3D.hpp"
@@ -21,6 +18,43 @@ struct Vector3D
 {
     using value_type = Type;
 
+    /** Class representing a reference to elements of a Vector3D object
+     * 
+     *  @note This class exists to support simple vector swizzle operations.
+     * 
+     *  @relates Vector3D
+     */
+    struct Ref
+    {
+        using value_type = Type;
+
+        /** Explicitly force the user to create these
+         * 
+         */
+        constexpr Ref(Type &x_in, Type &y_in, Type &z_in) : x{x_in}, y{y_in}, z{z_in} { }
+
+        constexpr Ref operator =(const Ref &input)
+        {
+            return Ref{ x = input.x, y = input.y, z = input.z };
+        }
+
+        constexpr Ref operator =(const Vector3D<Type> &input)
+        {
+            return Ref{ x = input.x, y = input.y, z = input.z };
+        }
+
+        /** Vector2D conversion operator
+         * 
+         *  This allows Vector2DRef objects to automatically be converted to Vector2D objects
+         *  for situations like passing to functions or constructors to Vector2D objects.
+         */
+        operator Vector3D<Type>() const { return { x, y, z }; }
+
+        Type &x;
+        Type &y;
+        Type &z;
+    };
+
     constexpr Vector3D() = default;
     constexpr Vector3D(const Type &x_in, const Type &y_in = 0, const Type &z_in = 0)
         :
@@ -29,6 +63,7 @@ struct Vector3D
         z{z_in}
         {
         }
+
 
     /** @name Constants
      *  @{
@@ -54,33 +89,35 @@ struct Vector3D
     /** @name Swizzle operations
      *  @{
      */
-    constexpr const Vector2DRef<Type> xy() const;
-    constexpr       Vector2DRef<Type> xy();
+    constexpr const Vector2D<Type>::Ref xy() const { return { x, y }; }
+    constexpr       Vector2D<Type>::Ref xy()       { return { x, y }; }
 
-    constexpr const Vector2DRef<Type> xz() const;
-    constexpr       Vector2DRef<Type> xz();
+    constexpr const Vector2D<Type>::Ref xz() const { return { x, z }; }
+    constexpr       Vector2D<Type>::Ref xz()       { return { x, z }; }
 
-    constexpr const Vector2DRef<Type> yx() const;
-    constexpr       Vector2DRef<Type> yx();
+    constexpr const Vector2D<Type>::Ref yx() const { return { y, x }; }
+    constexpr       Vector2D<Type>::Ref yx()       { return { y, x }; }
 
-    constexpr const Vector2DRef<Type> yz() const;
-    constexpr       Vector2DRef<Type> yz();
+    constexpr const Vector2D<Type>::Ref yz() const { return { y, z }; }
+    constexpr       Vector2D<Type>::Ref yz()       { return { y, z }; }
 
-    constexpr const Vector2DRef<Type> zx() const;
-    constexpr       Vector2DRef<Type> zx();
+    constexpr const Vector2D<Type>::Ref zx() const { return { z, x }; }
+    constexpr       Vector2D<Type>::Ref zx()       { return { z, x }; }
 
-    constexpr const Vector3DRef<Type> xyz() const;
-    constexpr       Vector3DRef<Type> xyz();
+    constexpr const Ref xyz() const { return Ref{ x, y, z }; }
+    constexpr       Ref xyz()       { return Ref{ x, y, z }; }
 
-    constexpr const Vector3DRef<Type> xzy() const;
-    constexpr       Vector3DRef<Type> xzy();
+    constexpr const Ref xzy() const { return Ref{ x, z, y }; }
+    constexpr       Ref xzy()       { return Ref{ x, z, y }; }
 
-    constexpr const Vector3DRef<Type> zxy() const;
-    constexpr       Vector3DRef<Type> zxy();
+    constexpr const Ref zxy() const { return Ref{ z, x, y }; }
+    constexpr       Ref zxy()       { return Ref{ z, x, y }; }
 
-    constexpr const Vector3DRef<Type> zyx() const;
-    constexpr       Vector3DRef<Type> zyx();
+    constexpr const Ref zyx() const { return Ref{ z, y, x }; }
+    constexpr       Ref zyx()       { return Ref{ z, y, x }; }
     /// @}
+
+    operator Ref() { return Ref{ x, y, z }; }
 
     /** @name Element Access
      *  @{
@@ -322,148 +359,3 @@ using Vector3Df = Vector3D<float>;
 using Vector3Dd = Vector3D<double>;
 using Vector3Dld = Vector3D<long double>;
 ///@}  {Vector3D Type Aliases}
-
-
-/** Class representing a reference to elements of a Vector3D object
- * 
- *  @note This class exists to support simple vector swizzle operations.
- * 
- *  @relates Vector3D
- */
-template <class Type>
-struct Vector3DRef
-{
-    using value_type = Type;
-
-    /** Explicitly force the user to create these
-     * 
-     */
-    constexpr explicit Vector3DRef(Type &x_in, Type &y_in, Type &z_in) : x{x_in}, y{y_in}, z{z_in} { }
-
-    constexpr Vector3DRef<Type> &operator =(const Vector3DRef<Type> &input)
-    {
-        // Early exit if we try to self-assign
-        if (this == &input)
-            return *this;
-
-        x = input.x;
-        y = input.y;
-        z = input.z;
-        return *this;
-    }
-
-    constexpr Vector3DRef<Type> &operator =(const Vector3D<Type> &input)
-    {
-        x = input.x;
-        y = input.y;
-        z = input.z;
-        return *this;
-    }
-
-    /** Vector2D conversion operator
-     * 
-     *  This allows Vector2DRef objects to automatically be converted to Vector2D objects
-     *  for situations like passing to functions or constructors to Vector2D objects.
-     */
-    operator Vector3D<Type>() const { return Vector3D<Type>{ x, y, z }; }
-
-    Type &x;
-    Type &y;
-    Type &z;
-};
-
-template <class Type>
-constexpr const Vector2DRef<Type> Vector3D<Type>::xy() const
-{
-    return Vector2DRef{ x, y };
-}
-
-template <class Type>
-constexpr Vector2DRef<Type> Vector3D<Type>::xy()
-{
-    return Vector2DRef{ x, y };
-}
-
-template <class Type>
-constexpr const Vector2DRef<Type> Vector3D<Type>::yx() const
-{
-    return Vector2DRef{ y, x };
-}
-
-template <class Type>
-constexpr Vector2DRef<Type> Vector3D<Type>::yx()
-{
-    return Vector2DRef{ y, x };
-}
-
-template <class Type>
-constexpr const Vector2DRef<Type> Vector3D<Type>::yz() const
-{
-    return Vector2DRef{ y, z };
-}
-
-template <class Type>
-constexpr Vector2DRef<Type> Vector3D<Type>::yz()
-{
-    return Vector2DRef{ y, z };
-}
-
-template <class Type>
-constexpr const Vector2DRef<Type> Vector3D<Type>::zx() const
-{
-    return Vector2DRef{ z, x };
-}
-
-template <class Type>
-constexpr Vector2DRef<Type> Vector3D<Type>::zx()
-{
-    return Vector2DRef{ z, x };
-}
-
-template <class Type>
-constexpr const Vector3DRef<Type> Vector3D<Type>::xyz() const
-{
-    return Vector3DRef{ x, y, z };
-}
-
-template <class Type>
-constexpr Vector3DRef<Type> Vector3D<Type>::xyz()
-{
-    return Vector3DRef{ x, y, z };
-}
-
-template <class Type>
-constexpr const Vector3DRef<Type> Vector3D<Type>::xzy() const
-{
-    return Vector3DRef{ x, z, y };
-}
-
-template <class Type>
-constexpr Vector3DRef<Type> Vector3D<Type>::xzy()
-{
-    return Vector3DRef{ x, z, y };
-}
-
-template <class Type>
-constexpr const Vector3DRef<Type> Vector3D<Type>::zxy() const
-{
-    return Vector3DRef{ z, x, y };
-}
-
-template <class Type>
-constexpr Vector3DRef<Type> Vector3D<Type>::zxy()
-{
-    return Vector3DRef{ z, x, y };
-}
-
-template <class Type>
-constexpr const Vector3DRef<Type> Vector3D<Type>::zyx() const
-{
-    return Vector3DRef{ z, y, x };
-}
-
-template <class Type>
-constexpr Vector3DRef<Type> Vector3D<Type>::zyx()
-{
-    return Vector3DRef{ z, y, x };
-}
