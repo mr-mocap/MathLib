@@ -1,5 +1,6 @@
 #include "Vector2DTests.hpp"
 #include "math/Vector2D.hpp"
+#include "math/Checks.hpp"
 #include <iostream>
 #include <format>
 
@@ -18,8 +19,8 @@ void DefaultInitialied()
 
     Vector2Df default_initialized;
 
-    assert( default_initialized.x == 0.0f );
-    assert( default_initialized.y == 0.0f );
+    CHECK_IF_EQUAL( default_initialized.x, 0.0f );
+    CHECK_IF_EQUAL( default_initialized.y, 0.0f );
 }
 
 void OneInitializer()
@@ -28,8 +29,8 @@ void OneInitializer()
 
     Vector2Df one{ 2.2f };
 
-    assert( one.x == 2.2f );
-    assert( one.y == 0.0f );
+    CHECK_IF_EQUAL( one.x, 2.2f );
+    CHECK_IF_EQUAL( one.y, 0.0f );
 
 }
 
@@ -39,8 +40,8 @@ void TwoInitializers()
 
     Vector2Df one{ 2.2f, 3.3f };
 
-    assert( one.x == 2.2f );
-    assert( one.y == 3.3f );
+    CHECK_IF_EQUAL( one.x, 2.2f );
+    CHECK_IF_EQUAL( one.y, 3.3f );
 
 }
 
@@ -63,8 +64,8 @@ void OperatorEqualsAndNotEquals()
     Vector2Df two{ 1.0f, 2.0f };
     Vector2Df three{ 9.16f, 32.7f };
 
-    assert( one == two );
-    assert( one != three );
+    CHECK_IF_EQUAL( one, two );
+    CHECK_IF_NOT_EQUAL( one, three );
 }
 
 void AssignVector2DToVector2DRef()
@@ -74,23 +75,23 @@ void AssignVector2DToVector2DRef()
     Vector2Df one{ 1.0f, 2.0f };
     Vector2Df two{ 2.1f, 2.3f };
 
-    assert( one.x != two.x );
-    assert( one.y != two.y );
+    CHECK_IF_NOT_EQUAL( one.x, two.x );
+    CHECK_IF_NOT_EQUAL( one.y, two.y );
 
     one.xy() = two;
 
-    assert( one.x == two.x );
-    assert( one.y == two.y );
+    CHECK_IF_EQUAL( one.x, two.x );
+    CHECK_IF_EQUAL( one.y, two.y );
     
     one.yx() = two;
 
-    assert( one.x == two.y );
-    assert( one.y == two.x );
+    CHECK_IF_EQUAL( one.x, two.y );
+    CHECK_IF_EQUAL( one.y, two.x );
 
     two.yx() = { 5.5f, 6.6f };
 
-    assert( two.x == 6.6f );
-    assert( two.y == 5.5f );
+    CHECK_IF_EQUAL( two.x, 6.6f );
+    CHECK_IF_EQUAL( two.y, 5.5f );
 }
 
 void AssignVector2DRefToVector2DRef()
@@ -100,13 +101,13 @@ void AssignVector2DRefToVector2DRef()
     Vector2Df one{ 1.0f, 2.0f };
     Vector2Df two{ 2.1f, 2.3f };
 
-    assert( one.x != two.x );
-    assert( one.y != two.y );
+    CHECK_IF_NOT_EQUAL( one.x, two.x );
+    CHECK_IF_NOT_EQUAL( one.y, two.y );
 
     one.xy() = two.xy();
 
-    assert( one.x == two.x );
-    assert( one.y == two.y );
+    CHECK_IF_EQUAL( one.x, two.x );
+    CHECK_IF_EQUAL( one.y, two.y );
 }
 
 void AssignVector2DRefToVector2D()
@@ -116,13 +117,13 @@ void AssignVector2DRefToVector2D()
     Vector2Df one{ 1.0f, 2.0f };
     Vector2Df two{ 2.1f, 2.3f };
 
-    assert( one.x != two.y );
-    assert( one.y != two.y );
+    CHECK_IF_NOT_EQUAL( one.x, two.y );
+    CHECK_IF_NOT_EQUAL( one.y, two.y );
 
     one = two.yx();
 
-    assert( one.x == two.y );
-    assert( one.y == two.x );
+    CHECK_IF_EQUAL( one.x, two.y );
+    CHECK_IF_EQUAL( one.y, two.x );
 }
 
 void AssignVector2DToVector2D()
@@ -132,13 +133,13 @@ void AssignVector2DToVector2D()
     Vector2Df one{ 1.0f, 2.0f };
     Vector2Df two{ 2.1f, 2.3f };
 
-    assert( one.x != two.x );
-    assert( one.y != two.y );
+    CHECK_IF_NOT_EQUAL( one.x, two.x );
+    CHECK_IF_NOT_EQUAL( one.y, two.y );
 
     one = two;
 
-    assert( one.x == two.x );
-    assert( one.y == two.y );
+    CHECK_IF_EQUAL( one.x, two.x );
+    CHECK_IF_EQUAL( one.y, two.y );
 }
 
 void LRef()
@@ -151,8 +152,8 @@ void LRef()
 
         one.xy() = two.yx();
 
-        assert( one.x == two.y );
-        assert( one.y == two.x );
+        CHECK_IF_EQUAL( one.x, two.y );
+        CHECK_IF_EQUAL( one.y, two.x );
     }
 }
 
@@ -164,8 +165,8 @@ void Swizzle()
         Vector2Df one{ 1.0f, 2.0f };
         Vector2Df two{ one.yx() };
 
-        assert( two.x == 2.0f );
-        assert( two.y == 1.0f );
+        CHECK_IF_EQUAL( two.x, 2.0f );
+        CHECK_IF_EQUAL( two.y, 1.0f );
     }
 }
 

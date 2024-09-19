@@ -1,5 +1,6 @@
 #include "DualNumberTests.hpp"
 #include "math/Dual.hpp"
+#include "math/Checks.hpp"
 #include <cassert>
 #include <iostream>
 
@@ -18,14 +19,6 @@
  */
 
 
-/** Determines if two values are close to each other within some tolerance
- * 
- */
-static bool IsNear(Dualf value_to_test, Dualf value_it_should_be, float epsilon = 0.0002f)
-{
-    return approximately_equal_to(value_to_test, value_it_should_be, epsilon);
-}
-
 /** Contains the unit tests for Dual
  * 
  */
@@ -40,8 +33,8 @@ void IdentityDualIsAsExpected()
 
     Dualf identity = Dualf::identity();
 
-    assert(identity.real == 1.0);
-    assert(identity.dual == 0.0);
+    CHECK_IF_EQUAL(identity.real, 1.0f);
+    CHECK_IF_EQUAL(identity.dual, 0.0f);
 }
 
 /** Verify the representation of a Dual's zero representation
@@ -52,8 +45,8 @@ void ZeroDualIsAsExpected()
 
     Dualf zero = Dualf::zero();
 
-    assert(zero.real == 0.0);
-    assert(zero.dual == 0.0);
+    CHECK_IF_EQUAL(zero.real, 0.0f);
+    CHECK_IF_EQUAL(zero.dual, 0.0f);
 }
 
 /** Verify that @c make_pure sets @c real() to zero
@@ -62,7 +55,7 @@ void MakePureDualSetsRealComponentToZero()
 {
     std::cout << __func__ << std::endl;
 
-    assert( Dualf::make_pure(3.0f).real == 0.0f );
+    CHECK_IF_EQUAL( Dualf::make_pure(3.0f).real, 0.0f );
 }
 
 /** Verify that @c make_pure sets @c dual() to the given value
@@ -71,7 +64,7 @@ void MakePureDualSetsDualComponentToGivenValue()
 {
     std::cout << __func__ << std::endl;
 
-    assert( Dualf::make_pure(3.3f).dual == 3.3f );
+    CHECK_IF_EQUAL( Dualf::make_pure(3.3f).dual, 3.3f );
 }
 
 /** Verifies the @c dot() function
@@ -84,7 +77,7 @@ void DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues()
     Dualf d1{ 1.0f, 3.0f  };
     Dualf d2{ 9.0f, 11.0f };
 
-    assert( dot( d1, d2 ) == 42.0f );
+    CHECK_IF_EQUAL( dot( d1, d2 ), 42.0f );
 }
 
 /** Verifies the @c dualscalar_sqrt() function
@@ -98,7 +91,7 @@ void DualScalarSquareRootTimesItselfIsTheOriginalNumber()
     Dualf root = dualscalar_sqrt(original_number);
     Dualf root_squared = root * root;
 
-    assert( IsNear(original_number, root_squared) );
+    CHECK_IF_EQUAL( original_number, root_squared );
 }
 
 /** Run all of the unit tests in this namespace
