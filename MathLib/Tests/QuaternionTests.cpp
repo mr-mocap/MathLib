@@ -27,6 +27,41 @@
 namespace QuaternionTests
 {
 
+void TestRotationAtRegularIntervals(Quaternionf begin, Degreef amount_of_rotation, Vector3Df rotation_axis, int num_equal_steps)
+{
+#if 0
+    Degreef step_deg{ 10.0f };
+    float step_percentage = 1.0f / 9.0f;
+
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 0.0f), begin );
+
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 0.0f), Quaternionf::make_rotation(step_deg * 0.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 1.0f), Quaternionf::make_rotation(step_deg * 1.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 2.0f), Quaternionf::make_rotation(step_deg * 2.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 3.0f), Quaternionf::make_rotation(step_deg * 3.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 4.0f), Quaternionf::make_rotation(step_deg * 4.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 5.0f), Quaternionf::make_rotation(step_deg * 5.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 6.0f), Quaternionf::make_rotation(step_deg * 6.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 7.0f), Quaternionf::make_rotation(step_deg * 7.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 8.0f), Quaternionf::make_rotation(step_deg * 8.0f, z) );
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 9.0f), Quaternionf::make_rotation(step_deg * 9.0f, z) );
+
+    CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 9.0f), end );
+#endif
+    Quaternionf end_rotation{ Quaternionf::make_rotation(amount_of_rotation, rotation_axis) };
+    float step_percentage = 1.0f / num_equal_steps;
+
+    for (int iCurrentStep = 0; iCurrentStep < num_equal_steps; ++iCurrentStep)
+    {
+        float       current_percentage{ step_percentage * iCurrentStep };
+        Degreef     current_rotation_amount{ amount_of_rotation * current_percentage };
+        Quaternionf new_rotation{ Quaternionf::make_rotation(current_rotation_amount, rotation_axis) };
+
+        CHECK_IF_EQUAL( slerp(begin, end_rotation, current_percentage), new_rotation);
+    }
+    CHECK_IF_EQUAL( slerp(begin, end_rotation, 1.0f), end_rotation);
+}
+
 /// @{
 void UnitQuaternionIsAsExpected()
 {
@@ -605,25 +640,10 @@ void TestSlerp()
     }
 
     // 0 to 90 in 10 deg increments
-    {
-        Degreef step_deg{ 10.0f };
-        float step_percentage = 1.0f / 9.0f;
+    TestRotationAtRegularIntervals(begin, 90.0_deg_f, z, 9);
 
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 0.0f), begin );
-
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 0.0f), Quaternionf::make_rotation(step_deg * 0.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 1.0f), Quaternionf::make_rotation(step_deg * 1.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 2.0f), Quaternionf::make_rotation(step_deg * 2.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 3.0f), Quaternionf::make_rotation(step_deg * 3.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 4.0f), Quaternionf::make_rotation(step_deg * 4.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 5.0f), Quaternionf::make_rotation(step_deg * 5.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 6.0f), Quaternionf::make_rotation(step_deg * 6.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 7.0f), Quaternionf::make_rotation(step_deg * 7.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 8.0f), Quaternionf::make_rotation(step_deg * 8.0f, z) );
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 9.0f), Quaternionf::make_rotation(step_deg * 9.0f, z) );
-
-        CHECK_IF_EQUAL( slerp(begin, end, step_percentage * 9.0f), end );
-    }
+    // 0 to 180 in 10 deg increments
+    TestRotationAtRegularIntervals(begin, 180.0_deg_f, z, 18);
 }
 
 void IsNaNIsTrueWhenAtLeastOneMemberIsNaN()

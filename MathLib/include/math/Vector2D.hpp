@@ -323,6 +323,12 @@ void CHECK_IF_NOT_EQUAL(const Vector2D<T> &input, const Vector2D<T> &near_to, co
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
+template <class T>
+void CHECK_IF_ZERO(const Vector2D<T> &input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, Vector2D<T>::zero(), tolerance));
+}
+
 /** @name Vector2D Type Aliases
  *  
  *  @relates Vector2D

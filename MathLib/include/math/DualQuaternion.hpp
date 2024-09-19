@@ -567,6 +567,12 @@ void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> 
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
+template <class T>
+void CHECK_IF_ZERO(const DualQuaternion<T> &input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
+}
+
 /** @name Type Aliases
  * 
  *  @relates DualQuaternion

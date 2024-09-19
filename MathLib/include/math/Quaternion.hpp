@@ -131,7 +131,7 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
-    T angle() const
+    Radian<T> angle() const
     {
         return T{2} * std::atan2( imaginary().magnitude(), w() );
     }
@@ -559,7 +559,7 @@ constexpr Quaternion<T> normalized(const Quaternion<T> &input)
 template <class T>
 T arg(const Quaternion<T> &input)
 {
-    return input.angle();
+    return input.angle().value();
 }
 
 /** Constructs a unit Quaternion from the given axis and angle
@@ -673,6 +673,12 @@ template <class T>
 void CHECK_IF_NOT_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, const float tolerance = 0.0002f)
 {
     assert( check_if_not_equal(input, near_to, tolerance) );
+}
+
+template <class T>
+void CHECK_IF_ZERO(const Quaternion<T> &input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, Quaternion<T>::zero(), tolerance));
 }
 
 /** @name Type Aliases

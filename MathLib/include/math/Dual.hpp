@@ -451,6 +451,12 @@ void CHECK_IF_NOT_EQUAL(const Dual<T> &input, const Dual<T> &near_to, const floa
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
+template <class T>
+void CHECK_IF_ZERO(const Dual<T> &input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, Dual<T>::zero(), tolerance));
+}
+
 /** @name Type Aliases
  * 
  *  @relates Dual
