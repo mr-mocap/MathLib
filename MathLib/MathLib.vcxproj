@@ -162,6 +162,7 @@
     <ClInclude Include="Exponential.hpp" />
     <ClInclude Include="include\math\Angle.hpp" />
     <ClInclude Include="include\math\ApproximatelyEqualTo.hpp" />
+    <ClInclude Include="include\math\Checks.hpp" />
     <ClInclude Include="include\math\Conjugate.hpp" />
     <ClInclude Include="include\math\Conversions.hpp" />
     <ClInclude Include="include\math\Dual.hpp" />

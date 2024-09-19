@@ -214,6 +214,80 @@ constexpr Vector2D<T> normalized(const Vector2D<T> &input)
 }
 /// @}  {GlobalFunctions}
 
+template <class T>
+std::string format(const Vector2D<T> &input)
+{
+    return std::format("[x: {}, y: {}]", input.x, input.y);
+}
+
+/** @addtogroup Checks
+ * 
+ *  Compare two values for equality with a tolerance and prints debug information when false
+ *  
+ *  @param input     The first value to compare
+ *  @param near_to   The second value to compare
+ *  @param tolerance The minimum value for being considered equal
+ * 
+ *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+ */
+template <class T>
+bool check_if_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, float tolerance = 0.0002f)
+{
+    if (!approximately_equal_to(input, near_to, tolerance))
+    {
+        auto diff{ near_to - input };
+
+        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                 ::format(input),
+                                 ::format(near_to),
+                                 tolerance,
+                                 ::format(near_to - input))
+        << std::endl;
+        return  false;
+    }
+    return true;
+}
+
+/** @addtogroup Checks
+ * 
+ *  Compare two values for inequality with a tolerance and prints debug information when false
+ *  
+ *  @param input     The first value to compare
+ *  @param near_to   The second value to compare
+ *  @param tolerance The minimum value for being considered equal
+ * 
+ *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+ */
+template <class T>
+bool check_if_not_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, float tolerance = 0.0002f)
+{
+    if (approximately_equal_to(input, near_to, tolerance))
+    {
+        auto diff{ near_to - input };
+
+        std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                 ::format(input),
+                                 ::format(near_to),
+                                 tolerance,
+                                 ::format(near_to - input))
+        << std::endl;
+        return  false;
+    }
+    return true;
+}
+
+template <class T>
+void CHECK_IF_EQUAL(const Vector2D<T> &input, const Vector2D<T> &near_to, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, near_to, tolerance) );
+}
+
+template <class T>
+void CHECK_IF_NOT_EQUAL(const Vector2D<T> &input, const Vector2D<T> &near_to, const float tolerance = 0.0002f)
+{
+    assert( check_if_not_equal(input, near_to, tolerance) );
+}
+
 /** @name Vector2D Type Aliases
  *  
  *  @relates Vector2D
