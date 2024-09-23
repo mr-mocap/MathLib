@@ -125,3 +125,18 @@ inline void CHECK_IF_NOT_EQUAL(const long double input, const long double near_t
 {
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
+
+inline void CHECK_IF_ZERO(const float input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, 0.0f, tolerance) );
+}
+
+inline void CHECK_IF_ZERO(const double input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, 0.0, tolerance) );
+}
+
+inline void CHECK_IF_ZERO(const long double input, const float tolerance = 0.0002f)
+{
+    assert( check_if_equal(input, static_cast<long double>(0.0), tolerance) );
+}
