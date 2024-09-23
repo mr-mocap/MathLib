@@ -252,7 +252,7 @@ constexpr T accumulate(const Vector3D<T> &input)
 template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
 {
-    return (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
+    return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
 }
 
 /** Calculate the normalized dot product of two Vector3D objects
@@ -282,10 +282,9 @@ constexpr T dot_normalized(const Vector3D<T> &left, const Vector3D<T> &right)
 template <class T>
 constexpr Vector3D<T> cross(const Vector3D<T> &left, const Vector3D<T> &right)
 {
-    return Vector3D<T>{ (left.y * right.z) - (left.z * right.y),
-                        (left.z * right.x) - (left.x * right.z),
-                        (left.x * right.y) - (left.y * right.x)
-                      };
+    return Vector3D<T>{ cross( left.yz(), right.yz() ),
+                        cross( left.zx(), right.zx() ),
+                        cross( left.xy(), right.xy() ) };
 }
 
 /** Creates the normalized form of a Vector3D

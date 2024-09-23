@@ -32,7 +32,6 @@ void OneInitializer()
 
     CHECK_IF_EQUAL( one.x, 2.2f );
     CHECK_IF_EQUAL( one.y, 0.0f );
-
 }
 
 void TwoInitializers()
@@ -43,7 +42,6 @@ void TwoInitializers()
 
     CHECK_IF_EQUAL( one.x, 2.2f );
     CHECK_IF_EQUAL( one.y, 3.3f );
-
 }
 
 void PassedToFunction()
@@ -143,21 +141,6 @@ void AssignVector2DToVector2D()
     CHECK_IF_EQUAL( one.y, two.y );
 }
 
-void LRef()
-{
-    std::cout << __func__ << std::endl;
-
-    {
-        Vector2Df one{ 1.0f, 2.0f };
-        Vector2Df two{ 2.1f, 2.3f };
-
-        one.xy() = two.yx();
-
-        CHECK_IF_EQUAL( one.x, two.y );
-        CHECK_IF_EQUAL( one.y, two.x );
-    }
-}
-
 void Swizzle()
 {
     std::cout << __func__ << std::endl;
@@ -171,7 +154,7 @@ void Swizzle()
     }
 }
 
-void TestDot()
+void Dot()
 {
     std::cout << __func__ << std::endl;
 
@@ -201,9 +184,9 @@ void Run()
     AssignVector2DToVector2DRef();
     AssignVector2DRefToVector2DRef();
     AssignVector2DRefToVector2D();
-    LRef();
+    AssignVector2DToVector2D();
     Swizzle();
-    TestDot();
+    Dot();
 
     std::cout << "PASSED!" << std::endl;
 }
