@@ -225,14 +225,7 @@ public:
      */
     constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const T axis_x, const T axis_y, const T axis_z)
     {
-        T half_angle = radians.value() * T{0.5};
-        T cos_theta = cos( half_angle );
-        T sin_theta = sin( half_angle );
-
-        return Quaternion<T>{ cos_theta,
-                              sin_theta * axis_x,
-                              sin_theta * axis_y,
-                              sin_theta * axis_z }.normalized();
+        return make_rotation(radians, { axis_x, axis_y, axis_z });
     }
 
     /** Enocde a rotation into a Quaternion
@@ -242,7 +235,18 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const Vector3D<T> &axis) { return make_rotation(radians, axis.x, axis.y, axis.z); }
+    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const Vector3D<T> &axis)
+    {
+        T half_angle = radians.value() * T{0.5};
+        T cos_theta = cos( half_angle );
+        T sin_theta = sin( half_angle );
+        Vector3D<T> n{ axis.normalized() };
+
+        return Quaternion<T>{ cos_theta,
+                              sin_theta * n.x,
+                              sin_theta * n.y,
+                              sin_theta * n.z };
+    }
     /// @}
 
 private:
@@ -459,6 +463,15 @@ constexpr T dot(const Quaternion<T> &left, const Quaternion<T> &right)
            left.i() * right.i() +
            left.j() * right.j() +
            left.k() * right.k();
+}
+
+template <class T>
+constexpr T dot_normalized(const Quaternion<T> &left, const Quaternion<T> &right)
+{
+    return (left.w() * right.w() +
+            left.i() * right.i() +
+            left.j() * right.j() +
+            left.k() * right.k()) / (left.magnitude() * right.magnitude());
 }
 
 /** Rotates the encoded point using the given rotation
