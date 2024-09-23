@@ -278,7 +278,7 @@ constexpr Vector2D<T> normalized(const Vector2D<T> &input)
 template <class T>
 std::string format(const Vector2D<T> &input)
 {
-    return std::format("[x: {}, y: {}]", input.x, input.y);
+    return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
 }
 
 /** @addtogroup Checks

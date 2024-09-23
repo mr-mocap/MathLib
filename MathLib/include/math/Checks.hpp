@@ -26,7 +26,7 @@ inline bool check_if_equal(float input, float near_to, float tolerance = 0.0002f
 {
     if (!approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;
@@ -36,7 +36,7 @@ inline bool check_if_equal(double input, double near_to, float tolerance = 0.000
 {
     if (!approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;
@@ -46,7 +46,7 @@ inline bool check_if_equal(long double input, long double near_to, float toleran
 {
     if (!approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;
@@ -69,7 +69,7 @@ inline bool check_if_not_equal(float input, float near_to, float tolerance = 0.0
 {
     if (approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;
@@ -79,7 +79,7 @@ inline bool check_if_not_equal(double input, double near_to, float tolerance = 0
 {
     if (approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;
@@ -89,7 +89,7 @@ inline bool check_if_not_equal(long double input, long double near_to, float tol
 {
     if (approximately_equal_to(input, near_to, tolerance))
     {
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {}.", input, near_to, tolerance, near_to - input) << std::endl;
+        std::cout << std::format("input: {:.6} is not equal to near_to: {:.6} within tolerance: {:.6}.  Difference is {:.6}.", input, near_to, tolerance, near_to - input) << std::endl;
         return  false;
     }
     return true;

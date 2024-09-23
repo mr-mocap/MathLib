@@ -303,7 +303,7 @@ constexpr Vector3D<T> normalized(const Vector3D<T> &input)
 template <class T>
 std::string format(const Vector3D<T> &input)
 {
-    return std::format("[x: {}, y: {}, z: {}]", input.x, input.y, input.z);
+    return std::format("[x: {:.6}, y: {:.6}, z: {:.6}]", input.x, input.y, input.z);
 }
 
 /** @addtogroup Checks
