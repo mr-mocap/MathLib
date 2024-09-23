@@ -75,10 +75,16 @@ struct Vector2D
     constexpr value_type normSquared() const { return (x * x) + (y * y); }
     constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
 
-    constexpr Vector2D<Type> normalized() const { return *this / norm(); }
 
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
+
+    constexpr Vector2D<Type> normalized() const
+    {
+        auto n = norm();
+
+        return { x / n, y / n };
+    }
 
     bool isNaN() const { return std::isnan(x) || std::isnan(y); }
 
