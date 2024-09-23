@@ -244,11 +244,32 @@ constexpr T accumulate(const Vector3D<T> &input)
  *  @param right The second vector
  * 
  *  @return The dot product of the two input vectors
+ *  
+ *  @note This is only a strict dot product and thus a normalized
+ *        result will depend on if the input vectors are both
+ *        normalized!
  */
 template <class T>
 constexpr T dot(const Vector3D<T> &left, const Vector3D<T> &right)
 {
     return (left.x * right.x) + (left.y + right.y) + (left.z * right.z);
+}
+
+/** Calculate the normalized dot product of two Vector3D objects
+ *
+ *  The input vectors are not assumed to be normalized, so we go
+ *  ahead and divide through by both the input vectors
+ *  to arrive at a normalized output.
+ * 
+ *  @param left  The first vector
+ *  @param right The second vector
+ * 
+ *  @return The dot product of the two input vectors
+ */
+template <class T>
+constexpr T dot_normalized(const Vector3D<T> &left, const Vector3D<T> &right)
+{
+    return dot(left, right) / (left.magnitude() * right.magnitude());
 }
 
 /** Calculates the cross product of two Vector3D objects

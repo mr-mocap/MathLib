@@ -3,6 +3,7 @@
 #include "math/Checks.hpp"
 #include <iostream>
 #include <format>
+#include <numbers>
 
 
 namespace Vector2DTests
@@ -170,6 +171,24 @@ void Swizzle()
     }
 }
 
+void TestDot()
+{
+    std::cout << __func__ << std::endl;
+
+    float sqrt2_over_2 = std::numbers::sqrt2_v<float> / 2.0f;
+    // At first, let's use unit vectors...
+
+    // Perpendicular vectors are 0
+    CHECK_IF_ZERO( dot(Vector2Df::unit_x(), Vector2Df::unit_y()) );
+
+    // Parallel vectors are 1
+    CHECK_IF_EQUAL( dot(Vector2Df::unit_x(), Vector2Df::unit_x()), 1.0f);
+    CHECK_IF_EQUAL( dot(Vector2Df::unit_y(), Vector2Df::unit_y()), 1.0f);
+
+    // Misc Rotations
+    CHECK_IF_EQUAL( dot(Vector2Df{sqrt2_over_2, sqrt2_over_2}, Vector2Df{sqrt2_over_2, sqrt2_over_2}), 1.0f ); // 45 deg rotation
+}
+
 void Run()
 {
     std::cout << "Running Vector2D Tests..." << std::endl;
@@ -184,6 +203,7 @@ void Run()
     AssignVector2DRefToVector2D();
     LRef();
     Swizzle();
+    TestDot();
 
     std::cout << "PASSED!" << std::endl;
 }
