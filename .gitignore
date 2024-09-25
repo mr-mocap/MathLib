@@ -371,3 +371,5 @@ MathLib/Documentation/latex/
 
 # Makefile outputs
 code_tests
+
+.vscode/
