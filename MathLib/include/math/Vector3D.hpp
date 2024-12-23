@@ -43,10 +43,10 @@ struct Vector3D
             return Ref{ x = input.x, y = input.y, z = input.z };
         }
 
-        /** Vector2D conversion operator
+        /** Vector3D conversion operator
          * 
-         *  This allows Vector2DRef objects to automatically be converted to Vector2D objects
-         *  for situations like passing to functions or constructors to Vector2D objects.
+         *  This allows Vector3DRef objects to automatically be converted to Vector3D objects
+         *  for situations like passing to functions or constructors to Vector3D objects.
          */
         operator Vector3D<Type>() const { return { x, y, z }; }
 
