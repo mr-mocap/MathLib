@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C/C++ Build Library and Run Tests
 
 on:
   push:
