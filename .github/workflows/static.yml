@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout and build docs
         uses: actions/checkout@v4
+      - name: Install Binary Dependencies
+        run: apt install doxygen
       - name: make docs
         run: make docs
       - name: Setup Pages
