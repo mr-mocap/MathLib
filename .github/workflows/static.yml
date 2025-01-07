@@ -32,7 +32,7 @@ jobs:
       - name: Checkout and build docs
         uses: actions/checkout@v4
       - name: Install Binary Dependencies
-        run: sudo apt install doxygen
+        run: sudo apt install doxygen graphviz
       - name: make docs
         run: make docs
       - name: Setup Pages
