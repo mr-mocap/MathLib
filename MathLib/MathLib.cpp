@@ -6,6 +6,8 @@
 #include "Tests/SceneNodeTests.hpp"
 #include "Tests/HierarchicalCoordinateSystemTests.hpp"
 #include "Tests/AngleTests.hpp"
+#include "Tests/ColorTypesTests.hpp"
+#include "Tests/ColorConversionTests.hpp"
 #include "Tests/Vector2DTests.hpp"
 #include "Tests/Vector3DTests.hpp"
 
@@ -15,6 +17,8 @@ int main()
     std::cout << "Running Unit Tests!\n";
 
     AngleTests::Run();
+    ColorTypesTests::Run();
+    ColorConversionTests::Run();
     QuaternionTests::Run();
     DualNumberTests::Run();
     DualQuaternionTests::Run();

@@ -6,6 +6,8 @@ DEBUG_FLAGS = -g3
 CXXFLAGS=-std=c++20 -W -Wall -pedantic -I . $(INC_PARAMS) $(DEBUG_FLAGS)
 
 TEST_OBJS = MathLib.o \
+			Tests/ColorTypesTests.o \
+			Tests/ColorConversionTests.o \
             Tests/AngleTests.o \
 			Tests/Vector2DTests.o \
 			Tests/Vector3DTests.o \
@@ -17,13 +19,13 @@ TEST_OBJS = MathLib.o \
 
 TEST_EXE  = code_tests
 
-default: run_tests
+default: tests
 
 $(TEST_EXE): $(TEST_OBJS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(TEST_EXE) $(LDFLAGS)
 
-.PHONY: test
-test: $(TEST_EXE)
+.PHONY: tests
+tests: $(TEST_EXE)
 
 run_tests: $(TEST_EXE)
 	./$(TEST_EXE)

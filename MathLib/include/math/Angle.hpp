@@ -20,6 +20,8 @@ public:
     constexpr Radian() = default;
     explicit constexpr Radian(const T value) : _value(value) { }
 
+    static constexpr Radian<T> zero() { return Radian<T>(); }
+
     /** @name Element Access
      *  @{
      */
@@ -170,6 +172,8 @@ public:
 
     operator Radian<T>() { return Radian<T>{DegreesToRadians(_value)}; }
 
+    static constexpr Degree<T> zero() { return Degree<T>(); }
+
     /** @name Element Access
      *  @{
      */
@@ -204,6 +208,15 @@ public:
     }
     /// @}  {Operators}
 
+    static constexpr T modulus() { return 360; }
+
+    constexpr Degree<T> modulo() const
+    {
+        T modded;
+
+        // Make in range of 0 - 360
+        return Degree{ (0.0 <= (modded = std::fmod( _value, modulus() )) ? modded : modulus() + modded) };
+    }
 private:
     T _value{};
 };
