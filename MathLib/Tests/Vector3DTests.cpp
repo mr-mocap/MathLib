@@ -9,6 +9,8 @@
 namespace Vector3DTests
 {
 
+using namespace Math;
+
 void TestFunction(const Vector3Df &input)
 {
     std::cout << std::format("{}\t{} {} {}", __func__, input.x, input.y, input.z) << std::endl;

@@ -7,6 +7,8 @@
 namespace ColorConversionTests
 {
 
+using namespace Color;
+
 void ConvertingBasicRGBColorsToHSV()
 {
     std::cout << __func__ << std::endl;

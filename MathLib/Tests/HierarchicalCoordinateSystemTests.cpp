@@ -20,6 +20,8 @@
  *  @{
  */
 
+using namespace Math;
+
 static std::shared_ptr<SceneNodef> GenerateHierarchicalSkeleton(HierarchicalCoordinateSystemf &world)
 {
     std::shared_ptr<SceneNodef> waist{ world.root().createChildNode( Vector3Df::zero(), Quaternionf::identity(), "waist" ) };

@@ -13,6 +13,8 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 /** The definition of a DualQuaternion
  *  
@@ -516,11 +518,11 @@ bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &nea
     {
         auto diff{ near_to - input };
 
-        std::cout << ::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                              ::format(input),
-                              ::format(near_to),
-                              tolerance,
-                              ::format(near_to - input))
+        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                 Math::format(input),
+                                 Math::format(near_to),
+                                 tolerance,
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -544,11 +546,11 @@ bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> 
     {
         auto diff{ near_to - input };
 
-        std::cout << ::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                              ::format(input),
-                              ::format(near_to),
-                              tolerance,
-                              ::format(near_to - input))
+        std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                 Math::format(input),
+                                 Math::format(near_to),
+                                 tolerance,
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -583,3 +585,5 @@ using DualQuaternionf = DualQuaternion<float>;
 using DualQuaterniond = DualQuaternion<double>;
 using DualQuaternionld = DualQuaternion<long double>;
 /// @}
+
+}

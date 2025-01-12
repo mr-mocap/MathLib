@@ -7,6 +7,8 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 /** @addtogroup Equality
  * 
@@ -35,3 +37,5 @@ inline bool approximately_equal_to(long double input, long double near_to, float
     return std::abs(near_to - input) <= tolerance;
 }
 /// @}
+
+}

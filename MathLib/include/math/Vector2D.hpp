@@ -4,10 +4,13 @@
 
 /** @file
  *  
- *  Contains the definition of 2D and 3D vector classes
+ *  Contains the definition of 2D vector class
  *
  *  @hideincludegraph
  */
+
+namespace Math
+{
 
 /** A simple 2D vector class
  *
@@ -299,10 +302,10 @@ bool check_if_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, float 
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -327,10 +330,10 @@ bool check_if_not_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, fl
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -365,3 +368,5 @@ using Vector2Df = Vector2D<float>;
 using Vector2Dd = Vector2D<double>;
 using Vector2Dld = Vector2D<long double>;
 ///@}  {Vector2D Type Aliases}
+
+}

@@ -9,6 +9,8 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 template <class T>
 inline T unnormalized_sinc(T radians)
@@ -26,4 +28,6 @@ inline T normalized_sinc(T radians)
         return T{1};
     else
         return sin( std::numbers::pi_v<T> * radians) / (std::numbers::pi_v<T> * radians);
+}
+
 }

@@ -57,11 +57,11 @@ public:
      */
     SceneNode(Private ,
               std::weak_ptr<SceneNode>  parent,
-              const Vector3D<Type>     &translation,
-              const Quaternion<Type>   &rotation,
+              const Math::Vector3D<Type>     &translation,
+              const Math::Quaternion<Type>   &rotation,
               const std::string        &name)
         :
-        _coordinate_system{ DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
+        _coordinate_system{ Math::DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
         _parent{parent},
         _name{name}
     {
@@ -85,14 +85,14 @@ public:
 
     const SceneNodeList<Type> &children() const { return _children; }
 
-    const DualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
-          DualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
+    const Math::DualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
+          Math::DualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
 
     const std::string &name() const { return _name; }
           std::string &name()       { return _name; }
 
-    std::weak_ptr<SceneNode<Type>> createChildNode(const Vector3D<Type>   &translation = Vector3D<Type>::zero(),
-                                                   const Quaternion<Type> &rotation    = Quaternion<Type>::identity(),
+    std::weak_ptr<SceneNode<Type>> createChildNode(const Math::Vector3D<Type>   &translation = Math::Vector3D<Type>::zero(),
+                                                   const Math::Quaternion<Type> &rotation    = Math::Quaternion<Type>::identity(),
                                                    const std::string      &name        = std::string())
     {
         std::shared_ptr<SceneNode<Type>> new_node = make( this->weak_from_this(), translation, rotation, name );
@@ -122,9 +122,11 @@ public:
         node->_parent = this->weak_from_this();
     }
 
-    Vector3D<Type> localToWorld(const Vector3D<Type> &local_coordinate) const
+    Math::Vector3D<Type> localToWorld(const Math::Vector3D<Type> &local_coordinate) const
     {
 #if 1
+        using namespace Math;
+
         DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
 
         // NOTE: From here on out, we cuse the algebraically-simplified form of multiplying it out with DualQuaternions...
@@ -144,7 +146,7 @@ public:
 #endif
     }
 
-    DualQuaternion<Type> concatenatedTransforms() const
+    Math::DualQuaternion<Type> concatenatedTransforms() const
     {
         if (_parent.expired())
             return _coordinate_system;
@@ -152,14 +154,14 @@ public:
             return _parent.lock()->concatenatedTransforms() * _coordinate_system;
     }
 private:
-    DualQuaternion<Type>           _coordinate_system;
+    Math::DualQuaternion<Type>     _coordinate_system;
     std::weak_ptr<SceneNode<Type>> _parent;
     SceneNodeList<Type>            _children;
     std::string                    _name;
 
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
-                                                 const Vector3D<Type>     &translation,
-                                                 const Quaternion<Type>   &rotation,
+                                                 const Math::Vector3D<Type>     &translation,
+                                                 const Math::Quaternion<Type>   &rotation,
                                                  const std::string        &name)
     {
         return std::make_shared<SceneNode<Type>>(Private{}, parent, translation, rotation, name);

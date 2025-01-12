@@ -9,6 +9,8 @@
 namespace Vector2DTests
 {
 
+using namespace Math;
+
 void TestFunction(const Vector2Df &input)
 {
     std::cout << std::format("{}\t{} {}", __func__, input.x, input.y) << std::endl;

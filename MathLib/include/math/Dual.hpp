@@ -12,6 +12,9 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
+
 /** Class representing the concept of a dual number
  *  
  *  @headerfile "math/Dual.hpp"
@@ -33,7 +36,7 @@ public:
     constexpr static Dual<T> zero() { return Dual{}; }
     /// @}
 
-    constexpr Dual<T> conjugate() const { return Dual{ real, ::conjugate(dual) }; }
+    constexpr Dual<T> conjugate() const { return Dual{ real, Math::conjugate(dual) }; }
     constexpr T       magnitude() const { return real; }
 
     /** @name Convenience Creation Functions
@@ -401,10 +404,10 @@ bool check_if_equal(const Dual<T> &input, const Dual<T> &near_to, float toleranc
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -429,10 +432,10 @@ bool check_if_not_equal(const Dual<T> &input, const Dual<T> &near_to, float tole
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -467,3 +470,5 @@ using Dualf = Dual<float>;
 using Duald = Dual<double>;
 using Dualld = Dual<long double>;
 /// @}
+
+}

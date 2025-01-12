@@ -9,6 +9,8 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 /** @addtogroup Checks
  * 
@@ -139,4 +141,6 @@ inline void CHECK_IF_ZERO(const double input, const float tolerance = 0.0002f)
 inline void CHECK_IF_ZERO(const long double input, const float tolerance = 0.0002f)
 {
     assert( check_if_equal(input, static_cast<long double>(0.0), tolerance) );
+}
+
 }

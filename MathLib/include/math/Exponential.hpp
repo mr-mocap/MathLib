@@ -6,6 +6,9 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
+
 /** @addtogroup Exponential
  * 
  *  @{
@@ -56,3 +59,5 @@ T log(T input)
 }
 /// @}  {General Template Case}
 /// @}  {Log}
+
+}

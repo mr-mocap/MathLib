@@ -6,6 +6,9 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
+
 /** @addtogroup Conjugate
  * 
  *  @{
@@ -56,3 +59,5 @@ constexpr long double conjugate<long double>(long double input)
 /// @}
 
 /// @}
+
+}

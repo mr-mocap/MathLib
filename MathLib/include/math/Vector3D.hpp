@@ -3,11 +3,15 @@
 #include "math/Functions.hpp"
 #include "math/Vector2D.hpp"
 
-/** A simple 3D vector class
+/** @file
+ *  
+ *  Contains the definition of 3D vector class
  *
- *  @headerfile "math/Vector3D.hpp"
- * 
+ *  @hideincludegraph
  */
+
+namespace Math
+{
 
 /** A simple 3D Vector class
  * 
@@ -324,10 +328,10 @@ bool check_if_equal(const Vector3D<T> &input, const Vector3D<T> &near_to, float 
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -352,10 +356,10 @@ bool check_if_not_equal(const Vector3D<T> &input, const Vector3D<T> &near_to, fl
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -390,3 +394,5 @@ using Vector3Df = Vector3D<float>;
 using Vector3Dd = Vector3D<double>;
 using Vector3Dld = Vector3D<long double>;
 ///@}  {Vector3D Type Aliases}
+
+}

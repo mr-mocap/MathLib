@@ -26,6 +26,8 @@
 namespace SceneNodeTests
 {
 
+using namespace Math;
+
 /** Verifies the default constructed state of a SceneNode
  * 
  */

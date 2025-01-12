@@ -7,6 +7,9 @@
 namespace ColorTypesTests
 {
 
+using namespace Color;
+using namespace Math;
+
 void DefaultConstructedRGBb()
 {
     std::cout << __func__ << std::endl;

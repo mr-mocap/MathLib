@@ -31,6 +31,8 @@
 namespace DualQuaternionTests
 {
 
+using namespace Math;
+
 void PureRotationHasZeroTranslation()
 {
     std::cout << __func__ << std::endl;

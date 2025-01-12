@@ -7,6 +7,9 @@
 #include <cmath>
 
 
+namespace Color
+{
+
 template <std::integral T>
 class BasicRGB
 {
@@ -177,7 +180,7 @@ public:
     };
 
     constexpr BasicHSV() = default;
-    constexpr BasicHSV(const Degree<value_type> h, const value_type s, const value_type v)
+    constexpr BasicHSV(const Math::Degree<value_type> h, const value_type s, const value_type v)
         :
         _hue{ h },
         _saturation{ s },
@@ -210,21 +213,21 @@ public:
 
     static constexpr BasicHSV<T> min()
     {
-        return BasicHSV<T>( Degree<T>(), 0.0, 0.0 );
+        return BasicHSV<T>( Math::Degree<T>(), 0.0, 0.0 );
     }
 
     static constexpr BasicHSV<T> max()
     {
-        return BasicHSV<T>( Degree<T>{ Degree<T>::modulus() }, 1.0, 1.0 );
+        return BasicHSV<T>( Math::Degree<T>{ Math::Degree<T>::modulus() }, 1.0, 1.0 );
     }
 
-    constexpr Degree<value_type> hue() const { return _hue; }
+    constexpr Math::Degree<value_type> hue() const { return _hue; }
     constexpr value_type saturation() const { return _saturation; }
     constexpr value_type value() const { return _value; }
 
     constexpr enum Color hueColor() const
     {
-        const Degree<T> mod = _hue.modulo();
+        const Math::Degree<T> mod = _hue.modulo();
 
         if ( _isInBoundsUpTo( mod.value(), 0.0, 60.0 ) )
             return Red;
@@ -241,7 +244,7 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(const Degree<value_type> input)
+    constexpr void hue(const Math::Degree<value_type> input)
     {
         _hue = input;
     }
@@ -262,14 +265,14 @@ public:
 
     constexpr bool isNormalized() const
     {
-        return _isInBoundsUpTo( _hue, 0.0, Degree<value_type>::modulus() ) &&
+        return _isInBoundsUpTo( _hue, 0.0, Math::Degree<value_type>::modulus() ) &&
                _isInBounds( _saturation ) &&
                _isInBounds( _value );
     }
 protected:
-    Degree<value_type> _hue{};
-    value_type         _saturation{};
-    value_type         _value{};
+    Math::Degree<value_type> _hue{};
+    value_type               _saturation{};
+    value_type               _value{};
 
     constexpr bool _isInBounds(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
     {
@@ -293,3 +296,5 @@ using UnitRGBf = UnitRGB<float>;
 template <class T>
 using HSV = BasicHSV<T>;
 using HSVf = HSV<float>;
+
+}

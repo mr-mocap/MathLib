@@ -1,5 +1,10 @@
 #pragma once
 
+#include <vector>
+
+namespace Math
+{
+
 namespace Combinatorics
 {
 
@@ -106,4 +111,5 @@ constexpr inline std::vector<int> pascal_triangle_row(int row)
     return values;
 }
 
-}
+} // Combinatorics
+} // Math

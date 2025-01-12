@@ -4,9 +4,13 @@
 
 /** @file
  *  
+ *  Contains the definition of Radian and Degree classes
+ * 
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 /** Class that stores its units in radians
  *  
@@ -385,3 +389,5 @@ using Radianf  = Radian<float>;
 using Radiand  = Radian<double>;
 using Radianld = Radian<long double>;
 /// @}  {Radian Type Aliases}
+
+}

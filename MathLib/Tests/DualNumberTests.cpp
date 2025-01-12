@@ -25,6 +25,8 @@
 namespace DualNumberTests
 {
 
+using namespace Math;
+
 /** Verify the representation of a Dual's identity representation
  */
 void IdentityDualIsAsExpected()

@@ -14,6 +14,9 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
+
 /** A mathematical quaternion
  *  
  *  @note A quaternion is a 4-dimensional object that is an extension
@@ -638,10 +641,10 @@ bool check_if_equal(const Quaternion<T> &input, const Quaternion<T> &near_to, fl
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -666,10 +669,10 @@ bool check_if_not_equal(const Quaternion<T> &input, const Quaternion<T> &near_to
         auto diff{ near_to - input };
 
         std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 ::format(input),
-                                 ::format(near_to),
+                                 Math::format(input),
+                                 Math::format(near_to),
                                  tolerance,
-                                 ::format(near_to - input))
+                                 Math::format(near_to - input))
         << std::endl;
         return  false;
     }
@@ -704,3 +707,5 @@ using Quaternionf = Quaternion<float>;
 using Quaterniond = Quaternion<double>;
 using Quaternionld = Quaternion<long double>;
 /// @}
+
+}
