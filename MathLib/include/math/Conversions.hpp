@@ -8,6 +8,8 @@
  *  @hideincludegraph
  */
 
+namespace Math
+{
 
 /** @addtogroup Conversions
  * 
@@ -29,3 +31,5 @@ constexpr inline T RadiansToDegrees(T radians)
     return radians * (T{180} / T{std::numbers::pi});
 }
 /// @}
+
+}
