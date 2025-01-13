@@ -2,6 +2,7 @@
 
 #include "math/ApproximatelyEqualTo.hpp"
 #include "math/Conjugate.hpp"
+#include "math/Normalized.hpp"
 #include "math/Conversions.hpp"
 #include "math/Exponential.hpp"
 #include "math/Trigonometric.hpp"
@@ -20,7 +21,7 @@ namespace Math
 
 // C++ 20 has std::lerp() in <cmath>, so use that by default
 template <class Type>
-constexpr inline Type lerp(const Type input_lower_bound, const Type input_upper_bound, const Type percentage_zero_to_one)
+constexpr inline Type lerp(const Type input_lower_bound, const Type input_upper_bound, const float percentage_zero_to_one)
 {
     if constexpr (std::is_floating_point<Type>::value)
         return std::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
@@ -44,6 +45,12 @@ template <class Type>
 constexpr inline const Type &saturate(const Type &value, const Type &lower_bound, const Type &upper_bound)
 {
     return std::clamp( value, lower_bound, upper_bound );
+}
+
+template <class Type>
+constexpr inline Type step(const Type y, const Type x)
+{
+    return (x >= y) ? 1 : 0;
 }
 
 constexpr inline float smoothstep(float input_value, const float left_edge = 0.0f, const float right_edge = 1.0f)

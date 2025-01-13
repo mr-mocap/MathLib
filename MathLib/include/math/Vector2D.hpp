@@ -264,18 +264,6 @@ constexpr T cross(const Vector2D<T> &left, const Vector2D<T> &right)
 {
     return (left.x * right.y) - (left.y * right.x);
 }
-
-/** Creates the normalized form of a Vector2D
- *  
- *  @param input The Vector2D to normalize
- *  
- *  @return The normalized version of @p input
- */
-template <class T>
-constexpr Vector2D<T> normalized(const Vector2D<T> &input)
-{
-    return input.normalized();
-}
 /// @}  {GlobalFunctions}
 
 template <class T>
