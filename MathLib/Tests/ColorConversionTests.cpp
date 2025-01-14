@@ -207,6 +207,29 @@ void ConvertingBasicCMYColorsToRGB()
     }
 }
 
+void ConvertingOtherColorsToHSV()
+{
+    std::cout << __func__ << std::endl;
+    
+    {
+        HSVf black{ 0.0_deg_f, 1.0, 0.0 };
+        UnitRGBf rgb_representation{ ToRGB( black ) };
+
+        assert( rgb_representation.red() == 0.0f );
+        assert( rgb_representation.green() == 0.0f );
+        assert( rgb_representation.blue() == 0.0f );
+    }
+
+    {
+        HSVf white{ 0.0_deg_f, 0.0, 1.0 };
+        UnitRGBf rgb_representation{ ToRGB( white ) };
+
+        assert( rgb_representation.red() == 1.0f );
+        assert( rgb_representation.green() == 1.0f );
+        assert( rgb_representation.blue() == 1.0f );
+    }
+}
+
 void Run()
 {
     std::cout << "Running Color Conversion Tests..." << std::endl;
@@ -221,6 +244,7 @@ void Run()
 
     ConvertingBasicHSVColorsToRGB();
     ConvertingBasicCMYColorsToRGB();
+    ConvertingOtherColorsToHSV();
 
     std::cout << "PASSED!" << std::endl;
 }
