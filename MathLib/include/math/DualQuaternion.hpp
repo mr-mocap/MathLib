@@ -203,14 +203,14 @@ public:
 
         // We should have a dual scalar now
         // Make that assumption clear
-        assert( approximately_equal_to(normsquared.real().i(), 0) );
-        assert( approximately_equal_to(normsquared.real().j(), 0) );
-        assert( approximately_equal_to(normsquared.real().k(), 0) );
+        assert( approximately_equal_to(normsquared.real().i(), T{0}) );
+        assert( approximately_equal_to(normsquared.real().j(), T{0}) );
+        assert( approximately_equal_to(normsquared.real().k(), T{0}) );
 
 #if 0
-        assert( approximately_equal_to(normsquared.dual().i(), 0) );
-        assert( approximately_equal_to(normsquared.dual().j(), 0) );
-        assert( approximately_equal_to(normsquared.dual().k(), 0) );
+        assert( approximately_equal_to(normsquared.dual().i(), T{0}) );
+        assert( approximately_equal_to(normsquared.dual().j(), T{0}) );
+        assert( approximately_equal_to(normsquared.dual().k(), T{0}) );
 #endif
 
         return Dual<T>{ normsquared.real().real(), normsquared.dual().real() };
@@ -457,7 +457,7 @@ constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const
 template <class T>
 constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
 {
-    return DualQuaternion<T>{ (dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
+    return DualQuaternion<T>{ DualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
 }
 /// @}  {Division}
 /// @}  {DualQuaternionAlgebra}

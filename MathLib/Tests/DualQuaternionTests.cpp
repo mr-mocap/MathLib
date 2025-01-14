@@ -32,6 +32,7 @@ namespace DualQuaternionTests
 {
 
 using namespace Math;
+using namespace Math::Literals;
 
 void PureRotationHasZeroTranslation()
 {

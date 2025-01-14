@@ -51,7 +51,7 @@ struct Vector4D
          *  This allows Vector4DRef objects to automatically be converted to Vector4D objects
          *  for situations like passing to functions or constructors to Vector4D objects.
          */
-        operator Vector4D<Type>() const { return { x, y, z, w }; }
+        constexpr operator Vector4D<Type>() const { return { x, y, z, w }; }
 
         Type &x;
         Type &y;
@@ -76,39 +76,7 @@ struct Vector4D
         w{w_in}
     {
     }
-    constexpr Vector4D(const Vector3D<Type>::Ref &first3, const Type &w_in = 0)
-        :
-        x{first3.x},
-        y{first3.y},
-        z{first3.z},
-        w{w_in}
-    {
-    }
     constexpr Vector4D(const Vector2D<Type> &first2, const Vector2D<Type> &second2)
-        :
-        x{first2.x},
-        y{first2.y},
-        z{second2.x},
-        w{second2.y}
-    {
-    }
-    constexpr Vector4D(const Vector2D<Type>::Ref &first2, const Vector2D<Type> &second2)
-        :
-        x{first2.x},
-        y{first2.y},
-        z{second2.x},
-        w{second2.y}
-    {
-    }
-    constexpr Vector4D(const Vector2D<Type> &first2, const Vector2D<Type>::Ref &second2)
-        :
-        x{first2.x},
-        y{first2.y},
-        z{second2.x},
-        w{second2.y}
-    {
-    }
-    constexpr Vector4D(const Vector2D<Type>::Ref &first2, const Vector2D<Type>::Ref &second2)
         :
         x{first2.x},
         y{first2.y},
@@ -124,23 +92,15 @@ struct Vector4D
         w{last3.z}
     {
     }
-    constexpr Vector4D(const Type &x_in, const Vector3D<Type>::Ref &last3)
-        :
-        x{x_in},
-        y{last3.x},
-        z{last3.y},
-        w{last3.z}
-    {
-    }
 
 
     /** @name Constants
      *  @{
      */
-    static constexpr Vector4D<Type> unit_x() { return Vector4D{ Type{1}, Type{0}, Type{0}, Type{0} }; }
-    static constexpr Vector4D<Type> unit_y() { return Vector4D{ Type{0}, Type{1}, Type{0}, Type{0} }; }
-    static constexpr Vector4D<Type> unit_z() { return Vector4D{ Type{0}, Type{0}, Type{1}, Type{0} }; }
-    static constexpr Vector4D<Type> unit_w() { return Vector4D{ Type{0}, Type{0}, Type{0}, Type{1} }; }
+    constexpr static Vector4D<Type> unit_x() { return Vector4D{ Type{1}, Type{0}, Type{0}, Type{0} }; }
+    constexpr static Vector4D<Type> unit_y() { return Vector4D{ Type{0}, Type{1}, Type{0}, Type{0} }; }
+    constexpr static Vector4D<Type> unit_z() { return Vector4D{ Type{0}, Type{0}, Type{1}, Type{0} }; }
+    constexpr static Vector4D<Type> unit_w() { return Vector4D{ Type{0}, Type{0}, Type{0}, Type{1} }; }
 
     constexpr static Vector4D<Type> zero() { return Vector4D{}; }
     /// @}
@@ -179,20 +139,31 @@ struct Vector4D
     constexpr const Vector2D<Type>::Ref zx() const { return { z, x }; }
     constexpr       Vector2D<Type>::Ref zx()       { return { z, x }; }
 
-    constexpr const Ref xyz() const { return Ref{ x, y, z }; }
-    constexpr       Ref xyz()       { return Ref{ x, y, z }; }
+    constexpr const Vector3D<Type>::Ref xyz() const { return { x, y, z }; }
+    constexpr       Vector3D<Type>::Ref xyz()       { return { x, y, z }; }
 
-    constexpr const Ref xzy() const { return Ref{ x, z, y }; }
-    constexpr       Ref xzy()       { return Ref{ x, z, y }; }
+    constexpr const Vector3D<Type>::Ref xzy() const { return { x, z, y }; }
+    constexpr       Vector3D<Type>::Ref xzy()       { return { x, z, y }; }
 
-    constexpr const Ref zxy() const { return Ref{ z, x, y }; }
-    constexpr       Ref zxy()       { return Ref{ z, x, y }; }
+    constexpr const Vector3D<Type>::Ref zxy() const { return { z, x, y }; }
+    constexpr       Vector3D<Type>::Ref zxy()       { return { z, x, y }; }
 
-    constexpr const Ref zyx() const { return Ref{ z, y, x }; }
-    constexpr       Ref zyx()       { return Ref{ z, y, x }; }
+    constexpr const Vector3D<Type>::Ref zyx() const { return { z, y, x }; }
+    constexpr       Vector3D<Type>::Ref zyx()       { return { z, y, x }; }
+
+    constexpr const Vector3D<Type>::Ref xxx() const { return { x, x, x }; }
+    constexpr       Vector3D<Type>::Ref xxx()       { return { x, x, x }; }
+
+    constexpr const Vector3D<Type>::Ref yyy() const { return { y, y, y }; }
+    constexpr       Vector3D<Type>::Ref yyy()       { return { y, y, y }; }
+
+    constexpr const Vector3D<Type>::Ref zzz() const { return { z, z, z }; }
+    constexpr       Vector3D<Type>::Ref zzz()       { return { z, z, z }; }
+
+    constexpr const Vector3D<Type>::Ref www() const { return { w, w, w }; }
+    constexpr       Vector3D<Type>::Ref www()       { return { w, w, w }; }
     /// @}
 
-    operator Ref() { return Ref{ x, y, z, w }; }
 
     /** @name Element Access
      *  @{
@@ -246,6 +217,24 @@ bool operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
     return approximately_equal_to(left, right);
 }
 
+template <class Type>
+bool operator ==(const Vector4D<Type> &left, const typename Vector4D<Type>::Ref &right)
+{
+    return approximately_equal_to(left, right);
+}
+
+template <class Type>
+bool operator ==(const typename Vector4D<Type>::Ref &left, const Vector4D<Type> &right)
+{
+    return approximately_equal_to(left, right);
+}
+
+template <class Type>
+bool operator ==(const typename Vector4D<Type>::Ref &left, const typename Vector4D<Type>::Ref &right)
+{
+    return approximately_equal_to(left, right);
+}
+
 /** Defines inequality of two Vector4D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
@@ -254,6 +243,24 @@ bool operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
  */
 template <class Type>
 bool operator !=(const Vector4D<Type> &left, const Vector4D<Type> &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const Vector4D<Type> &left, const typename Vector4D<Type>::Ref &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector4D<Type>::Ref &left, const Vector4D<Type> &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector4D<Type>::Ref &left, const typename Vector4D<Type>::Ref &right)
 {
     return !(left == right);
 }
@@ -288,6 +295,48 @@ constexpr Vector4D<Type> operator -(const Vector4D<Type> &left, const Vector4D<T
     return Vector4D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
 }
 /// @}  {Subtraction}
+
+/** @name Multiplication
+ *  @{
+ */
+/** Defines multiplication of two Vector4D objects
+ */
+template <class Type>
+constexpr Vector4D<Type> operator *(const Vector4D<Type> left, const Vector4D<Type> right)
+{
+    return Vector4D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
+}
+
+template <class Type>
+constexpr Vector4D<Type> operator *(const Vector4D<Type> left, const Type right)
+{
+    return Vector4D<Type>{ left.x * right, left.y * right, left.z * right, left.w * right };
+}
+
+template <class Type>
+constexpr Vector4D<Type> operator *(const Type left, const Vector4D<Type> right)
+{
+    return Vector4D<Type>{ left * right.x, left * right.y, left * right.z, left * right.w };
+}
+/// @}  {Multiplication}
+
+/** @name Division
+ *  @{
+ */
+/** Defines division of two Vector4D objects
+ */
+template <class Type>
+constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Vector4D<Type> &right)
+{
+    return Vector4D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
+}
+
+template <class Type>
+constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Type right)
+{
+    return Vector4D<Type>{ left.x / right, left.y / right, left.z / right, left.w / right };
+}
+/// @}  {Division}
 /// @}  {Vector4DAlgebra}
 /// @}  {GlobalOperators}
 
@@ -341,6 +390,39 @@ template <class T>
 constexpr T dot_normalized(const Vector4D<T> &left, const Vector4D<T> &right)
 {
     return dot(left, right) / (left.magnitude() * right.magnitude());
+}
+
+/** Calculate the absolute value of all components of a Vector4D
+ *   
+ *   @param input The Vector4D to operate on
+ *
+ *   @return The Vector4D with only positive values
+ */
+template <class T>
+constexpr Vector4D<T> abs(const Vector4D<T> &input)
+{
+    return Vector4D<T>( std::abs(input.x), std::abs(input.y), std::abs(input.z), std::abs(input.w) );
+}
+
+/** Calculate the fractional part of all components of a Vector4D
+ *   
+ *   @param input The Vector4D to operate on
+ *
+ *   @return The Vector4D with only fractional values
+ */
+template <class T>
+constexpr Vector4D<T> fract(const Vector4D<T> &input)
+{
+    return Vector4D<T>( std::modf(input.x), std::modf(input.y), std::modf(input.z), std::modf(input.w) );
+}
+
+template <class T>
+constexpr Vector4D<T> saturate(const Vector4D<T> &input, const T lower_bound, const T upper_bound)
+{
+    return Vector4D<T>( Math::saturate(input.x, lower_bound, upper_bound),
+                        Math::saturate(input.y, lower_bound, upper_bound),
+                        Math::saturate(input.z, lower_bound, upper_bound),
+                        Math::saturate(input.w, lower_bound, upper_bound) );
 }
 /// @}  {GlobalFunctions}
 

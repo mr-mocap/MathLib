@@ -52,7 +52,7 @@ struct Vector3D
          *  This allows Vector3DRef objects to automatically be converted to Vector3D objects
          *  for situations like passing to functions or constructors to Vector3D objects.
          */
-        operator Vector3D<Type>() const { return { x, y, z }; }
+        constexpr operator Vector3D<Type>() const { return { x, y, z }; }
 
         Type &x;
         Type &y;
@@ -65,16 +65,29 @@ struct Vector3D
         x{x_in},
         y{y_in},
         z{z_in}
-        {
-        }
-
+    {
+    }
+    constexpr Vector3D(const Vector2D<Type> &other, const Type z_in = 0)
+        :
+        x{other.x},
+        y{other.y},
+        z{z_in}
+    {
+    }
+    constexpr Vector3D(const Type x_in, const Vector2D<Type> &other)
+        :
+        x{x_in},
+        y{other.x},
+        z{other.y}
+    {
+    }
 
     /** @name Constants
      *  @{
      */
-    static constexpr Vector3D<Type> unit_x() { return Vector3D{ Type{1}, Type{0}, Type{0} }; }
-    static constexpr Vector3D<Type> unit_y() { return Vector3D{ Type{0}, Type{1}, Type{0} }; }
-    static constexpr Vector3D<Type> unit_z() { return Vector3D{ Type{0}, Type{0}, Type{1} }; }
+    constexpr static Vector3D<Type> unit_x() { return Vector3D{ Type{1}, Type{0}, Type{0} }; }
+    constexpr static Vector3D<Type> unit_y() { return Vector3D{ Type{0}, Type{1}, Type{0} }; }
+    constexpr static Vector3D<Type> unit_z() { return Vector3D{ Type{0}, Type{0}, Type{1} }; }
 
     constexpr static Vector3D<Type> zero() { return Vector3D{}; }
     /// @}
@@ -113,20 +126,18 @@ struct Vector3D
     constexpr const Vector2D<Type>::Ref zx() const { return { z, x }; }
     constexpr       Vector2D<Type>::Ref zx()       { return { z, x }; }
 
-    constexpr const Ref xyz() const { return Ref{ x, y, z }; }
-    constexpr       Ref xyz()       { return Ref{ x, y, z }; }
+    constexpr const Ref xyz() const { return { x, y, z }; }
+    constexpr       Ref xyz()       { return { x, y, z }; }
 
-    constexpr const Ref xzy() const { return Ref{ x, z, y }; }
-    constexpr       Ref xzy()       { return Ref{ x, z, y }; }
+    constexpr const Ref xzy() const { return { x, z, y }; }
+    constexpr       Ref xzy()       { return { x, z, y }; }
 
-    constexpr const Ref zxy() const { return Ref{ z, x, y }; }
-    constexpr       Ref zxy()       { return Ref{ z, x, y }; }
+    constexpr const Ref zxy() const { return { z, x, y }; }
+    constexpr       Ref zxy()       { return { z, x, y }; }
 
-    constexpr const Ref zyx() const { return Ref{ z, y, x }; }
-    constexpr       Ref zyx()       { return Ref{ z, y, x }; }
+    constexpr const Ref zyx() const { return { z, y, x }; }
+    constexpr       Ref zyx()       { return { z, y, x }; }
     /// @}
-
-    operator Ref() { return Ref{ x, y, z }; }
 
     /** @name Element Access
      *  @{
@@ -178,6 +189,24 @@ bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
     return approximately_equal_to(left, right);
 }
 
+template <class Type>
+bool operator ==(const Vector3D<Type> &left, const typename Vector3D<Type>::Ref &right)
+{
+    return approximately_equal_to(left, right);
+}
+
+template <class Type>
+bool operator ==(const typename Vector3D<Type>::Ref &left, const Vector3D<Type> &right)
+{
+    return approximately_equal_to(left, right);
+}
+
+template <class Type>
+bool operator ==(const typename Vector3D<Type>::Ref &left, const typename Vector3D<Type>::Ref &right)
+{
+    return approximately_equal_to(left, right);
+}
+
 /** Defines inequality of two Vector3D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
@@ -186,6 +215,24 @@ bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
  */
 template <class Type>
 bool operator !=(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const Vector3D<Type> &left, const typename Vector3D<Type>::Ref &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector3D<Type>::Ref &left, const Vector3D<Type> &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector3D<Type>::Ref &left, const typename Vector3D<Type>::Ref &right)
 {
     return !(left == right);
 }
@@ -207,6 +254,24 @@ constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<T
 {
     return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
 }
+
+template <class Type>
+constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const typename Vector3D<Type>::Ref &right)
+{
+    return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator +(const typename Vector3D<Type>::Ref &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator +(const typename Vector3D<Type>::Ref &left, const typename Vector3D<Type>::Ref &right)
+{
+    return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
+}
 /// @}  {Addition}
 
 /** @name Subtraction
@@ -219,7 +284,67 @@ constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<T
 {
     return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
 }
+
+template <class Type>
+constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const typename Vector3D<Type>::Ref &right)
+{
+    return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator -(const typename Vector3D<Type>::Ref &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator -(const typename Vector3D<Type>::Ref &left, const typename Vector3D<Type>::Ref &right)
+{
+    return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
+}
 /// @}  {Subtraction}
+
+/** @name Multiplication
+ *  @{
+ */
+/** Defines multiplication of two Vector3D objects
+ */
+template <class Type>
+constexpr Vector3D<Type> operator *(const Vector3D<Type> left, const Vector3D<Type> right)
+{
+    return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator *(const Vector3D<Type> left, const Type right)
+{
+    return Vector3D<Type>{ left.x * right, left.y * right, left.z * right };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator *(const Type left, const Vector3D<Type> right)
+{
+    return Vector3D<Type>{ left * right.x, left * right.y, left * right.z };
+}
+/// @}  {Multiplication}
+
+/** @name Division
+ *  @{
+ */
+/** Defines division of two Vector3D objects
+ */
+template <class Type>
+constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
+{
+    return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
+}
+
+template <class Type>
+constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Type right)
+{
+    return Vector3D<Type>{ left.x / right, left.y / right, left.z / right };
+}
+/// @}  {Division}
 /// @}  {Vector3DAlgebra}
 /// @}  {GlobalOperators}
 
@@ -301,6 +426,38 @@ template <class T>
 constexpr Vector3D<T> normalized(const Vector3D<T> &input)
 {
     return input.normalized();
+}
+
+/** Calculate the absolute value of all components of a Vector3D
+ *   
+ *   @param input The Vector3D to operate on
+ *
+ *   @return The Vector3D with only positive values
+ */
+template <class T>
+constexpr Vector3D<T> abs(const Vector3D<T> &input)
+{
+    return Vector3D<T>( std::abs(input.x), std::abs(input.y), std::abs(input.z) );
+}
+
+/** Calculate the fractional part of all components of a Vector3D
+ *   
+ *   @param input The Vector3D to operate on
+ *
+ *   @return The Vector3D with only fractional values
+ */
+template <class T>
+constexpr Vector3D<T> fract(const Vector3D<T> &input)
+{
+    return Vector3D<T>( std::modf(input.x), std::modf(input.y), std::modf(input.z) );
+}
+
+template <class T>
+constexpr Vector3D<T> saturate(const Vector3D<T> &input, const T lower_bound, const T upper_bound)
+{
+    return Vector3D<T>( Math::saturate(input.x, lower_bound, upper_bound),
+                        Math::saturate(input.y, lower_bound, upper_bound),
+                        Math::saturate(input.z, lower_bound, upper_bound) );
 }
 /// @}  {GlobalFunctions}
 

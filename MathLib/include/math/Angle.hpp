@@ -193,9 +193,21 @@ public:
         return *this;
     }
 
+    Degree<T> operator +=(const T other)
+    {
+        _value += other;
+        return *this;
+    }
+
     Degree<T> &operator -=(const Degree<T> other)
     {
         _value -= other.value();
+        return *this;
+    }
+
+    Degree<T> &operator -=(const T other)
+    {
+        _value -= other;
         return *this;
     }
 
@@ -205,9 +217,21 @@ public:
         return *this;
     }
 
+    Degree<T> &operator *=(const T other)
+    {
+        _value *= other;
+        return *this;
+    }
+
     Degree<T> &operator /=(const Degree<T> other)
     {
-        _value *= other.value();
+        _value /= other.value();
+        return *this;
+    }
+
+    Degree<T> &operator /=(const T other)
+    {
+        _value /= other;
         return *this;
     }
     /// @}  {Operators}
@@ -345,6 +369,8 @@ Degree<T> operator -(const Degree<T> input)
 }
 /// @}  {Degree}
 
+namespace Literals
+{
 /** @name User-Defined Literals
  * 
  *  @relates Degree
@@ -366,7 +392,7 @@ constexpr Degree<long double> operator ""_deg_ld(long double degrees)
     return Degree{degrees};
 }
 /// @}  {User-Defined Literals}
-
+}
 
 /** @name Degree Type Aliases
  * 

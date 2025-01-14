@@ -8,6 +8,7 @@ namespace ColorConversionTests
 {
 
 using namespace Color;
+using namespace Math::Literals;
 
 void ConvertingBasicRGBColorsToHSV()
 {
@@ -27,7 +28,7 @@ void ConvertingBasicRGBColorsToHSV()
         UnitRGBf green{ 0.0, 1.0, 0.0 };
         HSVf hsv_representation{ ToHSV( green ) };
 
-        assert( hsv_representation.hue().value() == 120.0f );
+        assert( hsv_representation.hue() == 120.0_deg_f );
         assert( hsv_representation.hueColor() == HSVf::Green );
         assert( hsv_representation.saturation() == 1.0f );
         assert( hsv_representation.value() == 1.0f );
@@ -142,6 +143,70 @@ void ConvertingBasicCMYColorsToHSV()
     }
 }
 
+void ConvertingBasicHSVColorsToRGB()
+{
+    std::cout << __func__ << std::endl;
+    
+    {
+        HSVf red{ 0.0_deg_f, 1.0f, 1.0f };
+        UnitRGBf rgb_representation{ ToRGB( red ) };
+
+        assert( rgb_representation.red() == 1.0f );
+        assert( rgb_representation.green() == 0.0f );
+        assert( rgb_representation.blue() == 0.0f );
+    }
+    
+    {
+        HSVf green{ 120.0_deg_f, 1.0f, 1.0f };
+        UnitRGBf rgb_representation{ ToRGB( green ) };
+
+        assert( rgb_representation.red() == 0.0f );
+        assert( rgb_representation.green() == 1.0f );
+        assert( rgb_representation.blue() == 0.0f );
+    }
+
+    {
+        HSVf blue{ 240.0_deg_f, 1.0f, 1.0f };
+        UnitRGBf rgb_representation{ ToRGB( blue ) };
+
+        assert( rgb_representation.red() == 0.0f );
+        assert( rgb_representation.green() == 0.0f );
+        assert( rgb_representation.blue() == 1.0f );
+    }
+}
+
+void ConvertingBasicCMYColorsToRGB()
+{
+    std::cout << __func__ << std::endl;
+    
+    {
+        HSVf cyan{ 180.0_deg_f, 1.0, 1.0 };
+        UnitRGBf rgb_representation{ ToRGB( cyan ) };
+
+        assert( rgb_representation.red() == 0.0f );
+        assert( rgb_representation.green() == 1.0f );
+        assert( rgb_representation.blue() == 1.0f );
+    }
+
+    {
+        HSVf magenta{ 300.0_deg_f, 1.0, 1.0 };
+        UnitRGBf rgb_representation{ ToRGB( magenta ) };
+
+        assert( rgb_representation.red() == 1.0f );
+        assert( rgb_representation.green() == 0.0f );
+        assert( rgb_representation.blue() == 1.0f );
+    }
+
+    {
+        HSVf yellow{ 60.0_deg_f, 1.0, 1.0 };
+        UnitRGBf rgb_representation{ ToRGB( yellow ) };
+
+        assert( rgb_representation.red() == 1.0f );
+        assert( rgb_representation.green() == 1.0f );
+        assert( rgb_representation.blue() == 0.0f );
+    }
+}
+
 void Run()
 {
     std::cout << "Running Color Conversion Tests..." << std::endl;
@@ -153,6 +218,9 @@ void Run()
     WhiteHasHueOfZero();
     GreyHasHueAndSaturationOfZeroAndValueOf50Percent();
     ConvertingBasicCMYColorsToHSV();
+
+    ConvertingBasicHSVColorsToRGB();
+    ConvertingBasicCMYColorsToRGB();
 
     std::cout << "PASSED!" << std::endl;
 }

@@ -30,6 +30,12 @@ constexpr inline Type lerp(const Type input_lower_bound, const Type input_upper_
 }
 
 template <class Type>
+constexpr inline Type mix(const Type input_lower_bound, const Type input_upper_bound, const float percentage_zero_to_one)
+{
+    return Math::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
+}
+
+template <class Type>
 constexpr inline Type inverse_lerp(const Type input_lower_bound, const Type input_upper_bound, const Type value_between)
 {
     return (value_between - input_lower_bound) / (input_upper_bound - input_lower_bound);
@@ -101,6 +107,12 @@ template <class Type = float>
 constexpr inline Type inverse_smoothstep(const Type input_value)
 {
     return Type{0.5} - std::sin( std::asin(Type{1.0} - Type{2.0} * std::clamp<Type>(input_value, Type{0}, Type{1})) / Type{3.0} );
+}
+
+template <class Type>
+Type fract(Type input)
+{
+    return std::modf(input);
 }
 
 }

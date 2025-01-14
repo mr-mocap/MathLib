@@ -52,7 +52,7 @@ struct Vector2D
          *  This allows Ref objects to automatically be converted to Vector2D objects
          *  for situations like passing to functions or constructors to Vector2D objects.
          */
-        operator Vector2D<Type>() const { return { x, y }; }
+        constexpr operator Vector2D<Type>() const { return { x, y }; }
 
         Type &x;
         Type &y;
@@ -69,8 +69,8 @@ struct Vector2D
     /** @name Constants
      *  @{
      */
-    static constexpr Vector2D<Type> unit_x() { return Vector2D{ Type{1}, Type{0} }; }
-    static constexpr Vector2D<Type> unit_y() { return Vector2D{ Type{0}, Type{1} }; }
+    constexpr static Vector2D<Type> unit_x() { return Vector2D{ Type{1}, Type{0} }; }
+    constexpr static Vector2D<Type> unit_y() { return Vector2D{ Type{0}, Type{1} }; }
 
     constexpr static Vector2D<Type> zero() { return Vector2D{}; }
     /// @}
@@ -102,7 +102,6 @@ struct Vector2D
     constexpr       Ref yx()       { return { y, x }; }
     /// @}
 
-    operator Ref() { return Ref{ x, y }; }
 
     /** @name Element Access
      *  @{
@@ -152,6 +151,24 @@ bool operator ==(const Vector2D<Type> &left, const Vector2D<Type> &right)
     return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
 }
 
+template <class Type>
+bool operator ==(const Vector2D<Type> &left, const typename Vector2D<Type>::Ref &right)
+{
+    return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
+}
+
+template <class Type>
+bool operator ==(const typename Vector2D<Type>::Ref &left, const Vector2D<Type> &right)
+{
+    return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
+}
+
+template <class Type>
+bool operator ==(const typename Vector2D<Type>::Ref &left, const typename Vector2D<Type>::Ref &right)
+{
+    return approximately_equal_to(left.x, right.x) && approximately_equal_to(left.y, right.y);
+}
+
 /** Defines inequality of two Vector2D objects
  *  
  *  @note Uses approximately_equal_to under-the-hood
@@ -164,9 +181,27 @@ bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
     return !(left == right);
 }
 
+template <class Type>
+bool operator !=(const Vector2D<Type> &left, const typename Vector2D<Type>::Ref &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector2D<Type>::Ref &left, const Vector2D<Type> &right)
+{
+    return !(left == right);
+}
+
+template <class Type>
+bool operator !=(const typename Vector2D<Type>::Ref &left, const typename Vector2D<Type>::Ref &right)
+{
+    return !(left == right);
+}
+
 /** @addtogroup Vector2DAlgebra 2D Vector Algebra
  * 
- *  Two Dimension Vector Algebra
+ *  Two Dimensional Vector Algebra
  * 
  *  @{
  */
@@ -194,6 +229,48 @@ constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<T
     return Vector2D<Type>{ left.x - right.x, left.y - right.y };
 }
 /// @}  {Subtraction}
+
+/** @name Multiplication
+ *  @{
+ */
+/** Defines multiplication of two Vector2D objects
+ */
+template <class Type>
+constexpr Vector2D<Type> operator *(const Vector2D<Type> left, const Vector2D<Type> right)
+{
+    return Vector2D<Type>{ left.x * right.x, left.y * right.y };
+}
+
+template <class Type>
+constexpr Vector2D<Type> operator *(const Vector2D<Type> left, const Type right)
+{
+    return Vector2D<Type>{ left.x * right, left.y * right };
+}
+
+template <class Type>
+constexpr Vector2D<Type> operator *(const Type left, const Vector2D<Type> right)
+{
+    return Vector2D<Type>{ left * right.x, left * right.y };
+}
+/// @}  {Multiplication}
+
+/** @name Division
+ *  @{
+ */
+/** Defines division of two Vector2D objects
+ */
+template <class Type>
+constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
+{
+    return Vector2D<Type>{ left.x / right.x, left.y / right.y };
+}
+
+template <class Type>
+constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Type right)
+{
+    return Vector2D<Type>{ left.x / right, left.y / right };
+}
+/// @}  {Division}
 /// @}  {Vector2DAlgebra}
 /// @}  {GlobalOperators}
 
@@ -252,7 +329,7 @@ constexpr T dot_normalized(const Vector2D<T> &left, const Vector2D<T> &right)
  *  @param left  The first vector
  *  @param right The second vector
  * 
- *  @result A scalar value representing the 2D cross product
+ *  @return A scalar value representing the 2D cross product
  * 
  *  @note Since the 3D version of cross product comes from the calculation
  *        of a determinant of a matrix, I define the same idea here but
@@ -263,6 +340,37 @@ template <class T>
 constexpr T cross(const Vector2D<T> &left, const Vector2D<T> &right)
 {
     return (left.x * right.y) - (left.y * right.x);
+}
+
+/** Calculate the absolute value of all components of a Vector2D
+ *   
+ *   @param input The Vector2D to operate on
+ *
+ *   @return The Vector2D with only positive values
+ */
+template <class T>
+constexpr Vector2D<T> abs(const Vector2D<T> &input)
+{
+    return Vector2D<T>( std::abs(input.x), std::abs(input.y) );
+}
+
+/** Calculate the fractional part of all components of a Vector2D
+ *   
+ *   @param input The Vector2D to operate on
+ *
+ *   @return The Vector2D with only fractional values
+ */
+template <class T>
+constexpr Vector2D<T> fract(const Vector2D<T> &input)
+{
+    return Vector2D<T>( std::modf(input.x), std::modf(input.y) );
+}
+
+template <class T>
+constexpr Vector2D<T> saturate(const Vector2D<T> &input, const T lower_bound, const T upper_bound)
+{
+    return Vector2D<T>( Math::saturate(input.x, lower_bound, upper_bound),
+                        Math::saturate(input.y, lower_bound, upper_bound) );
 }
 /// @}  {GlobalFunctions}
 

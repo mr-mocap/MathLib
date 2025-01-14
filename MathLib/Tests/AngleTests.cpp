@@ -9,6 +9,7 @@ namespace AngleTests
 {
 
 using namespace Math;
+using namespace Math::Literals;
 
 constexpr double PI = std::numbers::pi;
 constexpr double PI_2 = std::numbers::pi / 2.0;

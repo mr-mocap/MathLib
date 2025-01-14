@@ -21,6 +21,7 @@
  */
 
 using namespace Math;
+using namespace Math::Literals;
 
 static std::shared_ptr<SceneNodef> GenerateHierarchicalSkeleton(HierarchicalCoordinateSystemf &world)
 {

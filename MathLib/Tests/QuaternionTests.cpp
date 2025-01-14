@@ -28,6 +28,7 @@ namespace QuaternionTests
 {
 
 using namespace Math;
+using namespace Math::Literals;
 
 void TestRotationAtRegularIntervals(Quaternionf begin, Degreef amount_of_rotation, Vector3Df rotation_axis, int num_equal_steps)
 {

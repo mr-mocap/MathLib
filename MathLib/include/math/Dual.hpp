@@ -350,7 +350,7 @@ constexpr Dual<T> dualscalar_sqrt(const Dual<T> &input)
     // Expect that T is a scalar type (float, double, int, etc.)
     T root = std::sqrt(input.real);
 
-    return Dual<T>{ root, input.dual / (2 * root)};
+    return Dual<T>{ root, input.dual / (T{2} * root)};
 }
 
 /** Calculates the square of the norm
@@ -362,7 +362,7 @@ constexpr T dualscalar_normsquared(const Dual<T> &d)
 {
     Dual<T> result = d * conjugate(d);
 
-    assert( approximately_equal_to(result.dual, 0) );
+    assert( approximately_equal_to(result.dual, T{0}) );
 
     return result.real;
 }
