@@ -39,15 +39,13 @@ struct Vector2D
 
         constexpr Ref &operator =(const Ref &input)
         {
-            //return Ref{ x = input.x, y = input.y };
             x = input.x;
             y = input.y;
             return *this;
         }
 
-        constexpr Ref operator =(const Vector2D<Type> &input)
+        constexpr Ref &operator =(const Vector2D<Type> &input)
         {
-            //return Ref{ x = input.x, y = input.y };
             x = input.x;
             y = input.y;
             return *this;
@@ -78,7 +76,6 @@ struct Vector2D
         y = other.y;
         return *this;
     }
-
 
     /** @name Constants
      *  @{
@@ -155,7 +152,6 @@ constexpr bool approximately_equal_to(const Vector2DRef<T> &value_to_test, const
     return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
            approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
 }
-
 /// @}
 
 /** @name Global Operators
@@ -173,13 +169,13 @@ constexpr bool approximately_equal_to(const Vector2DRef<T> &value_to_test, const
  *  @{
  */
 template <class T>
-constexpr bool operator ==(const Vector2D<T> left, const Vector2D<T> right)
+constexpr bool operator ==(const Vector2D<T> &left, const Vector2D<T> &right)
 {
     return approximately_equal_to(left, right);
 }
 
 template <class T>
-constexpr bool operator ==(const Vector2DRef<T> left, const Vector2DRef<T> right)
+constexpr bool operator ==(const Vector2DRef<T> &left, const Vector2DRef<T> &right)
 {
     return approximately_equal_to(left, right);
 }
@@ -194,13 +190,13 @@ constexpr bool operator ==(const Vector2DRef<T> left, const Vector2DRef<T> right
  *  @{
  */
 template <class Type>
-constexpr bool operator !=(const Vector2D<Type> left, const Vector2D<Type> right)
+constexpr bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
 {
     return !(left == right);
 }
 
 template <class Type>
-constexpr bool operator !=(const Vector2DRef<Type> left, const Vector2DRef<Type> right)
+constexpr bool operator !=(const Vector2DRef<Type> &left, const Vector2DRef<Type> &right)
 {
     return !(left == right);
 }
