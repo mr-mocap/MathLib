@@ -202,4 +202,38 @@ UnitRGB<T> ToRGB(const HSV<T> &input_hsv)
 #endif
 }
 
+template <std::floating_point T>
+HSL<T> ToHSL(const HSV<T> &input_hsv)
+{
+    // https://en.wikipedia.org/wiki/HSL_and_HSV (HSV to HSL)
+    // 
+    // TODO: Use algorithms from Computer Graphics: Principles and Practice
+    T lightness = input_hsv.value() * (T{1.0} - input_hsv.saturation() / T{2.0});
+    T saturation;
+
+    if ( approximately_equal_to( lightness, T{0.0} ) || approximately_equal_to( lightness, T{1.0} ) )
+        saturation = T{0};
+    else
+        saturation = (input_hsv.value() - lightness) / std::min(lightness, T{1.0} - lightness);
+
+    return HSL<T>{ input_hsv.value(), saturation, lightness };
+}
+
+template <std::floating_point T>
+HSV<T> ToHSV(const HSL<T> &input_hsl)
+{
+    // https://en.wikipedia.org/wiki/HSL_and_HSV (HSV to HSL)
+    // 
+    // TODO: Use algorithms from Computer Graphics: Principles and Practice
+    T value = input_hsl.lightness() + input_hsl.saturation() * std::min(input_hsl.lightness(), T{1.0} - input_hsl.lightness());
+    T saturation;
+
+    if ( approximately_equal_to( value, T{0.0} ) )
+        saturation = T{0.0};
+    else
+        saturation = T{2.0} * (T{1.0} - input_hsl.lightness() / value);
+
+    return HSV<T>{ input_hsl.hue(), saturation, value };
+}
+
 }

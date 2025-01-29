@@ -509,8 +509,142 @@ constexpr BasicHSV<Type> operator -(const BasicHSV<Type> &left, const BasicHSV<T
 }
 /// @}  {Subtraction}
 
-/// @}  {Vector2DAlgebra}
+/// @}  {BasicHSVAlgebra}
 /// @}  {GlobalOperators}
+
+template <std::floating_point T = float>
+class BasicHSL
+{
+public:
+    using value_type = T;
+
+    enum Color {
+        Red,
+        Yellow,
+        Green,
+        Cyan,
+        Blue,
+        Magenta
+    };
+
+    constexpr BasicHSL() = default;
+    constexpr BasicHSL(const Math::Degree<value_type> h, const value_type s, const value_type l)
+        :
+        _hue{ h },
+        _saturation{ s },
+        _lightness{ l }
+    {
+        assert( _isInBounds( _saturation ) );
+        assert( _isInBounds( _lightness ) );
+    }
+    constexpr BasicHSL(const BasicHSL &other)
+        :
+        _hue{   other._hue   },
+        _saturation{ other._saturation },
+        _lightness{  other._lightness  }
+    {
+        assert( other.isNormalized() );
+    }
+    constexpr BasicHSL &operator =(const BasicHSL &other)
+    {
+        assert( other.isNormalized() );
+
+        if ( this == &other )
+            return *this;
+        
+        _hue    = other._hue;
+        _saturation = other._saturation;
+        _lightness  = other._lightness;
+
+        return *this;
+    }
+
+    constexpr Math::Degree<value_type> hue() const { return _hue; }
+    constexpr value_type saturation() const { return _saturation; }
+    constexpr value_type lightness() const { return _lightness; }
+
+    constexpr enum Color hueColor() const
+    {
+        const Math::Degree<value_type> mod = _hue.modulo();
+
+        if ( _isInBoundsUpTo( mod.value(), 0.0, 60.0 ) )
+            return Red;
+        else if ( _isInBoundsUpTo( mod.value(), 60.0, 120.0 ) )
+            return Yellow;
+        else if ( _isInBoundsUpTo( mod.value(), 120.0, 180.0 ) )
+            return Green;
+        else if ( _isInBoundsUpTo( mod.value(), 180.0, 240.0 ) )
+            return Cyan;
+        else if ( _isInBoundsUpTo( mod.value(), 240.0, 300.0 ) )
+            return Blue;
+
+        // It must be in range 300 - 360
+        return Magenta;
+    }
+
+    constexpr void hue(const Math::Degree<value_type> input)
+    {
+        _hue = input;
+    }
+
+    constexpr void saturation(const value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _saturation = input;
+    }
+
+    constexpr void lightness(const value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _lightness = input;
+    }
+
+    constexpr bool isNormalized() const
+    {
+        return _isInBoundsUpTo( _hue, 0.0, Math::Degree<value_type>::modulus() ) &&
+               _isInBounds( _saturation ) &&
+               _isInBounds( _lightness );
+    }
+protected:
+    Math::Degree<value_type> _hue{};
+    value_type               _saturation{};
+    value_type               _lightness{};
+
+    constexpr bool _isInBounds(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    {
+        return (component >= lower_bound) && (component <= upper_bound);
+    }
+
+    constexpr bool _isInBoundsUpTo(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    {
+        return (component >= lower_bound) && (component < upper_bound);
+    }
+};
+
+/** @addtogroup Equality
+ * 
+ *  @relates BasicHSL
+ * 
+ *  @{
+ * 
+ *  Compares two BasicHSL inputs equal, component-wise, to within a tolerance
+ *  
+ *  @param value_to_test
+ *  @param value_it_should_be 
+ *  @param tolerance          How close they should be to be considered equal
+ *  
+ *  @return @c true if they are equal
+ */
+template <class T>
+constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const float tolerance = 0.0002f)
+{
+    return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
+           approximately_equal_to(value_to_test.saturation(), value_it_should_be.saturation(), tolerance) &&
+           approximately_equal_to(value_to_test.lightness(), value_it_should_be.lightness(), tolerance);
+}
+/// @}
 
 template <class T>
 using RGB = BasicRGB<T>;
@@ -524,4 +658,7 @@ template <class T>
 using HSV = BasicHSV<T>;
 using HSVf = HSV<float>;
 
+template <class T>
+using HSL = BasicHSL<T>;
+using HSLf = HSL<float>;
 }
