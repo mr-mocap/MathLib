@@ -163,12 +163,10 @@ void OperatorEqualsEquals()
     Vector2Df one{ 1.0f, 2.0f };
     Vector2Df two{ 1.0f, 2.0f };
 
-#if 0
     assert( one == two );
     assert( one == two.xy() );
     assert( one.xy() == two );
     assert( one.xy() == two.xy() );
-#endif
 }
 
 void Dot()

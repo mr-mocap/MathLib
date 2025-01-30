@@ -51,6 +51,23 @@ struct Vector2D
             return *this;
         }
 
+        /** Defines equality of two Vector2D::Ref objects
+         *  
+         *  @note Uses approximately_equal_to under-the-hood
+         *  
+         *  @note We take advantage of the new C++20 rule where if there
+         *        is not an appropriate operator ==(const Vector2D<Type> &) defined
+         *        for this class, then the compiler tries a swapped instantiation
+         *        in its place.  This allows us to only define the typical operator ==() here
+         *        and then define comparison of different types to the other class.
+         * 
+         *  @see Equality
+         */
+        constexpr bool operator ==(const Ref &other) const
+        {
+            return approximately_equal_to( *this, other );
+        }
+
         /** Vector2D conversion operator
          * 
          *  This allows Ref objects to automatically be converted to Vector2D objects
@@ -60,6 +77,30 @@ struct Vector2D
 
         Type &x;
         Type &y;
+
+
+        /** @name Private Friend Functions
+         *  @{
+         */
+
+        /** Compares two Vector2D inputs equal, component-wise, to within a tolerance
+         * 
+         *  @addtogroup Equality
+         * 
+         *  @relates Vector2D
+         *  
+         *  @param value_to_test
+         *  @param value_it_should_be 
+         *  @param tolerance          How close they should be to be considered equal
+         *  
+         *  @return @c true if they are equal
+         */
+        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, const float tolerance = 0.0002f)
+        {
+            return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+                   approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+        }
+        /// @} {Private Friend Functions}
     };
 
     constexpr Vector2D() = default;
@@ -75,6 +116,34 @@ struct Vector2D
         x = other.x;
         y = other.y;
         return *this;
+    }
+
+    /** Defines equality of two Vector2D objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note We take advantage of new C++20 rules that can automatically
+     *        generate the operator !=() from the operator ==().
+     * 
+     *  @see Equality
+     */
+    constexpr bool operator ==(const Vector2D<Type> &right) const
+    {
+        return approximately_equal_to(*this, right);
+    }
+
+    /** Defines equality of a Vector2D and Vector2D<Type>::Ref objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note We take advantage of new C++20 rules that can automatically
+     *        generate the operator !=() from the operator ==().
+     * 
+     *  @see Equality
+     */
+    constexpr bool operator ==(const Vector2D<Type>::Ref &right) const
+    {
+        return approximately_equal_to(*this, Vector2D<Type>{right});
     }
 
     /** @name Constants
@@ -111,7 +180,7 @@ struct Vector2D
 
     constexpr const Ref yx() const { return { y, x }; }
     constexpr       Ref yx()       { return { y, x }; }
-    /// @}
+    /// @} {Swizzle operations}
 
 
     /** @name Element Access
@@ -120,39 +189,34 @@ struct Vector2D
     Type x{};
     Type y{};
     /// @}
+
+    /** @name Private Friend Functions
+     *  @{
+     */
+
+    /** Compares two Vector2D inputs equal, component-wise, to within a tolerance
+     * 
+     *  @addtogroup Equality
+     * 
+     *  @relates Vector2D
+     * 
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const Vector2D<Type> &value_to_test, const Vector2D<Type> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+    }
+    /// @} {Private Friend Functions}
 };
 
 template <class T>
 using Vector2DRef = typename Vector2D<T>::Ref;
 
-/** @addtogroup Equality
- * 
- *  @relates Vector2D
- * 
- *  @{
- * 
- *  Compares two Vector2D inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const Vector2D<T> &value_to_test, const Vector2D<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-           approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
-}
-
-template <class T>
-constexpr bool approximately_equal_to(const Vector2DRef<T> &value_to_test, const Vector2DRef<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-           approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
-}
-/// @}
 
 /** @name Global Operators
  * 
@@ -160,47 +224,6 @@ constexpr bool approximately_equal_to(const Vector2DRef<T> &value_to_test, const
  * 
  *  @{
  */
-/** Defines equality of two Vector2D objects
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see Equality
- * 
- *  @{
- */
-template <class T>
-constexpr bool operator ==(const Vector2D<T> &left, const Vector2D<T> &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-template <class T>
-constexpr bool operator ==(const Vector2DRef<T> &left, const Vector2DRef<T> &right)
-{
-    return approximately_equal_to(left, right);
-}
-/// @}
-
-/** Defines inequality of two Vector2D objects
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see Equality
- * 
- *  @{
- */
-template <class Type>
-constexpr bool operator !=(const Vector2D<Type> &left, const Vector2D<Type> &right)
-{
-    return !(left == right);
-}
-
-template <class Type>
-constexpr bool operator !=(const Vector2DRef<Type> &left, const Vector2DRef<Type> &right)
-{
-    return !(left == right);
-}
-/// @}
 
 /** @addtogroup Vector2DAlgebra 2D Vector Algebra
  * 
