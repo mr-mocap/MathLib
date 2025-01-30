@@ -192,6 +192,59 @@ struct Vector2D
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
         }
+
+        friend constexpr Type accumulate(const Ref &input)
+        {
+            return input.x + input.y;
+        }
+
+        friend constexpr Type dot(const Ref &left, const Ref &right)
+        {
+            return (left.x * right.x) + (left.y * right.y);
+        }
+        friend constexpr Type dot(const Ref &left, const Vector2D<Type> &right)
+        {
+            return (left.x * right.x) + (left.y * right.y);
+        }
+
+        friend constexpr Type dot_normalized(const Ref &left, const Ref &right)
+        {
+            return dot(left, right) / (left.magnitude() * right.magnitude());
+        }
+        friend constexpr Type dot_normalized(const Ref &left, const Vector2D<Type> &right)
+        {
+            return dot(left, right) / (left.magnitude() * right.magnitude());
+        }
+
+        friend constexpr Type cross(const Ref &left, const Ref &right)
+        {
+            return (left.x * right.y) - (left.y * right.x);
+        }
+        friend constexpr Type cross(const Ref &left, const Vector2D<Type> &right)
+        {
+            return (left.x * right.y) - (left.y * right.x);
+        }
+
+        friend constexpr Vector2D<Type> abs(const Ref &input)
+        {
+            return Vector2D<Type>( std::abs(input.x), std::abs(input.y) );
+        }
+
+        friend constexpr Vector2D<Type> fract(const Ref &input)
+        {
+            return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
+        }
+
+        constexpr Vector2D<Type> saturate(const Ref &input, const Type lower_bound, const Type upper_bound)
+        {
+            return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
+                                   Math::saturate(input.y, lower_bound, upper_bound) );
+        }
+
+        friend std::string format(const Ref &input)
+        {
+            return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
+        }
         /// @} {Private Friend Functions}
     };
 
@@ -403,6 +456,186 @@ struct Vector2D
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
     }
+
+    /** Sums up the components of @p input
+     *  
+     *  @input The Vector2D to operate on
+     */
+    friend constexpr Type accumulate(const Vector2D<Type> &input)
+    {
+        return input.x + input.y;
+    }
+
+    /** Calculate the dot product of two Vector2D objects
+     *
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *  
+     *  @note This is only a strict dot product and thus a normalized
+     *        result will depend on if the input vectors are both
+     *        normalized!
+     *
+     *  @{
+     */
+    friend constexpr Type dot(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    {
+        return (left.x * right.x) + (left.y * right.y);
+    }
+    friend constexpr Type dot(const Vector2D<Type> &left, const Ref &right)
+    {
+        return (left.x * right.x) + (left.y * right.y);
+    }
+
+    /** Calculate the normalized dot product of two Vector2D objects
+     *
+     *  The input vectors are not assumed to be normalized, so we go
+     *  ahead and divide through by both the input vectors
+     *  to arrive at a normalized output.
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *
+     *  @{
+     */
+    friend constexpr Type dot_normalized(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+    friend constexpr Type dot_normalized(const Vector2D<Type> &left, const Ref &right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+    /// @} {dot_normalized}
+
+    /** Calculates a pseudo cross product between two Vector2D objects
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return A scalar value representing the 2D cross product
+     * 
+     *  @note Since the 3D version of cross product comes from the calculation
+     *        of a determinant of a matrix, I define the same idea here but
+     *        using a 2 x 2 matrix instead of the 3 x 3 3D for the version (also
+     *        owing to the recursive nature of the calculation of a determinant).
+     * 
+     *  @{
+     */
+    friend constexpr Type cross(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    {
+        return (left.x * right.y) - (left.y * right.x);
+    }
+    friend constexpr Type cross(const Vector2D<Type> &left, const Ref &right)
+    {
+        return (left.x * right.y) - (left.y * right.x);
+    }
+    /// @} {cross}
+
+    /** Calculate the absolute value of all components of a Vector2D
+     *   
+     *   @param input The Vector2D to operate on
+     *
+     *   @return The Vector2D with only positive values
+     */
+    friend constexpr Vector2D<Type> abs(const Vector2D<Type> &input)
+    {
+        return Vector2D<Type>( std::abs(input.x), std::abs(input.y) );
+    }
+
+    /** Calculate the fractional part of all components of a Vector2D
+     *   
+     *   @param input The Vector2D to operate on
+     *
+     *   @return The Vector2D with only fractional values
+     */
+    friend constexpr Vector2D<Type> fract(const Vector2D<Type> &input)
+    {
+        return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
+    }
+
+    friend constexpr Vector2D<Type> saturate(const Vector2D<Type> &input, const Type lower_bound, const Type upper_bound)
+    {
+        return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
+                               Math::saturate(input.y, lower_bound, upper_bound) );
+    }
+
+    friend std::string format(const Vector2D<Type> &input)
+    {
+        return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
+    friend bool check_if_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, float tolerance = 0.0002f)
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
+    friend bool check_if_not_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, float tolerance = 0.0002f)
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    friend void CHECK_IF_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_NOT_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_ZERO(const Vector2D<Type> &input, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, Vector2D<Type>::zero(), tolerance));
+    }
     /// @} {Private Friend Functions}
 };
 
@@ -420,195 +653,6 @@ using Vector2DdRef = Vector2DRef<double>;
 using Vector2DldRef = Vector2DRef<long double>;
 ///@}  {Vector2D::Ref Type Aliases}
 
-
-/** @name Global Operators
- * 
- *  @relates Vector2D
- * 
- *  @{
- */
-
-/// @}  {GlobalOperators}
-
-/** @name Global Functions
- * 
- *  @relates Vector2D
- * 
- *  @{
- */
-/** Sums up the components of @p input
- *  
- *  @input The Vector2D to operate on
- */
-template <class T>
-constexpr T accumulate(const Vector2D<T> &input)
-{
-    return input.x + input.y;
-}
-
-/** Calculate the dot product of two Vector2D objects
- *
- *  @param left  The first vector
- *  @param right The second vector
- * 
- *  @return The dot product of the two input vectors
- *  
- *  @note This is only a strict dot product and thus a normalized
- *        result will depend on if the input vectors are both
- *        normalized!
- */
-template <class T>
-constexpr T dot(const Vector2D<T> &left, const Vector2D<T> &right)
-{
-    return (left.x * right.x) + (left.y * right.y);
-}
-
-/** Calculate the normalized dot product of two Vector2D objects
- *
- *  The input vectors are not assumed to be normalized, so we go
- *  ahead and divide through by both the input vectors
- *  to arrive at a normalized output.
- * 
- *  @param left  The first vector
- *  @param right The second vector
- * 
- *  @return The dot product of the two input vectors
- */
-template <class T>
-constexpr T dot_normalized(const Vector2D<T> &left, const Vector2D<T> &right)
-{
-    return dot(left, right) / (left.magnitude() * right.magnitude());
-}
-
-/** Calculates a pseudo cross product between two Vector2D objects
- * 
- *  @param left  The first vector
- *  @param right The second vector
- * 
- *  @return A scalar value representing the 2D cross product
- * 
- *  @note Since the 3D version of cross product comes from the calculation
- *        of a determinant of a matrix, I define the same idea here but
- *        using a 2 x 2 matrix instead of the 3 x 3 3D for the version (also
- *        owing to the recursive nature of the calculation of a determinant).
- */
-template <class T>
-constexpr T cross(const Vector2D<T> &left, const Vector2D<T> &right)
-{
-    return (left.x * right.y) - (left.y * right.x);
-}
-
-/** Calculate the absolute value of all components of a Vector2D
- *   
- *   @param input The Vector2D to operate on
- *
- *   @return The Vector2D with only positive values
- */
-template <class T>
-constexpr Vector2D<T> abs(const Vector2D<T> &input)
-{
-    return Vector2D<T>( std::abs(input.x), std::abs(input.y) );
-}
-
-/** Calculate the fractional part of all components of a Vector2D
- *   
- *   @param input The Vector2D to operate on
- *
- *   @return The Vector2D with only fractional values
- */
-template <class T>
-constexpr Vector2D<T> fract(const Vector2D<T> &input)
-{
-    return Vector2D<T>( std::modf(input.x), std::modf(input.y) );
-}
-
-template <class T>
-constexpr Vector2D<T> saturate(const Vector2D<T> &input, const T lower_bound, const T upper_bound)
-{
-    return Vector2D<T>( Math::saturate(input.x, lower_bound, upper_bound),
-                        Math::saturate(input.y, lower_bound, upper_bound) );
-}
-/// @}  {GlobalFunctions}
-
-template <class T>
-std::string format(const Vector2D<T> &input)
-{
-    return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for equality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are equal within @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, float tolerance = 0.0002f)
-{
-    if (!approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for inequality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_not_equal(const Vector2D<T> &input, const Vector2D<T> &near_to, float tolerance = 0.0002f)
-{
-    if (approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-template <class T>
-void CHECK_IF_EQUAL(const Vector2D<T> &input, const Vector2D<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_NOT_EQUAL(const Vector2D<T> &input, const Vector2D<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_not_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_ZERO(const Vector2D<T> &input, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, Vector2D<T>::zero(), tolerance));
-}
 
 /** @name Vector2D Type Aliases
  *  
