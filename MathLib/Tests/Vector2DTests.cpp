@@ -187,6 +187,138 @@ void Dot()
     CHECK_IF_EQUAL( dot(Vector2Df{sqrt2_over_2, sqrt2_over_2}, Vector2Df{sqrt2_over_2, sqrt2_over_2}), 1.0f ); // 45 deg rotation
 }
 
+void Addition()
+{
+    std::cout << __func__ << std::endl;
+
+    // Vector2Df
+    {
+        Vector2Df left{ 1.0f, 2.0f };
+        Vector2Df right{ 1.0f, 2.0f };
+        Vector2Df result = left + right;
+
+        CHECK_IF_EQUAL( left + right, Vector2Df( 2.0f, 4.0f ) );
+        CHECK_IF_EQUAL( result, Vector2Df( 2.0f, 4.0f ) );
+    }
+
+    // Vector2Df & Vector2Df::Ref
+    {
+        Vector2Df left{ 1.0f, 2.0f };
+        Vector2Df right{ 3.0f, 4.0f };
+        Vector2Df result = left + right.yx();
+
+        CHECK_IF_EQUAL( left + right.yx(), Vector2Df( 5.0f, 5.0f ) );
+        CHECK_IF_EQUAL( result, Vector2Df( 5.0f, 5.0f ) );
+    }
+
+    // Vector2Df::Ref & Vector2Df::Ref
+    {
+        Vector2Df left{ 1.0f, 2.0f };
+        Vector2Df right{ 3.0f, 4.0f };
+        Vector2Df result = left.xy() + right.xy();
+
+        CHECK_IF_EQUAL( left.xy() + right.xy(), Vector2Df( 4.0f, 6.0f ) );
+        CHECK_IF_EQUAL( result, Vector2Df( 4.0f, 6.0f ) );
+    }
+}
+
+void Subtraction()
+{
+    std::cout << __func__ << std::endl;
+
+    // Vector2Df
+    {
+        Vector2Df left{ 1.0f, 2.0f };
+        Vector2Df right{ 1.0f, 2.0f };
+        Vector2Df result = left - right;
+
+        CHECK_IF_EQUAL( left - right, Vector2Df::zero() );
+        CHECK_IF_EQUAL( result, Vector2Df::zero() );
+    }
+
+    // Vector2Df & Vector2Df::Ref
+    {
+        Vector2Df left{ 1.0f, 2.0f };
+        Vector2Df right{ 1.0f, 2.0f };
+        Vector2Df result = left - right.yx();
+
+        CHECK_IF_EQUAL( left - right.yx(), Vector2Df{ -1.0f, 1.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ -1.0f, 1.0f } );
+    }
+
+    // Vector2Df::Ref & Vector2Df::Ref
+    {
+        Vector2Df left{ 5.0f, 9.0f };
+        Vector2Df right{ 3.0f, 7.0f };
+        Vector2Df result = left - right.yx();
+
+        CHECK_IF_EQUAL( left - right.yx(), Vector2Df{ -2.0f, 6.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ -2.0f, 6.0f } );
+    }
+}
+
+void Multiplication()
+{
+    std::cout << __func__ << std::endl;
+
+    // Vector2Df
+    {
+        Vector2Df left{ 3.0f, 4.0f };
+        Vector2Df right{ 5.0f, 9.0f };
+        Vector2Df result = left * right;
+
+        CHECK_IF_EQUAL( left * right, Vector2Df{ 15.0f, 36.0f } );
+        CHECK_IF_EQUAL( right * left, Vector2Df{ 15.0f, 36.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ 15.0f, 36.0f } );
+    }
+
+    // Vector2Df & scalar
+    {
+        Vector2Df left{ 3.0f, 4.0f };
+        float scalar = 7.0f;
+        Vector2Df result  = left * scalar;
+        Vector2Df result2 = scalar * left;
+
+        CHECK_IF_EQUAL( left * scalar, Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( scalar * left, Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( result2, Vector2Df{ 21.0f, 28.0f } );
+    }
+
+    // Vector2Df & Vector2Df::Ref
+    {
+        Vector2Df left{ 3.0f, 4.0f };
+        Vector2Df right{ 5.0f, 9.0f };
+        Vector2Df result = left * right.xy();
+        Vector2Df result2 = right.xy() * left;
+
+        CHECK_IF_EQUAL( left * right.xy(), Vector2Df{ 15.0f, 36.0f } );
+        CHECK_IF_EQUAL( right * left.xy(), Vector2Df{ 15.0f, 36.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ 15.0f, 36.0f } );
+        CHECK_IF_EQUAL( result2, Vector2Df{ 15.0f, 36.0f } );
+    }
+
+    // Vector2Df::Ref & Vector2Df::Ref
+    {
+        Vector2Df left{ 1.0f, 3.0f };
+        Vector2Df right{ 2.0f, 6.0f };
+        Vector2Df result = left.xy() * right.xy();
+        Vector2Df result2 = right.xy() * left.xy();
+
+        CHECK_IF_EQUAL( left.xy() * right.xy(), Vector2Df{ 2.0f, 18.0f} );
+        CHECK_IF_EQUAL( right.xy() * left.xy(), Vector2Df{ 2.0f, 18.0f} );
+        CHECK_IF_EQUAL( result, Vector2Df{ 2.0f, 18.0f} );
+        CHECK_IF_EQUAL( result2, Vector2Df{ 2.0f, 18.0f} );
+    }
+}
+
+void ArithmeticOperations()
+{
+    Addition();
+    Subtraction();
+    Multiplication();
+}
+
 void Run()
 {
     std::cout << "Running Vector2D Tests..." << std::endl;
@@ -203,6 +335,8 @@ void Run()
     OperatorEqualsEquals();
     Swizzle();
     Dot();
+
+    ArithmeticOperations();
 
     std::cout << "PASSED!" << std::endl;
 }

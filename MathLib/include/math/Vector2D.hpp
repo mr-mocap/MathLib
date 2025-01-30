@@ -68,6 +68,98 @@ struct Vector2D
             return approximately_equal_to( *this, other );
         }
 
+        /** @addtogroup Vector2DAlgebra 2D Vector Algebra
+         * 
+         *  Two Dimensional Vector Algebra
+         * 
+         *  @{
+         */
+
+        /** @name Addition
+         *  @{
+         */
+        /** Defines addition of two Vector2D::Ref objects
+         */
+        constexpr Vector2D<Type> operator +(const Ref &other) const
+        {
+            return { x + other.x, y + other.y };
+        }
+        /// @} {Addition}
+
+        /** @name Subtraction
+         *  @{
+         */
+        /** Defines subtraction of two Vector2D::Ref objects
+         */
+        constexpr Vector2D<Type> operator -(const Ref &other) const
+        {
+            return { x - other.x, y - other.y };
+        }
+        constexpr Vector2D<Type> operator -(const Vector2D<Type> &other) const
+        {
+            return { x - other.x, y - other.y };
+        }
+        /// @}  {Subtraction}
+
+        /** @name Multiplication
+         *  @{
+         */
+        /** Defines multiplication of two Vector2D::Ref objects
+         */
+        constexpr Vector2D<Type> operator *(const Vector2D<Type> &other) const
+        {
+            return Vector2D<Type>{ x * other.x, y * other.y };
+        }
+
+        constexpr Vector2D<Type> operator *(const Ref &other) const
+        {
+            return Vector2D<Type>{ x * other.x, y * other.y };
+        }
+
+        /** Defines multiplication of a Vector2D::Ref object by a scalar
+         */
+        constexpr Vector2D<Type> operator *(const Type scalar) const
+        {
+            return Vector2D<Type>{ x * scalar, y * scalar };
+        }
+        /** Defines multiplication of a scalar by a Vector2D::Ref object
+         */
+        friend constexpr Vector2D<Type> operator *(const Type scalar, const Ref &right)
+        {
+            return Vector2D<Type>{ scalar * right.x, scalar * right.y };
+        }
+        /// @}  {Multiplication}
+
+        /** @name Division
+         *  @{
+         */
+        /** Defines division of two Vector2D::Ref objects
+         */
+        constexpr Vector2D<Type> operator /(const Ref &other) const
+        {
+            return Vector2D<Type>{ x / other.x, y / other.y };
+        }
+
+        constexpr Vector2D<Type> operator /(const Vector2D<Type> &other) const
+        {
+            return Vector2D<Type>{ x / other.x, y / other.y };
+        }
+
+        /** Defines division of a Vector2D::Ref object by a scalar
+         */
+        constexpr Vector2D<Type> operator /(const Type scalar) const
+        {
+            return Vector2D<Type>{ x / scalar, y / scalar };
+        }
+        /** Defines division of a scalar by a Vector2D::Ref object
+         */
+        friend constexpr Vector2D<Type> operator /(const Type scalar, const Ref &right)
+        {
+            return Vector2D<Type>{ scalar / right.x, scalar / right.y };
+        }
+        /// @} {Division}
+        /// @} {Vector2DAlgebra}
+
         /** Vector2D conversion operator
          * 
          *  This allows Ref objects to automatically be converted to Vector2D objects
@@ -146,6 +238,100 @@ struct Vector2D
         return approximately_equal_to(*this, Vector2D<Type>{right});
     }
 
+    /** @addtogroup Vector2DAlgebra 2D Vector Algebra
+     * 
+     *  Two Dimensional Vector Algebra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two Vector2D objects
+     */
+    constexpr Vector2D<Type> operator +(const Vector2D<Type> &other) const
+    {
+        return Vector2D<Type>{ x + other.x, y + other.y };
+    }
+    constexpr Vector2D<Type> operator +(const Ref &other) const
+    {
+        return Vector2D<Type>{ x + other.x, y + other.y };
+    }
+    /// @} {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two Vector2D objects
+     */
+    constexpr Vector2D<Type> operator -(const Vector2D<Type> &other) const
+    {
+        return { x - other.x, y - other.y };
+    }
+    constexpr Vector2D<Type> operator -(const Ref &other) const
+    {
+        return { x - other.x, y - other.y };
+    }
+    /// @}  {Subtraction}
+
+    /** @name Multiplication
+     *  @{
+     */
+    /** Defines multiplication of two Vector2D objects
+     */
+    constexpr Vector2D<Type> operator *(const Vector2D<Type> &right) const
+    {
+        return Vector2D<Type>{ x * right.x, y * right.y };
+    }
+
+    constexpr Vector2D<Type> operator *(const Ref &right) const
+    {
+        return Vector2D<Type>{ x * right.x, y * right.y };
+    }
+
+    constexpr Vector2D<Type> operator *(const Type scalar) const
+    {
+        return Vector2D<Type>{ x * scalar, y * scalar };
+    }
+
+    friend constexpr Vector2D<Type> operator *(const Type scalar, const Vector2D<Type> &right)
+    {
+        return Vector2D<Type>{ scalar * right.x, scalar * right.y };
+    }
+    /// @}  {Multiplication}
+
+    /** @name Division
+     *  @{
+     */
+    /** Defines division of two Vector2D objects
+     */
+    constexpr Vector2D<Type> operator /(const Vector2D<Type> &right) const
+    {
+        return Vector2D<Type>{ x / right.x, y / right.y };
+    }
+
+    constexpr Vector2D<Type> operator /(const Ref &right) const
+    {
+        return Vector2D<Type>{ x / right.x, y / right.y };
+    }
+
+    /** Defines division of a Vector2D object by a scalar
+     */
+    constexpr Vector2D<Type> operator /(const Type scalar) const
+    {
+        return Vector2D<Type>{ x / scalar, y / scalar };
+    }
+
+    /** Defines division of a scalar by a Vector2D object
+     */
+    friend constexpr Vector2D<Type> operator /(const Type scalar, const Vector2D<Type> &right)
+    {
+        return Vector2D<Type>{ scalar / right.x, scalar / right.y };
+    }
+    /// @}  {Division}
+    /// @}  {Vector2DAlgebra}
+
     /** @name Constants
      *  @{
      */
@@ -175,6 +361,12 @@ struct Vector2D
     /** @name Swizzle operations
      *  @{
      */
+    constexpr Vector2D<Type> xx() const { return { x, x }; }
+    constexpr Vector2D<Type> xx()       { return { x, x }; }
+
+    constexpr Vector2D<Type> yy() const { return { y, y }; }
+    constexpr Vector2D<Type> yy()       { return { y, y }; }
+
     constexpr const Ref xy() const { return { x, y }; }
     constexpr       Ref xy()       { return { x, y }; }
 
@@ -214,8 +406,19 @@ struct Vector2D
     /// @} {Private Friend Functions}
 };
 
+/** @name Vector2D::Ref Type Aliases
+ *  
+ *  @relates Vector2D
+ * 
+ *  @{
+ */
 template <class T>
 using Vector2DRef = typename Vector2D<T>::Ref;
+
+using Vector2DfRef = Vector2DRef<float>;
+using Vector2DdRef = Vector2DRef<double>;
+using Vector2DldRef = Vector2DRef<long double>;
+///@}  {Vector2D::Ref Type Aliases}
 
 
 /** @name Global Operators
@@ -225,79 +428,6 @@ using Vector2DRef = typename Vector2D<T>::Ref;
  *  @{
  */
 
-/** @addtogroup Vector2DAlgebra 2D Vector Algebra
- * 
- *  Two Dimensional Vector Algebra
- * 
- *  @{
- */
-
-/** @name Addition
- *  @{
- */
-/** Defines addition of two Vector2D objects
- */
-template <class Type>
-constexpr Vector2D<Type> operator +(const Vector2D<Type> &left, const Vector2D<Type> &right)
-{
-    return Vector2D<Type>{ left.x + right.x, left.y + right.y };
-}
-/// @}  {Addition}
-
-/** @name Subtraction
- *  @{
- */
-/** Defines subtraction of two Vector2D objects
- */
-template <class Type>
-constexpr Vector2D<Type> operator -(const Vector2D<Type> &left, const Vector2D<Type> &right)
-{
-    return Vector2D<Type>{ left.x - right.x, left.y - right.y };
-}
-/// @}  {Subtraction}
-
-/** @name Multiplication
- *  @{
- */
-/** Defines multiplication of two Vector2D objects
- */
-template <class Type>
-constexpr Vector2D<Type> operator *(const Vector2D<Type> left, const Vector2D<Type> right)
-{
-    return Vector2D<Type>{ left.x * right.x, left.y * right.y };
-}
-
-template <class Type>
-constexpr Vector2D<Type> operator *(const Vector2D<Type> left, const Type right)
-{
-    return Vector2D<Type>{ left.x * right, left.y * right };
-}
-
-template <class Type>
-constexpr Vector2D<Type> operator *(const Type left, const Vector2D<Type> right)
-{
-    return Vector2D<Type>{ left * right.x, left * right.y };
-}
-/// @}  {Multiplication}
-
-/** @name Division
- *  @{
- */
-/** Defines division of two Vector2D objects
- */
-template <class Type>
-constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Vector2D<Type> &right)
-{
-    return Vector2D<Type>{ left.x / right.x, left.y / right.y };
-}
-
-template <class Type>
-constexpr Vector2D<Type> operator /(const Vector2D<Type> &left, const Type right)
-{
-    return Vector2D<Type>{ left.x / right, left.y / right };
-}
-/// @}  {Division}
-/// @}  {Vector2DAlgebra}
 /// @}  {GlobalOperators}
 
 /** @name Global Functions
