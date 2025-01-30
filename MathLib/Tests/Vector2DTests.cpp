@@ -310,6 +310,20 @@ void Multiplication()
         CHECK_IF_EQUAL( result, Vector2Df{ 2.0f, 18.0f} );
         CHECK_IF_EQUAL( result2, Vector2Df{ 2.0f, 18.0f} );
     }
+
+    // Vector2Df::Ref & scalar
+    {
+        Vector2Df left{ 3.0f, 4.0f };
+        float scalar = 7.0f;
+        Vector2Df result  = left.xy() * scalar;
+        Vector2Df result2 = scalar * left.xy();
+
+        CHECK_IF_EQUAL( left.xy() * scalar, Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( scalar * left.xy(), Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( result, Vector2Df{ 21.0f, 28.0f } );
+        CHECK_IF_EQUAL( result2, Vector2Df{ 21.0f, 28.0f } );
+    }
+
 }
 
 void ArithmeticOperations()
