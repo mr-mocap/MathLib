@@ -232,8 +232,8 @@ void Subtraction()
         Vector2Df right{ 1.0f, 2.0f };
         Vector2Df result = left - right;
 
-        CHECK_IF_EQUAL( left - right, Vector2Df::zero() );
-        CHECK_IF_EQUAL( result, Vector2Df::zero() );
+        CHECK_IF_ZERO( left - right );
+        CHECK_IF_ZERO( result );
     }
 
     // Vector2Df & Vector2Df::Ref
