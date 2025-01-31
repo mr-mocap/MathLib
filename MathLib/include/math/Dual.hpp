@@ -312,7 +312,7 @@ public:
      */
     friend constexpr T dualscalar_normsquared(const Dual<T> &d)
     {
-        Dual<T> result = d * Math::conjugate(d);
+        Dual<T> result = d * d.conjugate();
 
         assert( approximately_equal_to(result.dual, T{0}) );
 
@@ -328,6 +328,11 @@ public:
     friend constexpr T accumulate(const Dual<T> &input)
     {
         return T{input.real + input.dual};
+    }
+
+    friend constexpr Dual<T> conjugate(const Dual<T> &input)
+    {
+        return input.conjugate();
     }
 
     friend std::string format(const Dual<T> &input)
