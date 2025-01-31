@@ -650,6 +650,15 @@ private:
     {
         return std::format("[w: {}, i: {}, j: {}, k: {}]", input.w(), input.i(), input.j(), input.k());
     }
+
+    /**  Computes the conjugate of the input
+     * 
+     *   @note This will just call @c input.conjugate()
+     */
+    friend constexpr Quaternion<T> conjugate(const Quaternion<T> &input)
+    {
+        return input.conjugate();
+    }
     /// @} {GlobalFunctions}
     /// @} {PrivateFriendFunctions}
 };

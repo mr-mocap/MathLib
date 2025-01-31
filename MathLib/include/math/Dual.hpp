@@ -78,6 +78,8 @@ public:
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
      *  @see Equality
      */
     constexpr bool operator ==(const Dual<T> &right) const
@@ -330,6 +332,10 @@ public:
         return T{input.real + input.dual};
     }
 
+    /**  Computes the conjugate of the input
+     * 
+     *   @note This will just call @c input.conjugate()
+     */
     friend constexpr Dual<T> conjugate(const Dual<T> &input)
     {
         return input.conjugate();

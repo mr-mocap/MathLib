@@ -17,42 +17,24 @@ namespace Math
  *  
  */
 
-/** @name General Template Case
- *  
- *  @{
- */
-
-/**  Computes the conjugate of the input
+/** Computes the conjugate of the input
  * 
- *   @note This will just call @c input.conjugate()
- */
-template<class T>
-constexpr T conjugate(T input)
-{
-    return input.conjugate();
-}
-/// @}
-
-/** @name Specializations
+ *  @param input The value to take the conjugate of
  * 
- *  These are the basic default template specializations for @c conjugate()
- *  from above
+ *  @return The conjugate of the input
  */
 /// @{
-template<>
-constexpr float conjugate<float>(float input)
+constexpr float conjugate(float input)
 {
     return -input;
 }
 
-template<>
-constexpr double conjugate<double>(double input)
+constexpr double conjugate(double input)
 {
     return -input;
 }
 
-template<>
-constexpr long double conjugate<long double>(long double input)
+constexpr long double conjugate(long double input)
 {
     return -input;
 }

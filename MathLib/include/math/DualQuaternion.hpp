@@ -459,6 +459,15 @@ private:
         return std::format("[real: {}, dual: {}]", input.real(), input.dual());
     }
 
+    /**  Computes the conjugate of the input
+     * 
+     *   @note This will just call @c input.conjugate()
+     */
+    friend constexpr DualQuaternion<T> conjugate(const DualQuaternion<T> &input)
+    {
+        return input.conjugate();
+    }
+
     /** @addtogroup Checks
      * 
      *  Compare two values for equality with a tolerance and prints debug information when false

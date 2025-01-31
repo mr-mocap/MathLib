@@ -55,106 +55,101 @@ public:
         _value /= other._value;
         return *this;
     }
+
+    /** Define the spaceship operator
+     *   
+     *  @note We define ONLY the <=> AND == operators in order to get all the
+     *        other relational operators (C++20).
+     * 
+     *  @{
+     */
+    constexpr std::strong_ordering operator <=>(const Radian<T> other) const
+    {
+        return _value <=> other._value;
+    }
+    constexpr std::strong_ordering operator <=>(const T other) const
+    {
+        return _value <=> other;
+    }
+    /// @}
+
+    /** Defines equality of two Radians
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     * 
+     *  @{
+     */
+    constexpr bool operator ==(const Radian<T> right) const
+    {
+        return value() == right.value();
+    }
+    constexpr bool operator ==(const T right) const
+    {
+        return value() == right;
+    }
+    /// @}
+
 private:
     T _value{};
+
+    /** @addtogroup Equality
+     * 
+     *  @relates Radian
+     *  
+     *  @{
+     * 
+     *  Compares two Radian inputs equal to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     *  
+     *  @see Equality
+     */
+    friend constexpr bool approximately_equal_to(const Radian<T> &value_to_test, const Radian<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
+    }
+    /// @}
+
+    /** @name Radian Global Operators
+     * 
+     *  @relates Radian
+     * 
+     *  @{
+     */
+    friend Radian<T> operator +(const Radian<T> left, const Radian<T> right)
+    {
+        return Radian<T>{ left.value() + right.value() };
+    }
+
+    friend Radian<T> operator -(const Radian<T> left, const Radian<T> right)
+    {
+        return Radian<T>{ left.value() - right.value() };
+    }
+
+    friend Radian<T> operator *(const Radian<T> left, const Radian<T> right)
+    {
+        return Radian<T>{ left.value() * right.value() };
+    }
+
+    friend Radian<T> operator /(const Radian<T> left, const Radian<T> right)
+    {
+        return Radian<T>{ left.value() / right.value() };
+    }
+
+    friend Radian<T> operator -(const Radian<T> input)
+    {
+        return Radian{ -input.value() };
+    }
+    /// @}  {Radian Global Operators}
 };
-
-/** @addtogroup Equality
- * 
- *  @relates Radian
- *  
- *  @{
- * 
- *  Compares two Radian inputs equal to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- *  
- *  @see Equality
- */
-template <class T>
-constexpr bool approximately_equal_to(const Radian<T> &value_to_test, const Radian<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
-}
-/// @}
-
-/** @name Radian Global Operators
- * 
- *  @relates Radian
- * 
- *  @{
- */
-template <class T>
-bool operator <(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() < right.value();
-}
-
-template <class T>
-bool operator <=(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() <= right.value();
-}
-
-template <class T>
-bool operator ==(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() == right.value();
-}
-
-template <class T>
-bool operator !=(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() != right.value();
-}
-
-template <class T>
-bool operator >(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() > right.value();
-}
-
-template <class T>
-bool operator >=(const Radian<T> left, const Radian<T> right)
-{
-    return left.value() >= right.value();
-}
-
-template <class T>
-Radian<T> operator +(const Radian<T> left, const Radian<T> right)
-{
-    return Radian<T>{ left.value() + right.value() };
-}
-
-template <class T>
-Radian<T> operator -(const Radian<T> left, const Radian<T> right)
-{
-    return Radian<T>{ left.value() - right.value() };
-}
-
-template <class T>
-Radian<T> operator *(const Radian<T> left, const Radian<T> right)
-{
-    return Radian<T>{ left.value() * right.value() };
-}
-
-template <class T>
-Radian<T> operator /(const Radian<T> left, const Radian<T> right)
-{
-    return Radian<T>{ left.value() / right.value() };
-}
-
-template <class T>
-Radian<T> operator -(const Radian<T> input)
-{
-    return Radian{ -input.value() };
-}
-/// @}  {Radian Global Operators}
-
 
 
 /** Class that stores its units in degrees
@@ -236,6 +231,42 @@ public:
     }
     /// @}  {Operators}
 
+    /** Define the spaceship operator
+     *   
+     *  @note We define ONLY the <=> AND == operators in order to get all the
+     *        other relational operators (C++20).
+     * 
+     *  @{
+     */
+    constexpr std::strong_ordering operator <=>(const Degree<T> other) const
+    {
+        return _value <=> other._value;
+    }
+    constexpr std::strong_ordering operator <=>(const T other) const
+    {
+        return _value <=> other;
+    }
+    /// @}
+
+    /** Defines equality of two Radians
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     * 
+     *  @{
+     */
+    constexpr bool operator ==(const Degree<T> right) const
+    {
+        return value() == right.value();
+    }
+    constexpr bool operator ==(const T right) const
+    {
+        return value() == right;
+    }
+    /// @}
     static constexpr T modulus() { return 360; }
 
     constexpr Degree<T> modulo() const
@@ -247,127 +278,82 @@ public:
     }
 private:
     T _value{};
+
+    /** @addtogroup Equality
+     * 
+     *  @relates Degree
+     *  
+     *  @{
+     * 
+     *  Compares two Degree inputs equal to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     *  
+     *  @see Equality
+     */
+    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
+    }
+    /// @}
+
+    /** @name Degree Global Operators
+     * 
+     *  @relates Degree
+     * 
+     *  @{
+     */
+    friend Degree<T> operator +(const Degree<T> left, const Degree<T> right)
+    {
+        return Degree<T>{ left.value() + right.value() };
+    }
+
+    friend Degree<T> operator -(const Degree<T> left, const Degree<T> right)
+    {
+        return Degree<T>{ left.value() - right.value() };
+    }
+
+    friend Degree<T> operator *(const Degree<T> left, const Degree<T> right)
+    {
+        return Degree<T>{ left.value() * right.value() };
+    }
+
+    friend Degree<T> operator /(const Degree<T> left, const Degree<T> right)
+    {
+        return Degree<T>{ left.value() / right.value() };
+    }
+
+    friend Degree<T> operator +(const Degree<T> left, const T right)
+    {
+        return Degree<T>{ left.value() + right };
+    }
+
+    friend Degree<T> operator -(const Degree<T> left, const T right)
+    {
+        return Degree<T>{ left.value() - right };
+    }
+
+    friend Degree<T> operator *(const Degree<T> left, const T right)
+    {
+        return Degree<T>{ left.value() * right };
+    }
+
+    friend Degree<T> operator /(const Degree<T> left, const T right)
+    {
+        return Degree<T>{ left.value() / right };
+    }
+
+    friend Degree<T> operator -(const Degree<T> input)
+    {
+        return Degree{ -input.value() };
+    }
+    /// @}  {Degree}
 };
 
-/** @addtogroup Equality
- * 
- *  @relates Degree
- *  
- *  @{
- * 
- *  Compares two Degree inputs equal to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- *  
- *  @see Equality
- */
-template <class T>
-constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
-}
-/// @}
-
-/** @name Degree Global Operators
- * 
- *  @relates Degree
- * 
- *  @{
- */
-template <class T>
-bool operator <(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() < right.value();
-}
-
-template <class T>
-bool operator <=(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() <= right.value();
-}
-
-template <class T>
-bool operator ==(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() == right.value();
-}
-
-template <class T>
-bool operator !=(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() != right.value();
-}
-
-template <class T>
-bool operator >(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() > right.value();
-}
-
-template <class T>
-bool operator >=(const Degree<T> left, const Degree<T> right)
-{
-    return left.value() >= right.value();
-}
-
-template <class T>
-Degree<T> operator +(const Degree<T> left, const Degree<T> right)
-{
-    return Degree<T>{ left.value() + right.value() };
-}
-
-template <class T>
-Degree<T> operator -(const Degree<T> left, const Degree<T> right)
-{
-    return Degree<T>{ left.value() - right.value() };
-}
-
-template <class T>
-Degree<T> operator *(const Degree<T> left, const Degree<T> right)
-{
-    return Degree<T>{ left.value() * right.value() };
-}
-
-template <class T>
-Degree<T> operator /(const Degree<T> left, const Degree<T> right)
-{
-    return Degree<T>{ left.value() / right.value() };
-}
-
-template <class T>
-Degree<T> operator +(const Degree<T> left, const T right)
-{
-    return Degree<T>{ left.value() + right };
-}
-
-template <class T>
-Degree<T> operator -(const Degree<T> left, const T right)
-{
-    return Degree<T>{ left.value() - right };
-}
-
-template <class T>
-Degree<T> operator *(const Degree<T> left, const T right)
-{
-    return Degree<T>{ left.value() * right };
-}
-
-template <class T>
-Degree<T> operator /(const Degree<T> left, const T right)
-{
-    return Degree<T>{ left.value() / right };
-}
-
-template <class T>
-Degree<T> operator -(const Degree<T> input)
-{
-    return Degree{ -input.value() };
-}
-/// @}  {Degree}
 
 namespace Literals
 {
