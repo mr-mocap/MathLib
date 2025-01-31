@@ -164,6 +164,16 @@ struct Vector4D
     constexpr       Vector3D<Type>::Ref www()       { return { w, w, w }; }
     /// @}
 
+    /** Defines equality of two Vector4D objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @see Equality
+     */
+    constexpr Vector4D<Type> operator ==(const Vector4D<Type> &other) const
+    {
+        return approximately_equal_to(*this, other);
+    }
 
     /** @name Element Access
      *  @{
@@ -173,338 +183,253 @@ struct Vector4D
     value_type z{};
     value_type w{};
     /// @}
+
+    /** @addtogroup Vector4DAlgebra 4D Vector Algebra
+     * 
+     *  Four Dimensional Vector Algrbra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two Vector4D objects
+     */
+    constexpr Vector4D<Type> operator +(const Vector4D<Type> &right) const
+    {
+        return Vector4D<Type>{ x + right.x, y + right.y, z + right.z, w + right.w };
+    }
+    /// @}  {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two Vector4D objects
+     */
+    constexpr Vector4D<Type> operator -(const Vector4D<Type> &right) const
+    {
+        return Vector4D<Type>{ x - right.x, y - right.y, z - right.z, w - right.w };
+    }
+    /// @}  {Subtraction}
+
+    /** @name Multiplication
+     *  @{
+     */
+    /** Defines multiplication of two Vector4D objects
+     */
+    constexpr Vector4D<Type> operator *(const Vector4D<Type> right) const
+    {
+        return Vector4D<Type>{ x * right.x, y * right.y, z * right.z, w * right.w };
+    }
+
+    constexpr Vector4D<Type> operator *(const Type right) const
+    {
+        return Vector4D<Type>{ x * right, y * right, z * right, w * right };
+    }
+
+    friend constexpr Vector4D<Type> operator *(const Type left, const Vector4D<Type> right)
+    {
+        return Vector4D<Type>{ left * right.x, left * right.y, left * right.z, left * right.w };
+    }
+    /// @}  {Multiplication}
+
+    /** @name Division
+     *  @{
+     */
+    /** Defines division of two Vector4D objects
+     */
+    constexpr Vector4D<Type> operator /(const Vector4D<Type> &right) const
+    {
+        return Vector4D<Type>{ x / right.x, y / right.y, z / right.z, w / right.w };
+    }
+
+    constexpr Vector4D<Type> operator /(const Type right) const
+    {
+        return Vector4D<Type>{ x / right, y / right, z / right, w / right };
+    }
+    /// @}  {Division}
+    /// @}  {Vector4DAlgebra}
+
+    /** @name Global Functions
+     * 
+     *  @relates Vector4D
+     * 
+     *  @{
+     */
+
+    /** @addtogroup Equality
+     * 
+     *  @relates Vector4D
+     * 
+     *  @{
+     * 
+     *  Compares two Vector4D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const Vector4D<Type> &value_to_test, const Vector4D<Type> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+            approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+            approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
+            approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
+    }
+    /// @}
+
+    /** Sums up the components of @p input
+     *  
+     *  @param input The Vector4D to operate on
+     * 
+     *  @return The sum of all the components
+     */
+    friend constexpr Type accumulate(const Vector4D<Type> &input)
+    {
+        return input.x + input.y + input.z + input.w;
+    }
+
+    /** Calculate the dot product of two Vector4D objects
+     *
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *  
+     *  @note This is only a strict dot product and thus a normalized
+     *        result will depend on if the input vectors are both
+     *        normalized!
+     */
+    friend constexpr Type dot(const Vector4D<Type> &left, const Vector4D<Type> &right)
+    {
+        return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
+    }
+
+    /** Calculate the normalized dot product of two Vector4D objects
+     *
+     *  The input vectors are not assumed to be normalized, so we go
+     *  ahead and divide through by both the input vectors
+     *  to arrive at a normalized output.
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     */
+    friend constexpr Type dot_normalized(const Vector4D<Type> &left, const Vector4D<Type> &right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+
+    /** Calculate the absolute value of all components of a Vector4D
+     *   
+     *   @param input The Vector4D to operate on
+     *
+     *   @return The Vector4D with only positive values
+     */
+    friend constexpr Vector4D<Type> abs(const Vector4D<Type> &input)
+    {
+        return Vector4D<Type>( std::abs(input.x), std::abs(input.y), std::abs(input.z), std::abs(input.w) );
+    }
+
+    /** Calculate the fractional part of all components of a Vector4D
+     *   
+     *   @param input The Vector4D to operate on
+     *
+     *   @return The Vector4D with only fractional values
+     */
+    friend constexpr Vector4D<Type> fract(const Vector4D<Type> &input)
+    {
+        return Vector4D<Type>( std::modf(input.x), std::modf(input.y), std::modf(input.z), std::modf(input.w) );
+    }
+
+    friend constexpr Vector4D<Type> saturate(const Vector4D<Type> &input, const Type lower_bound, const Type upper_bound)
+    {
+        return Vector4D<Type>( saturate(input.x, lower_bound, upper_bound),
+                            saturate(input.y, lower_bound, upper_bound),
+                            saturate(input.z, lower_bound, upper_bound),
+                            saturate(input.w, lower_bound, upper_bound) );
+    }
+
+    friend std::string format(const Vector4D<Type> &input)
+    {
+        return std::format("[x: {:.6}, y: {:.6}, z: {:.6}, w: {:.6}]", input.x, input.y, input.z, input.w);
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
+    friend bool check_if_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, float tolerance = 0.0002f)
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
+    friend bool check_if_not_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, float tolerance = 0.0002f)
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    friend void CHECK_IF_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_NOT_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_ZERO(const Vector4D<Type> &input, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, Vector4D<Type>::zero(), tolerance));
+    }
+    /// @}  {GlobalFunctions}
 };
 
-/** @addtogroup Equality
- * 
- *  @relates Vector4D
- * 
- *  @{
- * 
- *  Compares two Vector4D inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const Vector4D<T> &value_to_test, const Vector4D<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-           approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
-           approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
-           approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
-}
-/// @}
-
-/** @name Global Operators
- * 
- *  @relates Vector4D
- * 
- *  @{
- */
-/** Defines equality of two Vector4D objects
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see Equality
- */
-template <class Type>
-bool operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-template <class Type>
-bool operator ==(const Vector4D<Type> &left, const typename Vector4D<Type>::Ref &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-template <class Type>
-bool operator ==(const typename Vector4D<Type>::Ref &left, const Vector4D<Type> &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-template <class Type>
-bool operator ==(const typename Vector4D<Type>::Ref &left, const typename Vector4D<Type>::Ref &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-/** Defines inequality of two Vector4D objects
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see Equality
- */
-template <class Type>
-bool operator !=(const Vector4D<Type> &left, const Vector4D<Type> &right)
-{
-    return !(left == right);
-}
-
-template <class Type>
-bool operator !=(const Vector4D<Type> &left, const typename Vector4D<Type>::Ref &right)
-{
-    return !(left == right);
-}
-
-template <class Type>
-bool operator !=(const typename Vector4D<Type>::Ref &left, const Vector4D<Type> &right)
-{
-    return !(left == right);
-}
-
-template <class Type>
-bool operator !=(const typename Vector4D<Type>::Ref &left, const typename Vector4D<Type>::Ref &right)
-{
-    return !(left == right);
-}
-
-/** @addtogroup Vector4DAlgebra 4D Vector Algebra
- * 
- *  Four Dimensional Vector Algrbra
- * 
- *  @{
- */
-
-/** @name Addition
- *  @{
- */
-/** Defines addition of two Vector4D objects
- */
-template <class Type>
-constexpr Vector4D<Type> operator +(const Vector4D<Type> &left, const Vector4D<Type> &right)
-{
-    return Vector4D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
-}
-/// @}  {Addition}
-
-/** @name Subtraction
- *  @{
- */
-/** Defines subtraction of two Vector4D objects
- */
-template <class Type>
-constexpr Vector4D<Type> operator -(const Vector4D<Type> &left, const Vector4D<Type> &right)
-{
-    return Vector4D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
-}
-/// @}  {Subtraction}
-
-/** @name Multiplication
- *  @{
- */
-/** Defines multiplication of two Vector4D objects
- */
-template <class Type>
-constexpr Vector4D<Type> operator *(const Vector4D<Type> left, const Vector4D<Type> right)
-{
-    return Vector4D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
-}
-
-template <class Type>
-constexpr Vector4D<Type> operator *(const Vector4D<Type> left, const Type right)
-{
-    return Vector4D<Type>{ left.x * right, left.y * right, left.z * right, left.w * right };
-}
-
-template <class Type>
-constexpr Vector4D<Type> operator *(const Type left, const Vector4D<Type> right)
-{
-    return Vector4D<Type>{ left * right.x, left * right.y, left * right.z, left * right.w };
-}
-/// @}  {Multiplication}
-
-/** @name Division
- *  @{
- */
-/** Defines division of two Vector4D objects
- */
-template <class Type>
-constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Vector4D<Type> &right)
-{
-    return Vector4D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
-}
-
-template <class Type>
-constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Type right)
-{
-    return Vector4D<Type>{ left.x / right, left.y / right, left.z / right, left.w / right };
-}
-/// @}  {Division}
-/// @}  {Vector4DAlgebra}
-/// @}  {GlobalOperators}
-
-/** @name Global Functions
- * 
- *  @relates Vector4D
- * 
- *  @{
- */
-/** Sums up the components of @p input
- *  
- *  @param input The Vector4D to operate on
- * 
- *  @return The sum of all the components
- */
-template <class T>
-constexpr T accumulate(const Vector4D<T> &input)
-{
-    return input.x + input.y + input.z + input.w;
-}
-
-/** Calculate the dot product of two Vector4D objects
- *
- *  @param left  The first vector
- *  @param right The second vector
- * 
- *  @return The dot product of the two input vectors
- *  
- *  @note This is only a strict dot product and thus a normalized
- *        result will depend on if the input vectors are both
- *        normalized!
- */
-template <class T>
-constexpr T dot(const Vector4D<T> &left, const Vector4D<T> &right)
-{
-    return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
-}
-
-/** Calculate the normalized dot product of two Vector4D objects
- *
- *  The input vectors are not assumed to be normalized, so we go
- *  ahead and divide through by both the input vectors
- *  to arrive at a normalized output.
- * 
- *  @param left  The first vector
- *  @param right The second vector
- * 
- *  @return The dot product of the two input vectors
- */
-template <class T>
-constexpr T dot_normalized(const Vector4D<T> &left, const Vector4D<T> &right)
-{
-    return dot(left, right) / (left.magnitude() * right.magnitude());
-}
-
-/** Calculate the absolute value of all components of a Vector4D
- *   
- *   @param input The Vector4D to operate on
- *
- *   @return The Vector4D with only positive values
- */
-template <class T>
-constexpr Vector4D<T> abs(const Vector4D<T> &input)
-{
-    return Vector4D<T>( std::abs(input.x), std::abs(input.y), std::abs(input.z), std::abs(input.w) );
-}
-
-/** Calculate the fractional part of all components of a Vector4D
- *   
- *   @param input The Vector4D to operate on
- *
- *   @return The Vector4D with only fractional values
- */
-template <class T>
-constexpr Vector4D<T> fract(const Vector4D<T> &input)
-{
-    return Vector4D<T>( std::modf(input.x), std::modf(input.y), std::modf(input.z), std::modf(input.w) );
-}
-
-template <class T>
-constexpr Vector4D<T> saturate(const Vector4D<T> &input, const T lower_bound, const T upper_bound)
-{
-    return Vector4D<T>( Math::saturate(input.x, lower_bound, upper_bound),
-                        Math::saturate(input.y, lower_bound, upper_bound),
-                        Math::saturate(input.z, lower_bound, upper_bound),
-                        Math::saturate(input.w, lower_bound, upper_bound) );
-}
-/// @}  {GlobalFunctions}
-
-template <class T>
-std::string format(const Vector4D<T> &input)
-{
-    return std::format("[x: {:.6}, y: {:.6}, z: {:.6}, w: {:.6}]", input.x, input.y, input.z, input.w);
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for equality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are equal within @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_equal(const Vector4D<T> &input, const Vector4D<T> &near_to, float tolerance = 0.0002f)
-{
-    if (!approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for inequality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_not_equal(const Vector4D<T> &input, const Vector4D<T> &near_to, float tolerance = 0.0002f)
-{
-    if (approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-template <class T>
-void CHECK_IF_EQUAL(const Vector4D<T> &input, const Vector4D<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_NOT_EQUAL(const Vector4D<T> &input, const Vector4D<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_not_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_ZERO(const Vector4D<T> &input, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, Vector4D<T>::zero(), tolerance));
-}
 
 /** @name Vector4D Type Aliases
  *  
