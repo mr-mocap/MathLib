@@ -36,7 +36,13 @@ public:
     constexpr static Dual<T> zero() { return Dual{}; }
     /// @}
 
-    constexpr Dual<T> conjugate() const { return Dual{ real, Math::conjugate(dual) }; }
+    constexpr Dual<T> conjugate() const
+    {
+        if constexpr (std::is_floating_point_v<T>)
+            return Dual{ real, -dual };
+        else
+            return Dual{ real, conjugate(dual) };
+    }
     constexpr T       magnitude() const { return real; }
 
     /** @name Convenience Creation Functions
