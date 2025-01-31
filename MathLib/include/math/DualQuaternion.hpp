@@ -286,294 +286,250 @@ public:
     bool isNaN() const { return _frame_of_reference.real.isNaN() || _frame_of_reference.dual.isNaN(); }
     bool isInf() const { return _frame_of_reference.real.isInf() || _frame_of_reference.dual.isInf(); }
 
+    /** Defines equality of two DualQuaternions
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     */
+    constexpr bool operator ==(const DualQuaternion<T> &right)
+    {
+        return approximately_equal_to(*this, right);
+    }
 private:
     Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator +(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
+    /** @name Global Operators
+     * 
+     *  @relates DualQuaternion
+     * 
+     *  @{
+     */
+    /** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
+     *  @{
+     */
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &left, const DualQuaternion<Type> &right);
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition
+     *  
+     *  We basically just add the underlying Dual numbers
+     */
+    friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
+    {
+        return DualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
+    }
+    /// @}  {Addition}
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const Type scalar, const DualQuaternion<Type> &dual_quaternion);
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator *(const DualQuaternion<Type> &dual_quaternion, const Type scalar);
+    /** @name Multiplication
+     *  @{
+     */
+    /** Defines scaling a DualQuaternion
+     *
+     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_scalar     The amount to scale by
+     *  
+     *  @return The scaled DualQuaternion
+     *  
+     *  @see DualQuaternion Algebra
+     */
+    friend constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
+    {
+        return DualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
+    }
 
-    template <class Type>
-    friend constexpr DualQuaternion<Type> operator /(const DualQuaternion<Type> &dual_quaternion, const Dual<Type> &dual_scalar);
+    /** Defines scaling a DualQuaternion
+     *
+     *  @param dual_scalar     The amount to scale by
+     *  @param dual_quaternion The DualQuaternion to scale
+     *  
+     *  @return The scaled DualQuaternion
+     *  
+     *  @see DualQuaternion Algebra
+     */
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
+    {
+        return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
+    }
 
-    template<class Type>
-    friend constexpr bool approximately_equal_to(const DualQuaternion<Type> &value_to_test, const DualQuaternion<Type> &value_it_should_be, float tolerance);
+    /** Defines multiplication of a DualQuaternion by a Dual
+     *
+     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_scalar     The amount to scale by
+     *  
+     *  @return The scaled DualQuaternion
+     *  
+     *  @see DualQuaternion Algebra
+     */
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
+    {
+        return dual_quaternion * DualQuaternion<T>{ Quaternion<T>{dual_scalar.real}, Quaternion<T>{dual_scalar.dual} };
+    }
+
+    /** Defines multiplication of two DualQuaternions
+     *
+     *  @return The resulting DualQuaternion
+     *  
+     *  @see DualQuaternion Algebra
+     */
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
+    {
+        return DualQuaternion<T>{ left_side._frame_of_reference * right_side._frame_of_reference };
+    }
+    /// @}  {Multiplication}
+
+    /** @name Division
+     *  @{
+     */
+    /** Defines division of a DualQuaternion by a Dual
+     *
+     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_scalar     The amount to scale by
+     *  
+     *  @return The scaled DualQuaternion
+     *  
+     *  @see DualQuaternion Algebra
+     */
+    friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
+    {
+        return DualQuaternion<T>{ DualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
+    }
+    /// @}  {Division}
+    /// @}  {DualQuaternionAlgebra}
+    /// @}  {Global Operators}
+
+    /** @addtogroup Equality
+     * 
+     *  @relates DualQuaternion
+     * 
+     *  @{
+     * 
+     *  Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     *  
+     *  @see Equality
+     */
+    friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, float tolerance = 0.0002f)
+    {
+        // Just use the underlying Dual number's version of the same function...
+        return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
+    }
+    /// @}  {Equality}
+
+    /** @name Global Functions
+     * 
+     *  @relates DualQuaternion
+     * 
+     *  @{
+     */
+    /** Creates the normalized form of a DualQuaternion
+     *  
+     *  @param input The DualQuaternion to normalize
+     *  
+     *  @return The normalized version of @p input
+     */
+    friend constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
+    {
+        return input.normalized();
+    }
+    /** Generates a linear blend between two DualQuaternion objects
+     *  
+     *  @param beginning  The start state
+     *  @param end        The ending state
+     *  @param percentage The percentage blend between the two (typically [0..1])
+     */
+    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const float percentage)
+    {
+        auto blended = beginning + (end - beginning) * percentage;
+
+        return blended.normalized();
+    }
+
+    friend std::string format(const DualQuaternion<T> &input)
+    {
+        return std::format("[real: {}, dual: {}]", input.real(), input.dual());
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
+    friend bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                    format(input),
+                                    format(near_to),
+                                    tolerance,
+                                    format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
+    friend bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                    format(input),
+                                    format(near_to),
+                                    tolerance,
+                                    format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+
+    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, const float tolerance = 0.0002f)
+    {
+        assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
+    }
+    /// @}  {GlobalFunctions}
 };
 
-/** @addtogroup Equality
- * 
- *  @relates DualQuaternion
- * 
- *  @{
- * 
- *  Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- *  
- *  @see Equality
- */
-template<class T>
-constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    // Just use the underlying Dual number's version of the same function...
-    return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
-}
-/// @}  {Equality}
-
-/** @name Global Operators
- * 
- *  @relates DualQuaternion
- * 
- *  @{
- */
-
-/** Defines equality of two DualQuaternions
- *  
- *  @note Uses approximately_equal_to under-the-hood
- *  
- *  @see Equality
- */
-template<class T>
-constexpr bool operator ==(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
-{
-    return approximately_equal_to(left, right);
-}
-
-/** Defines inequality of two DualQuaternions
- *  
- *  @note Uses operator ==()
- *  
- *  @see Equality
- */
-template<class T>
-constexpr bool operator !=(const DualQuaternion<T> &left, const DualQuaternion<T> &right)
-{
-    return !(left == right);
-}
-
-/** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
- *  @{
- */
-
-/** @name Addition
- *  @{
- */
-/** Defines addition
- *  
- *  We basically just add the underlying Dual numbers
- */
-template <class T>
-constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
-{
-    return DualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
-}
-/// @}  {Addition}
-
-/** @name Multiplication
- *  @{
- */
-/** Defines scaling a DualQuaternion
- *
- *  @param dual_quaternion The DualQuaternion to scale
- *  @param dual_scalar     The amount to scale by
- *  
- *  @return The scaled DualQuaternion
- *  
- *  @see DualQuaternion Algebra
- */
-template <class T>
-constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
-{
-    return DualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
-}
-
-/** Defines scaling a DualQuaternion
- *
- *  @param dual_scalar     The amount to scale by
- *  @param dual_quaternion The DualQuaternion to scale
- *  
- *  @return The scaled DualQuaternion
- *  
- *  @see DualQuaternion Algebra
- */
-template <class T>
-constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
-{
-    return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
-}
-
-/** Defines multiplication of a DualQuaternion by a Dual
- *
- *  @param dual_quaternion The DualQuaternion to scale
- *  @param dual_scalar     The amount to scale by
- *  
- *  @return The scaled DualQuaternion
- *  
- *  @see DualQuaternion Algebra
- */
-template <class T>
-constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
-{
-    return dual_quaternion * DualQuaternion<T>{ Quaternion<T>{dual_scalar.real}, Quaternion<T>{dual_scalar.dual} };
-}
-
-/** Defines multiplication of two DualQuaternions
- *
- *  @return The resulting DualQuaternion
- *  
- *  @see DualQuaternion Algebra
- */
-template <class T>
-constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
-{
-    return DualQuaternion<T>{ left_side._frame_of_reference * right_side._frame_of_reference };
-}
-/// @}  {Multiplication}
-
-/** @name Division
- *  @{
- */
-/** Defines division of a DualQuaternion by a Dual
- *
- *  @param dual_quaternion The DualQuaternion to scale
- *  @param dual_scalar     The amount to scale by
- *  
- *  @return The scaled DualQuaternion
- *  
- *  @see DualQuaternion Algebra
- */
-template <class T>
-constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
-{
-    return DualQuaternion<T>{ DualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
-}
-/// @}  {Division}
-/// @}  {DualQuaternionAlgebra}
-/// @}  {Global Operators}
-
-/** @name Global Functions
- * 
- *  @relates DualQuaternion
- * 
- *  @{
- */
-/** Creates the normalized form of a DualQuaternion
- *  
- *  @param input The DualQuaternion to normalize
- *  
- *  @return The normalized version of @p input
- */
-template <class T>
-constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
-{
-    return input.normalized();
-}
-/** Generates a linear blend between two DualQuaternion objects
- *  
- *  @param beginning  The start state
- *  @param end        The ending state
- *  @param percentage The percentage blend between the two (typically [0..1])
- */
-template <class T>
-constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const float percentage)
-{
-    auto blended = beginning + (end - beginning) * percentage;
-
-    return blended.normalized();
-}
-/// @}  {GlobalFunctions}
-
-template <class T>
-std::string format(const DualQuaternion<T> &input)
-{
-    return std::format("[real: {}, dual: {}]", input.real(), input.dual());
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for equality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are equal within @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
-{
-    if (!approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-/** @addtogroup Checks
- * 
- *  Compare two values for inequality with a tolerance and prints debug information when false
- *  
- *  @param input     The first value to compare
- *  @param near_to   The second value to compare
- *  @param tolerance The minimum value for being considered equal
- * 
- *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
- */
-template <class T>
-bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
-{
-    if (approximately_equal_to(input, near_to, tolerance))
-    {
-        auto diff{ near_to - input };
-
-        std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
-                                 Math::format(input),
-                                 Math::format(near_to),
-                                 tolerance,
-                                 Math::format(near_to - input))
-        << std::endl;
-        return  false;
-    }
-    return true;
-}
-
-template <class T>
-void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
-{
-    assert( check_if_not_equal(input, near_to, tolerance) );
-}
-
-template <class T>
-void CHECK_IF_ZERO(const DualQuaternion<T> &input, const float tolerance = 0.0002f)
-{
-    assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
-}
 
 /** @name Type Aliases
  * 
