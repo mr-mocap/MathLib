@@ -49,7 +49,13 @@ public:
     constexpr static Quaternion<T> unit_k() { return Quaternion{ T{}, T{},  T{},  T{1} }; }
     /// @}
 
-    constexpr Quaternion<T> conjugate() const { return Quaternion<T>{ _w, -_i, -_j, -_k }; }
+    constexpr Quaternion<T> conjugate() const
+    {
+        if constexpr (std::is_floating_point_v<T>)
+            return Quaternion<T>{ _w, -_i, -_j, -_k };
+        else
+            return Quaternion<T>{ _w, conjugate(_i), conjugate(_j), conjugate(_k) };
+    }
 
     /// Computes this Quaternion raised to a real power
     Quaternion<T> pow(const T exponent) const
@@ -658,6 +664,24 @@ private:
     friend constexpr Quaternion<T> conjugate(const Quaternion<T> &input)
     {
         return input.conjugate();
+    }
+
+    /**  Computes the log of the input
+     * 
+     *   @note This will just call @c input.log()
+     */
+    friend constexpr Quaternion<T> log(const Quaternion<T> &input)
+    {
+        return input.log();
+    }
+
+    /**  Computes the exponential of the input
+     * 
+     *   @note This will just call @c input.exp()
+     */
+    friend Quaternion<T> exp(const Quaternion<T> &input)
+    {
+        return input.exp();
     }
     /// @} {GlobalFunctions}
     /// @} {PrivateFriendFunctions}
