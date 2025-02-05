@@ -258,18 +258,6 @@ public:
     }
     /// @}
 
-    /** Defines equality of two Quaternions
-     *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
-     *  @note Use C++20's ability to generate the operator !=() from operator ==()
-     * 
-     *  @see Equality
-     */
-    constexpr bool operator ==(const Quaternion<T> &right) const
-    {
-        return approximately_equal_to(*this, right);
-    }
 private:
     T _w{};
     T _i{};
@@ -279,6 +267,19 @@ private:
     /** @name Private Friend Functions
      *  @{
      */
+
+    /** Defines equality of two Quaternions
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     */
+    friend constexpr bool operator ==(const Quaternion<T> &left, const Quaternion<T> &right)
+    {
+        return approximately_equal_to(left, right);
+    }
 
     /** @addtogroup Equality
      * 

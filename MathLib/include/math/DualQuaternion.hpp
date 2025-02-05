@@ -286,18 +286,6 @@ public:
     bool isNaN() const { return _frame_of_reference.real.isNaN() || _frame_of_reference.dual.isNaN(); }
     bool isInf() const { return _frame_of_reference.real.isInf() || _frame_of_reference.dual.isInf(); }
 
-    /** Defines equality of two DualQuaternions
-     *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
-     *  @note Use C++20's ability to generate the operator !=() from operator ==()
-     * 
-     *  @see Equality
-     */
-    constexpr bool operator ==(const DualQuaternion<T> &right)
-    {
-        return approximately_equal_to(*this, right);
-    }
 private:
     Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 
@@ -307,6 +295,20 @@ private:
      * 
      *  @{
      */
+
+    /** Defines equality of two DualQuaternions
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     */
+    friend constexpr bool operator ==(const DualQuaternion<T> &left,  DualQuaternion<T> &right)
+    {
+        return approximately_equal_to(left, right);
+    }
+
     /** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
      *  @{
      */

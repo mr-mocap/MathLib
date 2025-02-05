@@ -170,9 +170,9 @@ struct Vector4D
      *  
      *  @see Equality
      */
-    constexpr Vector4D<Type> operator ==(const Vector4D<Type> &other) const
+    friend constexpr Vector4D<Type> operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return approximately_equal_to(*this, other);
+        return approximately_equal_to(left, other);
     }
 
     /** @name Element Access
@@ -207,9 +207,9 @@ struct Vector4D
      */
     /** Defines subtraction of two Vector4D objects
      */
-    constexpr Vector4D<Type> operator -(const Vector4D<Type> &right) const
+    friend constexpr Vector4D<Type> operator -(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return Vector4D<Type>{ x - right.x, y - right.y, z - right.z, w - right.w };
+        return Vector4D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
     }
     /// @}  {Subtraction}
 
@@ -218,14 +218,14 @@ struct Vector4D
      */
     /** Defines multiplication of two Vector4D objects
      */
-    constexpr Vector4D<Type> operator *(const Vector4D<Type> right) const
+    friend constexpr Vector4D<Type> operator *(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return Vector4D<Type>{ x * right.x, y * right.y, z * right.z, w * right.w };
+        return Vector4D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
     }
 
-    constexpr Vector4D<Type> operator *(const Type right) const
+    friend constexpr Vector4D<Type> operator *(const Vector4D<Type> &left, const Type right)
     {
-        return Vector4D<Type>{ x * right, y * right, z * right, w * right };
+        return Vector4D<Type>{ left.x * right, left.y * right, left.z * right, left.w * right };
     }
 
     friend constexpr Vector4D<Type> operator *(const Type left, const Vector4D<Type> right)
@@ -239,14 +239,14 @@ struct Vector4D
      */
     /** Defines division of two Vector4D objects
      */
-    constexpr Vector4D<Type> operator /(const Vector4D<Type> &right) const
+    friend constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return Vector4D<Type>{ x / right.x, y / right.y, z / right.z, w / right.w };
+        return Vector4D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
     }
 
-    constexpr Vector4D<Type> operator /(const Type right) const
+    friend constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Type right)
     {
-        return Vector4D<Type>{ x / right, y / right, z / right, w / right };
+        return Vector4D<Type>{ left.x / right, left.y / right, left.z / right, left.w / right };
     }
     /// @}  {Division}
     /// @}  {Vector4DAlgebra}

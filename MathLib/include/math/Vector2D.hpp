@@ -63,9 +63,9 @@ struct Vector2D
          * 
          *  @see Equality
          */
-        constexpr bool operator ==(const Ref &other) const
+        friend constexpr bool operator ==(const Ref &left, const Ref &right)
         {
-            return approximately_equal_to( *this, other );
+            return approximately_equal_to( left, right );
         }
 
         /** @addtogroup Vector2DAlgebra 2D Vector Algebra
@@ -80,9 +80,9 @@ struct Vector2D
          */
         /** Defines addition of two Vector2D::Ref objects
          */
-        constexpr Vector2D<Type> operator +(const Ref &other) const
+        friend constexpr Vector2D<Type> operator +(const Ref &left, const Ref &right)
         {
-            return { x + other.x, y + other.y };
+            return { left.x + right.x, left.y + right.y };
         }
         /// @} {Addition}
 
@@ -91,13 +91,13 @@ struct Vector2D
          */
         /** Defines subtraction of two Vector2D::Ref objects
          */
-        constexpr Vector2D<Type> operator -(const Ref &other) const
+        friend constexpr Vector2D<Type> operator -(const Ref &left, const Ref &right)
         {
-            return { x - other.x, y - other.y };
+            return { left.x - right.x, left.y - right.y };
         }
-        constexpr Vector2D<Type> operator -(const Vector2D<Type> &other) const
+        friend constexpr Vector2D<Type> operator -(const Ref &left, const Vector2D<Type> &right)
         {
-            return { x - other.x, y - other.y };
+            return { left.x - rightother.x, left.y - right.y };
         }
         /// @}  {Subtraction}
 
@@ -106,21 +106,21 @@ struct Vector2D
          */
         /** Defines multiplication of two Vector2D::Ref objects
          */
-        constexpr Vector2D<Type> operator *(const Vector2D<Type> &other) const
+        friend constexpr Vector2D<Type> operator *(const Ref &left, const Vector2D<Type> &right)
         {
-            return Vector2D<Type>{ x * other.x, y * other.y };
+            return Vector2D<Type>{ left.x * right.x, left.y * right.y };
         }
 
-        constexpr Vector2D<Type> operator *(const Ref &other) const
+        friend constexpr Vector2D<Type> operator *(const Ref &left, const Ref &right)
         {
-            return Vector2D<Type>{ x * other.x, y * other.y };
+            return Vector2D<Type>{ left.x * right.x, left.y * right.y };
         }
 
         /** Defines multiplication of a Vector2D::Ref object by a scalar
          */
-        constexpr Vector2D<Type> operator *(const Type scalar) const
+        friend constexpr Vector2D<Type> operator *(const Ref &left, const Type scalar)
         {
-            return Vector2D<Type>{ x * scalar, y * scalar };
+            return Vector2D<Type>{ left.x * scalar, left.y * scalar };
         }
         /** Defines multiplication of a scalar by a Vector2D::Ref object
          */
@@ -135,21 +135,21 @@ struct Vector2D
          */
         /** Defines division of two Vector2D::Ref objects
          */
-        constexpr Vector2D<Type> operator /(const Ref &other) const
+        friend constexpr Vector2D<Type> operator /(const Ref &left, const Ref &right)
         {
-            return Vector2D<Type>{ x / other.x, y / other.y };
+            return Vector2D<Type>{ left.x / right.x, left.y / right.y };
         }
 
-        constexpr Vector2D<Type> operator /(const Vector2D<Type> &other) const
+        friend constexpr Vector2D<Type> operator /(const Ref &left, const Vector2D<Type> &right)
         {
-            return Vector2D<Type>{ x / other.x, y / other.y };
+            return Vector2D<Type>{ left.x / right.x, left.y / right.y };
         }
 
         /** Defines division of a Vector2D::Ref object by a scalar
          */
-        constexpr Vector2D<Type> operator /(const Type scalar) const
+        friend constexpr Vector2D<Type> operator /(const Ref &left, const Type scalar)
         {
-            return Vector2D<Type>{ x / scalar, y / scalar };
+            return Vector2D<Type>{ left.x / scalar, left.y / scalar };
         }
         /** Defines division of a scalar by a Vector2D::Ref object
          */

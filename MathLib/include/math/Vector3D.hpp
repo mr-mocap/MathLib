@@ -55,6 +55,17 @@ struct Vector3D
             return *this;
         }
 
+        /** Vector3D conversion operator
+         * 
+         *  This allows Vector3DRef objects to automatically be converted to Vector3D objects
+         *  for situations like passing to functions or constructors to Vector3D objects.
+         */
+        constexpr operator Vector3D<Type>() const { return { x, y, z }; }
+
+        Type &x;
+        Type &y;
+        Type &z;
+
         /** Defines equality of two Vector3D::Ref objects
          *  
          *  @note Uses approximately_equal_to under-the-hood
@@ -67,42 +78,31 @@ struct Vector3D
          * 
          *  @see Equality
          */
-        constexpr bool operator ==(const Ref &other) const
+        friend constexpr bool operator ==(const Ref &left, const Ref &right)
         {
-            return approximately_equal_to( *this, other );
+            return approximately_equal_to( left, right );
         }
 
-        constexpr Vector3D<Type> operator +(const Ref &other) const
+        friend constexpr Vector3D<Type> operator +(const Ref &left, const Ref &right)
         {
-            return Vector3D<Type>{ x + other.x, y + other.y, z + other.z};
+            return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z};
         }
-        constexpr Vector3D<Type> operator -(const Ref &other) const
+        friend constexpr Vector3D<Type> operator -(const Ref &left, const Ref &right)
         {
-            return Vector3D<Type>{ x - other.x, y - other.y, z - other.z};
+            return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z};
         }
-        constexpr Vector3D<Type> operator *(const Ref &other) const
+        friend constexpr Vector3D<Type> operator *(const Ref &left, const Ref &right)
         {
-            return Vector3D<Type>{ x * other.x, y * other.y, z * other.z};
+            return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z};
         }
-        constexpr Vector3D<Type> operator /(const Ref &other) const
+        friend constexpr Vector3D<Type> operator /(const Ref &left, const Ref &right)
         {
-            return Vector3D<Type>{ x / other.x, y / other.y, z / other.z};
+            return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z};
         }
 
         /** @name Private Friend Functions
          *  @{
          */
-
-        /** Vector3D conversion operator
-         * 
-         *  This allows Vector3DRef objects to automatically be converted to Vector3D objects
-         *  for situations like passing to functions or constructors to Vector3D objects.
-         */
-        constexpr operator Vector3D<Type>() const { return { x, y, z }; }
-
-        Type &x;
-        Type &y;
-        Type &z;
 
         /** Compares two Vector3D::Ref inputs equal, component-wise, to within a tolerance
          * 
@@ -327,14 +327,14 @@ struct Vector3D
      * 
      *  @{
      */
-    constexpr bool operator ==(const Vector3D<Type> &right) const
+    friend constexpr bool operator ==(const Vector3D<Type> &left, const Vector3D<Type> &right)
     {
-        return approximately_equal_to(*this, right);
+        return approximately_equal_to(left, right);
     }
 
-    constexpr bool operator ==(const typename Vector3D<Type>::Ref &right) const
+    friend constexpr bool operator ==(const Vector3D<Type> &left, const Ref &right)
     {
-        return approximately_equal_to(*this, Vector3D<Type>{right});
+        return approximately_equal_to(left, Vector3D<Type>{right});
     }
     /// @}
 
@@ -380,14 +380,14 @@ struct Vector3D
      */
     /** Defines addition of two Vector3D objects
      */
-    constexpr Vector3D<Type> operator +(const Vector3D<Type> &right) const
+    friend constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Vector3D<Type> &right)
     {
-        return Vector3D<Type>{ x + right.x, y + right.y, z + right.z };
+        return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
     }
 
-    constexpr Vector3D<Type> operator +(const typename Vector3D<Type>::Ref &right) const
+    friend constexpr Vector3D<Type> operator +(const Vector3D<Type> &left, const Ref &right)
     {
-        return Vector3D<Type>{ x + right.x, y + right.y, z + right.z };
+        return Vector3D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z };
     }
     /// @}  {Addition}
 
@@ -396,14 +396,14 @@ struct Vector3D
      */
     /** Defines subtraction of two Vector3D objects
      */
-    constexpr Vector3D<Type> operator -(const Vector3D<Type> &right) const
+    friend constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Vector3D<Type> &right)
     {
-        return Vector3D<Type>{ x - right.x, y - right.y, z - right.z };
+        return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
     }
 
-    constexpr Vector3D<Type> operator -(const typename Vector3D<Type>::Ref &right) const
+    friend constexpr Vector3D<Type> operator -(const Vector3D<Type> &left, const Ref &right)
     {
-        return Vector3D<Type>{ x - right.x, y - right.y, z - right.z };
+        return Vector3D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z };
     }
     /// @}  {Subtraction}
 
@@ -412,14 +412,14 @@ struct Vector3D
      */
     /** Defines multiplication of two Vector3D objects
      */
-    constexpr Vector3D<Type> operator *(const Vector3D<Type> right) const
+    friend constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Vector3D<Type> &right)
     {
-        return Vector3D<Type>{ x * right.x, y * right.y, z * right.z };
+        return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
     }
 
-    constexpr Vector3D<Type> operator *(const Type right) const
+    friend constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Type right)
     {
-        return Vector3D<Type>{ x * right, y * right, z * right };
+        return Vector3D<Type>{ left.x * right, left.y * right, left.z * right };
     }
     /// @}  {Multiplication}
 
@@ -428,14 +428,14 @@ struct Vector3D
      */
     /** Defines division of two Vector3D objects
      */
-    constexpr Vector3D<Type> operator /(const Vector3D<Type> &right) const
+    friend constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Vector3D<Type> &right)
     {
-        return Vector3D<Type>{ x / right.x, y / right.y, z / right.z };
+        return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
     }
 
-    constexpr Vector3D<Type> operator /(const Type right) const
+    friend constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Type right)
     {
-        return Vector3D<Type>{ x / right, y / right, z / right };
+        return Vector3D<Type>{ left.x / right, left.y / right, left.z / right };
     }
     /// @}  {Division}
     /// @}  {Vector3DAlgebra}

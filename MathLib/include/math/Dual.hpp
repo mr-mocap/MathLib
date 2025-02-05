@@ -80,6 +80,10 @@ public:
     T dual{};
     /// @}
 
+    /** @name Private Friend Functions
+     *  @{
+     */
+
     /** Defines equality of two Duals
      *  
      *  @note Uses approximately_equal_to under-the-hood
@@ -88,9 +92,9 @@ public:
      * 
      *  @see Equality
      */
-    constexpr bool operator ==(const Dual<T> &right) const
+    friend constexpr bool operator ==(const Dual<T> &left, const Dual<T> &right)
     {
-        return approximately_equal_to(*this, right);
+        return approximately_equal_to(left, right);
     }
 
     /** @addtogroup DualAlgebra Dual Number Algebra
@@ -102,10 +106,10 @@ public:
      */
     /** Defines multiplication of two Duals
      */
-    constexpr Dual<T> operator *(const Dual<T> &right) const
+    friend constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
     {
-        return Dual<T>(real * right.real,
-                    real * right.dual + right.real * dual);
+        return Dual<T>(left.real * right.real,
+                       left.real * right.dual + right.real * left.dual);
     }
 
     /** Defines multiplication of a single-precision scalar and a Dual
@@ -117,9 +121,9 @@ public:
 
     /** Defines multiplication of a Dual and a single-precision scalar
      */
-    constexpr Dual<T> operator *(const float scalar) const
+    friend constexpr Dual<T> operator *(const Dual<T> &left, const float scalar)
     {
-        return *this * Dual<T>( T(scalar) );
+        return left * Dual<T>( T(scalar) );
     }
 
     /** Defines multiplication of a double-precision scalar and a Dual
@@ -131,9 +135,9 @@ public:
 
     /** Defines multiplication of a Dual and a double-precision scalar
      */
-    constexpr Dual<T> operator *(const double scalar) const
+    friend constexpr Dual<T> operator *(const Dual<T> &left, const double scalar)
     {
-        return *this * Dual<T>( T(scalar) );
+        return left * Dual<T>( T(scalar) );
     }
     /// @}
 
@@ -142,10 +146,10 @@ public:
      */
     /** Defines division of two Duals
      */
-    constexpr Dual<T> operator /(const Dual<T> &right) const
+    friend constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
     {
-        return Dual<T>(real * right.real / (right.real * right.real),
-                       (dual * right.real - real * right.dual) / (right.real * right.real));
+        return Dual<T>(left.real * right.real / (right.real * right.real),
+                       (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
     }
 
     /** Defines division of a single-precision scalar and a Dual
@@ -157,9 +161,9 @@ public:
 
     /** Defines division of a Dual and a single-precision scalar
      */
-    constexpr Dual<T> operator /(const float scalar) const
+    friend constexpr Dual<T> operator /(const Dual<T> &left, const float scalar)
     {
-        return *this / Dual<T>( T(scalar) );
+        return left / Dual<T>( T(scalar) );
     }
 
     /** Defines division of a double-precision scalar and a Dual
@@ -171,9 +175,9 @@ public:
 
     /** Defines division of a Dual and a double-precision scalar
      */
-    constexpr Dual<T> operator /(const double scalar) const
+    friend constexpr Dual<T> operator /(const Dual<T> &left, const double scalar)
     {
-        return *this / Dual<T>( T(scalar) );
+        return left / Dual<T>( T(scalar) );
     }
     /// @}
 
@@ -182,9 +186,9 @@ public:
      */
     /** Defines addition of two Duals
      */
-    constexpr Dual<T> operator +(const Dual<T> &right) const
+    friend constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
     {
-        return Dual<T>(real + right.real, dual + right.dual);
+        return Dual<T>(left.real + right.real, left.dual + right.dual);
     }
 
     /** Defines addition of a single-precision scalar and a Dual
@@ -196,9 +200,9 @@ public:
 
     /** Defines addition of a Dual and a single-precision scalar
      */
-    constexpr Dual<T> operator +(const float scalar) const
+    friend constexpr Dual<T> operator +(const Dual<T> &left, const float scalar)
     {
-        return *this + Dual<T>( T(scalar) );
+        return left + Dual<T>( T(scalar) );
     }
 
     /** Defines addition of a double-precision scalar and a Dual
@@ -210,9 +214,9 @@ public:
 
     /** Defines addition of a Dual and a double-precision scalar
      */
-    constexpr Dual<T> operator +(const double scalar) const
+    friend constexpr Dual<T> operator +(const Dual<T> &left, const double scalar)
     {
-        return *this + Dual<T>( T(scalar) );
+        return left + Dual<T>( T(scalar) );
     }
     /// @}
 
@@ -221,9 +225,9 @@ public:
      */
     /** Defines subtraction of two Duals
      */
-    constexpr Dual<T> operator -(const Dual<T> &right) const
+    friend constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
     {
-        return Dual<T>(real - right.real, dual - right.dual);
+        return Dual<T>(left.real - right.real, left.dual - right.dual);
     }
 
     /** Defines subtraction of a single-precision scalar and a Dual
@@ -235,9 +239,9 @@ public:
 
     /** Defines subtraction of a Dual and a single-precision scalar
      */
-    constexpr Dual<T> operator -(const float scalar) const
+    friend constexpr Dual<T> operator -(const Dual<T> &left, const float scalar)
     {
-        return *this - Dual<T>( T(scalar) );
+        return left - Dual<T>( T(scalar) );
     }
 
     /** Defines subtraction of a double-precision scalar and a Dual
@@ -249,16 +253,12 @@ public:
 
     /** Defines subtraction of a Dual and a double-precision scalar
      */
-    constexpr Dual<T> operator -(const double scalar)
+    friend constexpr Dual<T> operator -(const Dual<T> &left, const double scalar)
     {
-        return *this - Dual<T>( T(scalar) );
+        return left - Dual<T>( T(scalar) );
     }
     /// @}  {Subtraction}
     /// @}  {DualAlgebra}
-
-    /** @name Private Friend Functions
-     *  @{
-     */
 
     /** @addtogroup Equality
      * 
