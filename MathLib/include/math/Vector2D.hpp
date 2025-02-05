@@ -97,7 +97,7 @@ struct Vector2D
         }
         friend constexpr Vector2D<Type> operator -(const Ref &left, const Vector2D<Type> &right)
         {
-            return { left.x - rightother.x, left.y - right.y };
+            return { left.x - right.x, left.y - right.y };
         }
         /// @}  {Subtraction}
 

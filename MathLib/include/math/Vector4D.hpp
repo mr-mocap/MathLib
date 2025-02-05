@@ -172,7 +172,7 @@ struct Vector4D
      */
     friend constexpr Vector4D<Type> operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return approximately_equal_to(left, other);
+        return approximately_equal_to(left, right);
     }
 
     /** @name Element Access
@@ -196,9 +196,9 @@ struct Vector4D
      */
     /** Defines addition of two Vector4D objects
      */
-    constexpr Vector4D<Type> operator +(const Vector4D<Type> &right) const
+    friend constexpr Vector4D<Type> operator +(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
-        return Vector4D<Type>{ x + right.x, y + right.y, z + right.z, w + right.w };
+        return Vector4D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
     }
     /// @}  {Addition}
 
