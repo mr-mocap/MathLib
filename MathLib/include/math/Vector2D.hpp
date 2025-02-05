@@ -488,6 +488,17 @@ struct Vector2D
         return (left.x * right.x) + (left.y * right.y);
     }
 
+    /** Creates the normalized form of a Vector2D
+     *  
+     *  @param input The Vector2D to normalize
+     *  
+     *  @return The normalized version of @p input
+     */
+    friend constexpr Vector2D<Type> normalized(const Vector2D<Type> &input)
+    {
+        return input.normalized();
+    }
+
     /** Calculate the normalized dot product of two Vector2D objects
      *
      *  The input vectors are not assumed to be normalized, so we go

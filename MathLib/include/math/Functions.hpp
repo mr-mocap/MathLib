@@ -1,7 +1,6 @@
 #pragma once
 
 #include "math/ApproximatelyEqualTo.hpp"
-#include "math/Normalized.hpp"
 #include "math/Conversions.hpp"
 #include "math/Trigonometric.hpp"
 #include "math/Checks.hpp"

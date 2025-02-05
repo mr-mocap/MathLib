@@ -308,6 +308,17 @@ struct Vector4D
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
     }
 
+    /** Creates the normalized form of a Vector4D
+     *  
+     *  @param input The Vector4D to normalize
+     *  
+     *  @return The normalized version of @p input
+     */
+    friend constexpr Vector4D<Type> normalized(const Vector4D<Type> &input)
+    {
+        return input.normalized();
+    }
+
     /** Calculate the normalized dot product of two Vector4D objects
      *
      *  The input vectors are not assumed to be normalized, so we go
