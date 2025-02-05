@@ -1,7 +1,6 @@
 #include "QuaternionTests.hpp"
 #include "math/Quaternion.hpp"
 #include "math/Conversions.hpp"
-#include "math/Exponential.hpp"
 #include "math/Checks.hpp"
 #include <cassert>
 #include <iostream>

@@ -3,7 +3,6 @@
 #include "math/ApproximatelyEqualTo.hpp"
 #include "math/Normalized.hpp"
 #include "math/Conversions.hpp"
-#include "math/Exponential.hpp"
 #include "math/Trigonometric.hpp"
 #include "math/Checks.hpp"
 #include "math/Combinatorics.hpp"
