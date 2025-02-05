@@ -81,30 +81,30 @@ protected:
     value_type _red{};
     value_type _green{};
     value_type _blue{};
+
+    /** @addtogroup Equality
+     * 
+     *  @relates BasicRGB
+     * 
+     *  @{
+     * 
+     *  Compares two BasicRGB inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const BasicRGB<T> &value_to_test, const BasicRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.red(),   value_it_should_be.red(),   tolerance) &&
+               approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
+               approximately_equal_to(value_to_test.blue(),  value_it_should_be.blue(),  tolerance) ;
+    }
+    /// @}
 };
 
-/** @addtogroup Equality
- * 
- *  @relates BasicRGB
- * 
- *  @{
- * 
- *  Compares two BasicRGB inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const BasicRGB<T> &value_to_test, const BasicRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
-           approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
-           approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
-}
-/// @}
 
 template <std::floating_point T>
 class BasicUnitRGB
@@ -225,100 +225,95 @@ protected:
     {
         return (component >= value_type{0.0}) && (component <= value_type{1.0});
     }
+
+    /** @addtogroup Equality
+     * 
+     *  @relates BasicUnitRGB
+     * 
+     *  @{
+     * 
+     *  Compares two BasicUnitRGB inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
+            approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
+            approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
+    }
+    /// @}
+
+    /** @name Global Operators
+     * 
+     *  @relates BasicUnitRGB
+     * 
+     *  @{
+     */
+
+    /** @addtogroup BasicUnitRGB Color Algebra
+     * 
+     *  RGB Color Algebra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two BasicUnitRGB objects
+     */
+    friend constexpr BasicUnitRGB<T> operator +(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
+    {
+        return BasicUnitRGB<T>( Math::saturate( left.red()   + right.red(),   T{0.0}, T{1.0} ),
+                                Math::saturate( left.green() + right.green(), T{0.0}, T{1.0} ),
+                                Math::saturate( left.blue()  + right.blue(),  T{0.0}, T{1.0} )
+                            );
+    }
+    /// @}  {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two BasicHSV objects
+     */
+    friend constexpr BasicUnitRGB<T> operator -(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
+    {
+        return BasicUnitRGB<T>( Math::saturate( left.red()   - right.red(),   T{0.0}, T{1.0} ),
+                                Math::saturate( left.green() - right.green(), T{0.0}, T{1.0} ),
+                                Math::saturate( left.blue()  - right.blue(),  T{0.0}, T{1.0} )
+                            );
+    }
+    /// @}  {Subtraction}
+
+    /** @name Multiplication
+     *  @{
+     */
+    /** Defines multiplication of two BasicUnitRGB objects
+     */
+    friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
+    {
+        return BasicUnitRGB<T>( Math::saturate( left.red()   * right.red(),   T{0.0}, T{1.0} ),
+                                Math::saturate( left.green() * right.green(), T{0.0}, T{1.0} ),
+                                Math::saturate( left.blue()  * right.blue(),  T{0.0}, T{1.0} )
+                            );
+    }
+
+    friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const T right)
+    {
+        return BasicUnitRGB<T>( Math::saturate( left.red()   * right, T{0.0}, T{1.0} ),
+                                Math::saturate( left.green() * right, T{0.0}, T{1.0} ),
+                                Math::saturate( left.blue()  * right, T{0.0}, T{1.0} )
+                            );
+    }
+    /// @}  {Multiplication}
+    /// @}  {Vector2DAlgebra}
+    /// @}  {GlobalOperators}
 };
-
-/** @addtogroup Equality
- * 
- *  @relates BasicUnitRGB
- * 
- *  @{
- * 
- *  Compares two BasicUnitRGB inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
-           approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
-           approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
-}
-/// @}
-
-/** @name Global Operators
- * 
- *  @relates BasicUnitRGB
- * 
- *  @{
- */
-
-/** @addtogroup BasicUnitRGB Color Algebra
- * 
- *  RGB Color Algebra
- * 
- *  @{
- */
-
-/** @name Addition
- *  @{
- */
-/** Defines addition of two BasicUnitRGB objects
- */
-template <class Type>
-constexpr BasicUnitRGB<Type> operator +(const BasicUnitRGB<Type> &left, const BasicUnitRGB<Type> &right)
-{
-    return BasicUnitRGB<Type>( Math::saturate( left.red()   + right.red(),   Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.green() + right.green(), Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.blue()  + right.blue(),  Type{0.0}, Type{1.0} )
-                         );
-}
-/// @}  {Addition}
-
-/** @name Subtraction
- *  @{
- */
-/** Defines subtraction of two BasicHSV objects
- */
-template <class Type>
-constexpr BasicUnitRGB<Type> operator -(const BasicUnitRGB<Type> &left, const BasicUnitRGB<Type> &right)
-{
-    return BasicUnitRGB<Type>( Math::saturate( left.red()   - right.red(),   Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.green() - right.green(), Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.blue()  - right.blue(),  Type{0.0}, Type{1.0} )
-                         );
-}
-/// @}  {Subtraction}
-
-/** @name Multiplication
- *  @{
- */
-/** Defines multiplication of two BasicUnitRGB objects
- */
-template <class Type>
-constexpr BasicUnitRGB<Type> operator *(const BasicUnitRGB<Type> &left, const BasicUnitRGB<Type> &right)
-{
-    return BasicUnitRGB<Type>( Math::saturate( left.red()   * right.red(),   Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.green() * right.green(), Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.blue()  * right.blue(),  Type{0.0}, Type{1.0} )
-                         );
-}
-
-template <class Type>
-constexpr BasicUnitRGB<Type> operator *(const BasicUnitRGB<Type> &left, const Type right)
-{
-    return BasicUnitRGB<Type>( Math::saturate( left.red()   * right, Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.green() * right, Type{0.0}, Type{1.0} ),
-                               Math::saturate( left.blue()  * right, Type{0.0}, Type{1.0} )
-                         );
-}
-/// @}  {Multiplication}
-/// @}  {Vector2DAlgebra}
-/// @}  {GlobalOperators}
 
 
 template <std::floating_point T = float>
@@ -440,77 +435,74 @@ protected:
     {
         return (component >= lower_bound) && (component < upper_bound);
     }
+
+    /** @addtogroup Equality
+     * 
+     *  @relates BasicHSV
+     * 
+     *  @{
+     * 
+     *  Compares two BasicHSV inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
+               approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
+               approximately_equal_to(value_to_test.value(),       value_it_should_be.value(),        tolerance);
+    }
+    /// @}
+
+    /** @name Global Operators
+     * 
+     *  @relates BasicHSV
+     * 
+     *  @{
+     */
+
+    /** @addtogroup BasicHSVAlgebra HSV Color Algebra
+     * 
+     *  HSV Color Algebra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two BasicHSV objects
+     */
+    friend constexpr BasicHSV<T> operator +(const BasicHSV<T> &left, const BasicHSV<T> &right)
+    {
+        return BasicHSV<T>( Degree<T>(left.hue() + right.hue()).modulo(),
+                            Math::saturate( left.saturation() + right.saturation(), T{0.0}, T{1.0} ),
+                            Math::saturate( left.value() + right.value(), T{0.0}, T{1.0} )
+                            );
+    }
+    /// @}  {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two BasicHSV objects
+     */
+    friend constexpr BasicHSV<T> operator -(const BasicHSV<T> &left, const BasicHSV<T> &right)
+    {
+        return BasicHSV<T>( Degree<T>(left.hue() - right.hue()).modulo(),
+                            Math::saturate( left.saturation() - right.saturation(), T{0.0}, T{1.0} ),
+                            Math::saturate( left.value() - right.value(), T{0.0}, T{1.0} )
+                            );
+    }
+    /// @}  {Subtraction}
+
+    /// @}  {BasicHSVAlgebra}
+    /// @}  {GlobalOperators}
 };
-
-/** @addtogroup Equality
- * 
- *  @relates BasicHSV
- * 
- *  @{
- * 
- *  Compares two BasicHSV inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
-           approximately_equal_to(value_to_test.saturation(), value_it_should_be.saturation(), tolerance) &&
-           approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
-}
-/// @}
-
-/** @name Global Operators
- * 
- *  @relates BasicHSV
- * 
- *  @{
- */
-
-/** @addtogroup BasicHSVAlgebra HSV Color Algebra
- * 
- *  HSV Color Algebra
- * 
- *  @{
- */
-
-/** @name Addition
- *  @{
- */
-/** Defines addition of two BasicHSV objects
- */
-template <class Type>
-constexpr BasicHSV<Type> operator +(const BasicHSV<Type> &left, const BasicHSV<Type> &right)
-{
-    return BasicHSV<Type>( Degree<Type>(left.hue() + right.hue()).modulo(),
-                           Math::saturate( left.saturation() + right.saturation(), Type{0.0}, Type{1.0} ),
-                           Math::saturate( left.value() + right.value(), Type{0.0}, Type{1.0} )
-                         );
-}
-/// @}  {Addition}
-
-/** @name Subtraction
- *  @{
- */
-/** Defines subtraction of two BasicHSV objects
- */
-template <class Type>
-constexpr BasicHSV<Type> operator -(const BasicHSV<Type> &left, const BasicHSV<Type> &right)
-{
-    return BasicHSV<Type>( Degree<Type>(left.hue() - right.hue()).modulo(),
-                           Math::saturate( left.saturation() - right.saturation(), Type{0.0}, Type{1.0} ),
-                           Math::saturate( left.value() - right.value(), Type{0.0}, Type{1.0} )
-                         );
-}
-/// @}  {Subtraction}
-
-/// @}  {BasicHSVAlgebra}
-/// @}  {GlobalOperators}
 
 template <std::floating_point T = float>
 class BasicHSL
@@ -621,30 +613,29 @@ protected:
     {
         return (component >= lower_bound) && (component < upper_bound);
     }
-};
 
-/** @addtogroup Equality
- * 
- *  @relates BasicHSL
- * 
- *  @{
- * 
- *  Compares two BasicHSL inputs equal, component-wise, to within a tolerance
- *  
- *  @param value_to_test
- *  @param value_it_should_be 
- *  @param tolerance          How close they should be to be considered equal
- *  
- *  @return @c true if they are equal
- */
-template <class T>
-constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const float tolerance = 0.0002f)
-{
-    return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
-           approximately_equal_to(value_to_test.saturation(), value_it_should_be.saturation(), tolerance) &&
-           approximately_equal_to(value_to_test.lightness(), value_it_should_be.lightness(), tolerance);
-}
-/// @}
+    /** @addtogroup Equality
+     * 
+     *  @relates BasicHSL
+     * 
+     *  @{
+     * 
+     *  Compares two BasicHSL inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const float tolerance = 0.0002f)
+    {
+        return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
+               approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
+               approximately_equal_to(value_to_test.lightness(),   value_it_should_be.lightness(),    tolerance);
+    }
+    /// @}
+};
 
 template <class T>
 using RGB = BasicRGB<T>;
