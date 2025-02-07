@@ -32,25 +32,25 @@ public:
     T value() const { return _value; }
     /// @}
 
-    Radian<T>& operator +=(const Radian other)
+    constexpr Radian<T> &operator +=(const Radian other)
     {
         _value += other._value;
         return *this;
     }
 
-    Radian<T>& operator -=(const Radian other)
+    constexpr Radian<T> &operator -=(const Radian other)
     {
         _value -= other._value;
         return *this;
     }
 
-    Radian<T>& operator *=(const Radian other)
+    constexpr Radian<T> &operator *=(const Radian other)
     {
         _value *= other._value;
         return *this;
     }
 
-    Radian<T>& operator /=(const Radian other)
+    constexpr Radian<T> &operator /=(const Radian other)
     {
         _value /= other._value;
         return *this;
@@ -124,27 +124,27 @@ private:
      * 
      *  @{
      */
-    friend Radian<T> operator +(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator +(const Radian<T> left, const Radian<T> right)
     {
         return Radian<T>{ left.value() + right.value() };
     }
 
-    friend Radian<T> operator -(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator -(const Radian<T> left, const Radian<T> right)
     {
         return Radian<T>{ left.value() - right.value() };
     }
 
-    friend Radian<T> operator *(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator *(const Radian<T> left, const Radian<T> right)
     {
         return Radian<T>{ left.value() * right.value() };
     }
 
-    friend Radian<T> operator /(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator /(const Radian<T> left, const Radian<T> right)
     {
         return Radian<T>{ left.value() / right.value() };
     }
 
-    friend Radian<T> operator -(const Radian<T> input)
+    friend constexpr Radian<T> operator -(const Radian<T> input)
     {
         return Radian{ -input.value() };
     }
@@ -182,49 +182,49 @@ public:
     /** @name Operators
      *  @{
      */
-    Degree<T> operator +=(const Degree<T> other)
+    constexpr Degree<T> &operator +=(const Degree<T> other)
     {
         _value += other.value();
         return *this;
     }
 
-    Degree<T> operator +=(const T other)
+    constexpr Degree<T> &operator +=(const T other)
     {
         _value += other;
         return *this;
     }
 
-    Degree<T> &operator -=(const Degree<T> other)
+    constexpr Degree<T> &operator -=(const Degree<T> other)
     {
         _value -= other.value();
         return *this;
     }
 
-    Degree<T> &operator -=(const T other)
+    constexpr Degree<T> &operator -=(const T other)
     {
         _value -= other;
         return *this;
     }
 
-    Degree<T> &operator *=(const Degree<T> other)
+    constexpr Degree<T> &operator *=(const Degree<T> other)
     {
         _value *= other.value();
         return *this;
     }
 
-    Degree<T> &operator *=(const T other)
+    constexpr Degree<T> &operator *=(const T other)
     {
         _value *= other;
         return *this;
     }
 
-    Degree<T> &operator /=(const Degree<T> other)
+    constexpr Degree<T> &operator /=(const Degree<T> other)
     {
         _value /= other.value();
         return *this;
     }
 
-    Degree<T> &operator /=(const T other)
+    constexpr Degree<T> &operator /=(const T other)
     {
         _value /= other;
         return *this;
@@ -307,47 +307,47 @@ private:
      * 
      *  @{
      */
-    friend Degree<T> operator +(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator +(const Degree<T> left, const Degree<T> right)
     {
         return Degree<T>{ left.value() + right.value() };
     }
 
-    friend Degree<T> operator -(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator -(const Degree<T> left, const Degree<T> right)
     {
         return Degree<T>{ left.value() - right.value() };
     }
 
-    friend Degree<T> operator *(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator *(const Degree<T> left, const Degree<T> right)
     {
         return Degree<T>{ left.value() * right.value() };
     }
 
-    friend Degree<T> operator /(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator /(const Degree<T> left, const Degree<T> right)
     {
         return Degree<T>{ left.value() / right.value() };
     }
 
-    friend Degree<T> operator +(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator +(const Degree<T> left, const T right)
     {
         return Degree<T>{ left.value() + right };
     }
 
-    friend Degree<T> operator -(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator -(const Degree<T> left, const T right)
     {
         return Degree<T>{ left.value() - right };
     }
 
-    friend Degree<T> operator *(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator *(const Degree<T> left, const T right)
     {
         return Degree<T>{ left.value() * right };
     }
 
-    friend Degree<T> operator /(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator /(const Degree<T> left, const T right)
     {
         return Degree<T>{ left.value() / right };
     }
 
-    friend Degree<T> operator -(const Degree<T> input)
+    friend constexpr Degree<T> operator -(const Degree<T> input)
     {
         return Degree{ -input.value() };
     }

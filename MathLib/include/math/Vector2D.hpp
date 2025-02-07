@@ -435,7 +435,7 @@ struct Vector2D
     Type y{};
     /// @}
 
-    /** @name Private Friend Functions
+    /** @name Hidden Friend Functions
      *  @{
      */
 
@@ -647,7 +647,7 @@ struct Vector2D
     {
         assert( check_if_equal(input, Vector2D<Type>::zero(), tolerance));
     }
-    /// @} {Private Friend Functions}
+    /// @} {Hidden Friend Functions}
 };
 
 /** @name Vector2D::Ref Type Aliases

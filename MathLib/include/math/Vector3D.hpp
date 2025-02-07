@@ -100,7 +100,7 @@ struct Vector3D
             return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z};
         }
 
-        /** @name Private Friend Functions
+        /** @name Hidden Friend Functions
          *  @{
          */
 
@@ -236,7 +236,7 @@ struct Vector3D
         {
             return std::format("[x: {:.6}, y: {:.6}, z: {:.6}]", input.x, input.y, input.z);
         }
-        /// @} {PrivateFriendFunctions}
+        /// @} {HiddenFriendFunctions}
     };
 
     constexpr Vector3D() = default;
@@ -619,6 +619,19 @@ struct Vector3D
     }
 };
 
+/** @name Vector3D::Ref Type Aliases
+ *  
+ *  @relates Vector3D
+ * 
+ *  @{
+ */
+template <class T>
+using Vector3DRef = typename Vector3D<T>::Ref;
+
+using Vector3DfRef = Vector3DRef<float>;
+using Vector3DdRef = Vector3DRef<double>;
+using Vector3DldRef = Vector3DRef<long double>;
+///@}  {Vector3D::Ref Type Aliases}
 
 /** @name Vector3D Type Aliases
  *  

@@ -442,6 +442,20 @@ struct Vector4D
 };
 
 
+/** @name Vector4D::Ref Type Aliases
+ *  
+ *  @relates Vector4D
+ * 
+ *  @{
+ */
+template <class T>
+using Vector4DRef = typename Vector4D<T>::Ref;
+
+using Vector4DfRef = Vector4DRef<float>;
+using Vector4DdRef = Vector4DRef<double>;
+using Vector4DldRef = Vector4DRef<long double>;
+///@}  {Vector4D::Ref Type Aliases}
+
 /** @name Vector4D Type Aliases
  *  
  *  @relates Vector4D

@@ -80,7 +80,7 @@ public:
     T dual{};
     /// @}
 
-    /** @name Private Friend Functions
+    /** @name Hidden Friend Functions
      *  @{
      */
 
@@ -420,7 +420,7 @@ public:
     {
         assert( check_if_equal(input, Dual<T>::zero(), tolerance));
     }
-    /// @} {Private Friend Functions}
+    /// @} {Hidden Friend Functions}
 };
 
 

@@ -264,7 +264,7 @@ private:
     T _j{};
     T _k{};
 
-    /** @name Private Friend Functions
+    /** @name Hidden Friend Functions
      *  @{
      */
 
@@ -613,7 +613,7 @@ private:
      *
      *  @note This is meant to mirror the behavior of std::arg( std::complex )
      */
-    friend T arg(const Quaternion<T> &input)
+    friend constexpr T arg(const Quaternion<T> &input)
     {
         return input.angle().value();
     }
@@ -622,7 +622,7 @@ private:
      *
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
-    friend Quaternion<T> polar(const Vector3D<T> &axis, const Radian<T> angle = Radian<T>{})
+    friend constexpr Quaternion<T> polar(const Vector3D<T> &axis, const Radian<T> angle = Radian<T>{})
     {
         assert( axis.magnitude() == T{1} );
 
@@ -685,7 +685,7 @@ private:
         return input.exp();
     }
     /// @} {GlobalFunctions}
-    /// @} {PrivateFriendFunctions}
+    /// @} {HiddenFriendFunctions}
 };
 
 
