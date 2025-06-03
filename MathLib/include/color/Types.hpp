@@ -285,7 +285,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const T tolerance = 0.0002f)
     {
         return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
                approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
@@ -500,7 +500,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const float tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const T tolerance = 0.0002f)
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
@@ -683,7 +683,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const float tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const T tolerance = 0.0002f)
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
