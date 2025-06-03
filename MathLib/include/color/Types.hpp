@@ -288,8 +288,8 @@ protected:
     friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
     {
         return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
-            approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
-            approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
+               approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
+               approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
     }
     /// @}
 
