@@ -73,36 +73,76 @@ public:
         blue( input );
     }
 
-    bool isNaN() const { return std::isnan(_red) || std::isnan(_green) || std::isnan(_blue); }
-
-    bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
-
 protected:
     value_type _red{};
     value_type _green{};
     value_type _blue{};
 
-    /** @addtogroup Equality
+    /** @name Global Operators
      * 
      *  @relates BasicRGB
      * 
      *  @{
-     * 
-     *  Compares two BasicRGB inputs equal, component-wise, to within a tolerance
-     *  
-     *  @param value_to_test
-     *  @param value_it_should_be 
-     *  @param tolerance          How close they should be to be considered equal
-     *  
-     *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicRGB<T> &value_to_test, const BasicRGB<T> &value_it_should_be, const float tolerance = 0.0002f)
+
+    /** @addtogroup BasicRGB Color Algebra
+     * 
+     *  RGB Color Algebra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two BasicRGB objects
+     */
+    friend constexpr BasicRGB<T> operator +(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
-        return approximately_equal_to(value_to_test.red(),   value_it_should_be.red(),   tolerance) &&
-               approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
-               approximately_equal_to(value_to_test.blue(),  value_it_should_be.blue(),  tolerance) ;
+        return BasicRGB<T>( Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
+                            Math::saturate( left.green() + right.green(), min().green(), max().green() ),
+                            Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
+                          );
     }
-    /// @}
+    /// @}  {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two BasicRGB objects
+     */
+    friend constexpr BasicRGB<T> operator -(const BasicRGB<T> &left, const BasicRGB<T> &right)
+    {
+        return BasicRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
+                            Math::saturate( left.green() - right.green(), min().green(), max().green() ),
+                            Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
+                          );
+    }
+    /// @}  {Subtraction}
+
+    /** @name Multiplication
+     *  @{
+     */
+    /** Defines multiplication of two BasicRGB objects
+     */
+    friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, const BasicRGB<T> &right)
+    {
+        return BasicRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
+                            Math::saturate( left.green() * right.green(), min().green(), max().green() ),
+                            Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
+                          );
+    }
+
+    friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, const T right)
+    {
+        return BasicRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
+                            Math::saturate( left.green() * right, min().green(), max().green() ),
+                            Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
+                          );
+    }
+    /// @}  {Multiplication}
+    /// @}  {RGBColorAlgebra}
+    /// @}  {GlobalOperators}
 };
 
 
@@ -216,6 +256,11 @@ public:
                _isInBounds( _green ) &&
                _isInBounds( _blue );
     }
+
+    bool isNaN() const { return std::isnan(_red) || std::isnan(_green) || std::isnan(_blue); }
+
+    bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
+
 protected:
     value_type _red{};
     value_type _green{};
@@ -269,10 +314,10 @@ protected:
      */
     friend constexpr BasicUnitRGB<T> operator +(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   + right.red(),   T{0.0}, T{1.0} ),
-                                Math::saturate( left.green() + right.green(), T{0.0}, T{1.0} ),
-                                Math::saturate( left.blue()  + right.blue(),  T{0.0}, T{1.0} )
-                            );
+        return BasicUnitRGB<T>( Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
+                                Math::saturate( left.green() + right.green(), min().green(), max().green() ),
+                                Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
+                              );
     }
     /// @}  {Addition}
 
@@ -283,9 +328,9 @@ protected:
      */
     friend constexpr BasicUnitRGB<T> operator -(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   - right.red(),   T{0.0}, T{1.0} ),
-                                Math::saturate( left.green() - right.green(), T{0.0}, T{1.0} ),
-                                Math::saturate( left.blue()  - right.blue(),  T{0.0}, T{1.0} )
+        return BasicUnitRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
+                                Math::saturate( left.green() - right.green(), min().green(), max().green() ),
+                                Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
                             );
     }
     /// @}  {Subtraction}
@@ -297,21 +342,21 @@ protected:
      */
     friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   * right.red(),   T{0.0}, T{1.0} ),
-                                Math::saturate( left.green() * right.green(), T{0.0}, T{1.0} ),
-                                Math::saturate( left.blue()  * right.blue(),  T{0.0}, T{1.0} )
+        return BasicUnitRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
+                                Math::saturate( left.green() * right.green(), min().green(), max().green() ),
+                                Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
                             );
     }
 
     friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const T right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   * right, T{0.0}, T{1.0} ),
-                                Math::saturate( left.green() * right, T{0.0}, T{1.0} ),
-                                Math::saturate( left.blue()  * right, T{0.0}, T{1.0} )
+        return BasicUnitRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
+                                Math::saturate( left.green() * right, min().green(), max().green() ),
+                                Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
                             );
     }
     /// @}  {Multiplication}
-    /// @}  {Vector2DAlgebra}
+    /// @}  {RGBColorAlgebra}
     /// @}  {GlobalOperators}
 };
 
@@ -421,6 +466,11 @@ public:
                _isInBounds( _saturation ) &&
                _isInBounds( _value );
     }
+
+    bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_value); }
+
+    bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_value); }
+
 protected:
     Math::Degree<value_type> _hue{};
     value_type               _saturation{};
@@ -480,8 +530,8 @@ protected:
     friend constexpr BasicHSV<T> operator +(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
         return BasicHSV<T>( Degree<T>(left.hue() + right.hue()).modulo(),
-                            Math::saturate( left.saturation() + right.saturation(), T{0.0}, T{1.0} ),
-                            Math::saturate( left.value() + right.value(), T{0.0}, T{1.0} )
+                            Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
+                            Math::saturate( left.value()      + right.value(),      min.value(),        max.value()        )
                             );
     }
     /// @}  {Addition}
@@ -494,8 +544,8 @@ protected:
     friend constexpr BasicHSV<T> operator -(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
         return BasicHSV<T>( Degree<T>(left.hue() - right.hue()).modulo(),
-                            Math::saturate( left.saturation() - right.saturation(), T{0.0}, T{1.0} ),
-                            Math::saturate( left.value() - right.value(), T{0.0}, T{1.0} )
+                            Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
+                            Math::saturate( left.value()      - right.value(),      min.value(),        max.value()        )
                             );
     }
     /// @}  {Subtraction}
@@ -599,6 +649,11 @@ public:
                _isInBounds( _saturation ) &&
                _isInBounds( _lightness );
     }
+
+    bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_lightness); }
+
+    bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_lightness); }
+
 protected:
     Math::Degree<value_type> _hue{};
     value_type               _saturation{};
