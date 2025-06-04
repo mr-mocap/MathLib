@@ -5,6 +5,7 @@
 #include <limits>
 #include <cstdint>
 #include <cmath>
+#include <concepts>
 
 
 namespace Color
@@ -285,11 +286,11 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const T tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const T tolerance = T{0.0002})
     {
-        return approximately_equal_to(value_to_test.red(), value_it_should_be.red(), tolerance) &&
+        return approximately_equal_to(value_to_test.red(),   value_it_should_be.red(),   tolerance) &&
                approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
-               approximately_equal_to(value_to_test.blue(), value_it_should_be.blue(), tolerance) ;
+               approximately_equal_to(value_to_test.blue(),  value_it_should_be.blue(),  tolerance) ;
     }
     /// @}
 
@@ -388,9 +389,9 @@ public:
     }
     constexpr BasicHSV(const BasicHSV &other)
         :
-        _hue{   other._hue   },
+        _hue{ other._hue },
         _saturation{ other._saturation },
-        _value{  other._value  }
+        _value{ other._value }
     {
         assert( other.isNormalized() );
     }
@@ -410,7 +411,7 @@ public:
 
     static constexpr BasicHSV<T> min()
     {
-        return BasicHSV<T>( Math::Degree<value_type>(), 0.0, 0.0 );
+        return BasicHSV<T>( Math::Degree<value_type>(), value_type{0.0}, value_type{0.0} );
     }
 
     static constexpr BasicHSV<T> max()
@@ -462,7 +463,7 @@ public:
 
     constexpr bool isNormalized() const
     {
-        return _isInBoundsUpTo( _hue, 0.0, Math::Degree<value_type>::modulus() ) &&
+        return _isInBoundsUpTo( _hue.value(), value_type{0.0}, Math::Degree<value_type>::modulus() ) &&
                _isInBounds( _saturation ) &&
                _isInBounds( _value );
     }
@@ -500,11 +501,11 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const T tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const T tolerance = T{0.0002})
     {
-        return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
-               approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
-               approximately_equal_to(value_to_test.value(),       value_it_should_be.value(),        tolerance);
+        return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().value(), tolerance) &&
+               approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),  tolerance) &&
+               approximately_equal_to(value_to_test.value(),       value_it_should_be.value(),       tolerance);
     }
     /// @}
 
@@ -529,9 +530,9 @@ protected:
      */
     friend constexpr BasicHSV<T> operator +(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
-        return BasicHSV<T>( Degree<T>(left.hue() + right.hue()).modulo(),
+        return BasicHSV<T>( Math::Degree<T>(left.hue() + right.hue()).modulo(),
                             Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
-                            Math::saturate( left.value()      + right.value(),      min.value(),        max.value()        )
+                            Math::saturate( left.value()      + right.value(),      min().value(),      max().value()      )
                             );
     }
     /// @}  {Addition}
@@ -543,9 +544,9 @@ protected:
      */
     friend constexpr BasicHSV<T> operator -(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
-        return BasicHSV<T>( Degree<T>(left.hue() - right.hue()).modulo(),
+        return BasicHSV<T>( Math::Degree<T>(left.hue() - right.hue()).modulo(),
                             Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
-                            Math::saturate( left.value()      - right.value(),      min.value(),        max.value()        )
+                            Math::saturate( left.value()      - right.value(),      min().value(),      max().value()      )
                             );
     }
     /// @}  {Subtraction}
@@ -599,6 +600,16 @@ public:
         _lightness  = other._lightness;
 
         return *this;
+    }
+
+    static constexpr BasicHSL<T> min()
+    {
+        return BasicHSL<T>( Math::Degree<value_type>(), value_type{0.0}, value_type{0.0} );
+    }
+
+    static constexpr BasicHSV<T> max()
+    {
+        return BasicHSV<T>( Math::Degree<value_type>{ Math::Degree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
     }
 
     constexpr Math::Degree<value_type> hue() const { return _hue; }
@@ -683,13 +694,58 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const T tolerance = 0.0002f)
+    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
                approximately_equal_to(value_to_test.lightness(),   value_it_should_be.lightness(),    tolerance);
     }
     /// @}
+
+    /** @name Global Operators
+     * 
+     *  @relates BasicHSL
+     * 
+     *  @{
+     */
+
+    /** @addtogroup BasicHSLAlgebra HSL Color Algebra
+     * 
+     *  HSL Color Algebra
+     * 
+     *  @{
+     */
+
+    /** @name Addition
+     *  @{
+     */
+    /** Defines addition of two BasicHSL objects
+     */
+    friend constexpr BasicHSL<T> operator +(const BasicHSL<T> &left, const BasicHSL<T> &right)
+    {
+        return BasicHSL<T>( Math::Degree<T>(left.hue() + right.hue()).modulo(),
+                            Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
+                            Math::saturate( left.lightness()  + right.lightness(),  min().lightness(),  max().lightness()  )
+                          );
+    }
+    /// @}  {Addition}
+
+    /** @name Subtraction
+     *  @{
+     */
+    /** Defines subtraction of two BasicHSL objects
+     */
+    friend constexpr BasicHSL<T> operator -(const BasicHSL<T> &left, const BasicHSL<T> &right)
+    {
+        return BasicHSL<T>( Math::Degree<T>(left.hue() - right.hue()).modulo(),
+                            Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
+                            Math::saturate( left.lightness()  - right.lightness(),  min().lightness(),  max().lightness()  )
+                          );
+    }
+    /// @}  {Subtraction}
+
+    /// @}  {BasicHSLAlgebra}
+    /// @}  {GlobalOperators}
 };
 
 template <class T>
