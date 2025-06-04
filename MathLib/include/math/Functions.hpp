@@ -18,7 +18,7 @@ namespace Math
 
 // C++ 20 has std::lerp() in <cmath>, so use that by default
 template <class Type>
-constexpr inline Type lerp(const Type input_lower_bound, const Type input_upper_bound, const float percentage_zero_to_one)
+constexpr inline Type lerp(Type input_lower_bound, Type input_upper_bound, float percentage_zero_to_one)
 {
     if constexpr (std::is_floating_point<Type>::value)
         return std::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
@@ -27,19 +27,19 @@ constexpr inline Type lerp(const Type input_lower_bound, const Type input_upper_
 }
 
 template <class Type>
-constexpr inline Type mix(const Type input_lower_bound, const Type input_upper_bound, const float percentage_zero_to_one)
+constexpr inline Type mix(Type input_lower_bound, Type input_upper_bound, float percentage_zero_to_one)
 {
     return Math::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
 }
 
 template <class Type>
-constexpr inline Type inverse_lerp(const Type input_lower_bound, const Type input_upper_bound, const Type value_between)
+constexpr inline Type inverse_lerp(Type input_lower_bound, Type input_upper_bound, Type value_between)
 {
     return (value_between - input_lower_bound) / (input_upper_bound - input_lower_bound);
 }
 
 template <class Type>
-constexpr inline Type remap(const Type input_value, const Type orig_range_min, const Type orig_range_max, const Type new_range_min, const Type new_range_max)
+constexpr inline Type remap(Type input_value, Type orig_range_min, Type orig_range_max, Type new_range_min, Type new_range_max)
 {
     return lerp(new_range_min, new_range_max, inverse_lerp(orig_range_min, orig_range_max, input_value));
 }
@@ -51,12 +51,12 @@ constexpr inline const Type &saturate(const Type &value, const Type &lower_bound
 }
 
 template <class Type>
-constexpr inline Type step(const Type y, const Type x)
+constexpr inline Type step(Type y, Type x)
 {
     return (x >= y) ? 1 : 0;
 }
 
-constexpr inline float smoothstep(float input_value, const float left_edge = 0.0f, const float right_edge = 1.0f)
+constexpr inline float smoothstep(float input_value, float left_edge = 0.0f, float right_edge = 1.0f)
 {
     // Scale and clamp to 0..1 range
     input_value = std::clamp<float>((input_value - left_edge) / (right_edge - left_edge), 0.0f, 1.0f);
@@ -66,7 +66,7 @@ constexpr inline float smoothstep(float input_value, const float left_edge = 0.0
 
 // Second-order smoothstep function
 template <class Type>
-constexpr inline Type smootherstep(Type input_value, const Type left_edge, const Type right_edge)
+constexpr inline Type smootherstep(Type input_value, Type left_edge, Type right_edge)
 {
     // Scale and clamp to 0..1 range
     input_value = std::clamp((input_value - left_edge) / (right_edge - left_edge), Type{0}, Type{1});
@@ -77,7 +77,7 @@ constexpr inline Type smootherstep(Type input_value, const Type left_edge, const
 }
 
 template <class Type = float>
-constexpr inline Type smoothstep_generalized(Type input_value, const Type left_edge = 0, const Type right_edge = 1, const int Order = 1)
+constexpr inline Type smoothstep_generalized(Type input_value, Type left_edge = 0, Type right_edge = 1, int Order = 1)
 {
     // Scale and clamp to 0..1 range
     input_value = std::clamp<Type>((input_value - left_edge) / (right_edge - left_edge), Type{0}, Type{1});
@@ -101,7 +101,7 @@ constexpr inline Type smoothstep_generalized(Type input_value, const Type left_e
 }
 
 template <class Type = float>
-constexpr inline Type inverse_smoothstep(const Type input_value)
+constexpr inline Type inverse_smoothstep(Type input_value)
 {
     return Type{0.5} - std::sin( std::asin(Type{1.0} - Type{2.0} * std::clamp<Type>(input_value, Type{0}, Type{1})) / Type{3.0} );
 }

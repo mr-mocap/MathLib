@@ -51,7 +51,7 @@ constexpr inline long long factorial_ll(long long input)
 }
 
 template <class Type>
-constexpr inline Type factorial(const Type input)
+constexpr inline Type factorial(Type input)
 {
     if constexpr (std::is_integral<Type>::value)
     {
@@ -80,7 +80,7 @@ constexpr inline Type factorial(const Type input)
 }
 
 template <class Type>
-constexpr inline Type n_choose_k(const Type n, const Type k)
+constexpr inline Type n_choose_k(Type n, Type k)
 {
     assert(k >= 0);
     assert(k <= n);
@@ -88,7 +88,7 @@ constexpr inline Type n_choose_k(const Type n, const Type k)
     return factorial(n) / (factorial(k) * factorial(n - k));
 }
 
-constexpr inline int binomial_coefficient(const int row, const int column)
+constexpr inline int binomial_coefficient(int row, int column)
 {
     if (column == 0) // Top of triangle AND left side
         return 1;

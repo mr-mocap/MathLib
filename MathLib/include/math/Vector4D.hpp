@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/Functions.hpp"
+#include <concepts>
 
 /** @file
  *  
@@ -170,9 +171,14 @@ struct Vector4D
      *  
      *  @see Equality
      */
-    friend constexpr Vector4D<Type> operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
+    friend constexpr bool operator ==(const Vector4D<Type> &left, const Vector4D<Type> &right)
     {
         return approximately_equal_to(left, right);
+    }
+
+    friend constexpr bool operator ==(const Vector4D<Type> &left, const Ref &right)
+    {
+        return approximately_equal_to(left, Vector4D<Type>{right});
     }
 
     /** @name Element Access
@@ -223,12 +229,12 @@ struct Vector4D
         return Vector4D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
     }
 
-    friend constexpr Vector4D<Type> operator *(const Vector4D<Type> &left, const Type right)
+    friend constexpr Vector4D<Type> operator *(const Vector4D<Type> &left, Type right)
     {
         return Vector4D<Type>{ left.x * right, left.y * right, left.z * right, left.w * right };
     }
 
-    friend constexpr Vector4D<Type> operator *(const Type left, const Vector4D<Type> right)
+    friend constexpr Vector4D<Type> operator *(Type left, const Vector4D<Type> right)
     {
         return Vector4D<Type>{ left * right.x, left * right.y, left * right.z, left * right.w };
     }
@@ -244,7 +250,7 @@ struct Vector4D
         return Vector4D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
     }
 
-    friend constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, const Type right)
+    friend constexpr Vector4D<Type> operator /(const Vector4D<Type> &left, Type right)
     {
         return Vector4D<Type>{ left.x / right, left.y / right, left.z / right, left.w / right };
     }
@@ -272,12 +278,13 @@ struct Vector4D
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const Vector4D<Type> &value_to_test, const Vector4D<Type> &value_it_should_be, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const Vector4D<Type> &value_to_test, const Vector4D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-            approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
-            approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
-            approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
+               approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
     }
     /// @}
 
@@ -357,7 +364,7 @@ struct Vector4D
         return Vector4D<Type>( std::modf(input.x), std::modf(input.y), std::modf(input.z), std::modf(input.w) );
     }
 
-    friend constexpr Vector4D<Type> saturate(const Vector4D<Type> &input, const Type lower_bound, const Type upper_bound)
+    friend constexpr Vector4D<Type> saturate(const Vector4D<Type> &input, Type lower_bound, Type upper_bound)
     {
         return Vector4D<Type>( saturate(input.x, lower_bound, upper_bound),
                             saturate(input.y, lower_bound, upper_bound),
@@ -380,7 +387,8 @@ struct Vector4D
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
-    friend bool check_if_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -407,7 +415,8 @@ struct Vector4D
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
-    friend bool check_if_not_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const Vector4D<Type> &input, const Vector4D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -424,17 +433,20 @@ struct Vector4D
         return true;
     }
 
-    friend void CHECK_IF_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_NOT_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const Vector4D<Type> &input, const Vector4D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_ZERO(const Vector4D<Type> &input, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_ZERO(const Vector4D<Type> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, Vector4D<Type>::zero(), tolerance));
     }

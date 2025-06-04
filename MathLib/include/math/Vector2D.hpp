@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/Functions.hpp"
+#include <concepts>
 
 /** @file
  *  
@@ -118,13 +119,13 @@ struct Vector2D
 
         /** Defines multiplication of a Vector2D::Ref object by a scalar
          */
-        friend constexpr Vector2D<Type> operator *(const Ref &left, const Type scalar)
+        friend constexpr Vector2D<Type> operator *(const Ref &left, Type scalar)
         {
             return Vector2D<Type>{ left.x * scalar, left.y * scalar };
         }
         /** Defines multiplication of a scalar by a Vector2D::Ref object
          */
-        friend constexpr Vector2D<Type> operator *(const Type scalar, const Ref &right)
+        friend constexpr Vector2D<Type> operator *(Type scalar, const Ref &right)
         {
             return Vector2D<Type>{ scalar * right.x, scalar * right.y };
         }
@@ -147,13 +148,13 @@ struct Vector2D
 
         /** Defines division of a Vector2D::Ref object by a scalar
          */
-        friend constexpr Vector2D<Type> operator /(const Ref &left, const Type scalar)
+        friend constexpr Vector2D<Type> operator /(const Ref &left, Type scalar)
         {
             return Vector2D<Type>{ left.x / scalar, left.y / scalar };
         }
         /** Defines division of a scalar by a Vector2D::Ref object
          */
-        friend constexpr Vector2D<Type> operator /(const Type scalar, const Ref &right)
+        friend constexpr Vector2D<Type> operator /(Type scalar, const Ref &right)
         {
             return Vector2D<Type>{ scalar / right.x, scalar / right.y };
         }
@@ -187,7 +188,8 @@ struct Vector2D
          *  
          *  @return @c true if they are equal
          */
-        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, const float tolerance = 0.0002f)
+        template <std::floating_point OT = float>
+        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, OT tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
@@ -235,7 +237,7 @@ struct Vector2D
             return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
         }
 
-        constexpr Vector2D<Type> saturate(const Ref &input, const Type lower_bound, const Type upper_bound)
+        constexpr Vector2D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
         {
             return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                    Math::saturate(input.y, lower_bound, upper_bound) );
@@ -343,12 +345,12 @@ struct Vector2D
         return Vector2D<Type>{ x * right.x, y * right.y };
     }
 
-    constexpr Vector2D<Type> operator *(const Type scalar) const
+    constexpr Vector2D<Type> operator *(Type scalar) const
     {
         return Vector2D<Type>{ x * scalar, y * scalar };
     }
 
-    friend constexpr Vector2D<Type> operator *(const Type scalar, const Vector2D<Type> &right)
+    friend constexpr Vector2D<Type> operator *(Type scalar, const Vector2D<Type> &right)
     {
         return Vector2D<Type>{ scalar * right.x, scalar * right.y };
     }
@@ -371,14 +373,14 @@ struct Vector2D
 
     /** Defines division of a Vector2D object by a scalar
      */
-    constexpr Vector2D<Type> operator /(const Type scalar) const
+    constexpr Vector2D<Type> operator /(Type scalar) const
     {
         return Vector2D<Type>{ x / scalar, y / scalar };
     }
 
     /** Defines division of a scalar by a Vector2D object
      */
-    friend constexpr Vector2D<Type> operator /(const Type scalar, const Vector2D<Type> &right)
+    friend constexpr Vector2D<Type> operator /(Type scalar, const Vector2D<Type> &right)
     {
         return Vector2D<Type>{ scalar / right.x, scalar / right.y };
     }
@@ -451,7 +453,8 @@ struct Vector2D
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const Vector2D<Type> &value_to_test, const Vector2D<Type> &value_it_should_be, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const Vector2D<Type> &value_to_test, const Vector2D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
@@ -568,7 +571,7 @@ struct Vector2D
         return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
     }
 
-    friend constexpr Vector2D<Type> saturate(const Vector2D<Type> &input, const Type lower_bound, const Type upper_bound)
+    friend constexpr Vector2D<Type> saturate(const Vector2D<Type> &input, const Type lower_bound, Type upper_bound)
     {
         return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                Math::saturate(input.y, lower_bound, upper_bound) );
@@ -589,7 +592,8 @@ struct Vector2D
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
-    friend bool check_if_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -616,7 +620,8 @@ struct Vector2D
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
-    friend bool check_if_not_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -633,17 +638,20 @@ struct Vector2D
         return true;
     }
 
-    friend void CHECK_IF_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_NOT_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_ZERO(const Vector2D<Type> &input, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_ZERO(const Vector2D<Type> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, Vector2D<Type>::zero(), tolerance));
     }

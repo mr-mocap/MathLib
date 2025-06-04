@@ -50,9 +50,9 @@ public:
      *  @note This is the proper way to construct a unit DualQuaternion.
      */
     explicit constexpr DualQuaternion(const Quaternion<T> &rotation,
-                                      const T translation_x,
-                                      const T translation_y,
-                                      const T translation_z)
+                                      T translation_x,
+                                      T translation_y,
+                                      T translation_z)
         :
         _frame_of_reference{ rotation, T{0.5} * Quaternion<T>::encode_point(translation_x, translation_y, translation_z) * rotation }
     {
@@ -117,7 +117,7 @@ public:
      *  @post result.real == Quaternion::identity()
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_translation(const T translation_x, const T translation_y, const T translation_z)
+    constexpr static DualQuaternion<T> make_translation(T translation_x, T translation_y, T translation_z)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
@@ -158,9 +158,9 @@ public:
      *        result.dual.isPure()
      */
     constexpr static DualQuaternion<T> make_coordinate_system(const Quaternion<T> &rotation,
-                                                              const            T   translation_x,
-                                                              const            T   translation_y,
-                                                              const            T   translation_z)
+                                                                               T   translation_x,
+                                                                               T   translation_y,
+                                                                               T   translation_z)
     {
         assert( rotation.isUnit() );
 
@@ -305,7 +305,7 @@ private:
      * 
      *  @see Equality
      */
-    friend constexpr bool operator ==(const DualQuaternion<T> &left,  DualQuaternion<T> &right)
+    friend constexpr bool operator ==(const DualQuaternion<T> &left,  const DualQuaternion<T> &right)
     {
         return approximately_equal_to(left, right);
     }
@@ -341,7 +341,7 @@ private:
      *  @see DualQuaternion Algebra
      */
     template <std::floating_point OT = double>
-    friend constexpr DualQuaternion<T> operator *(const OT scalar, const DualQuaternion<T> &dual_quaternion)
+    friend constexpr DualQuaternion<T> operator *(OT scalar, const DualQuaternion<T> &dual_quaternion)
     {
         return DualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
     }
@@ -356,7 +356,7 @@ private:
      *  @see DualQuaternion Algebra
      */
     template <std::floating_point OT = double>
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const OT scalar)
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, OT scalar)
     {
         return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
     }
@@ -454,7 +454,7 @@ private:
      *  @param percentage The percentage blend between the two (typically [0..1])
      */
     template <std::floating_point OT = float>
-    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const OT percentage)
+    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, OT percentage)
     {
         auto blended = beginning + (end - beginning) * percentage;
 
@@ -532,19 +532,19 @@ private:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
     }

@@ -34,8 +34,8 @@ public:
     using value_type = T;
 
     Quaternion() = default;
-    explicit constexpr Quaternion(const T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
-    explicit constexpr Quaternion(const T w, const T i, const T j, const T k) : _w(w), _i(i), _j(j), _k(k) { }
+    explicit constexpr Quaternion(T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
+    explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
     /** @name Constants
      *  @{
@@ -60,7 +60,7 @@ public:
     }
 
     /// Computes this Quaternion raised to a real power
-    Quaternion<T> pow(const T exponent) const
+    Quaternion<T> pow(T exponent) const
     {
         assert( isUnit() );
 
@@ -167,10 +167,10 @@ public:
     /// @}
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
-    bool isUnit(const T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
+    bool isUnit(T tolerance) const { return approximately_equal_to( magnitude(), T{1}, tolerance ); }
 
     bool isZero() const { return approximately_equal_to( magnitude(), T{} ); }
-    bool isZero(const T tolerance) const { return approximately_equal_to( magnitude(), T{}, tolerance ); }
+    bool isZero(T tolerance) const { return approximately_equal_to( magnitude(), T{}, tolerance ); }
 
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
@@ -201,7 +201,7 @@ public:
      *  @note A pure Quaternion is one in which the w, or real, component
      *        is 0.
      */
-    constexpr static Quaternion<T> make_pure(const T x, const T y, const T z) { return Quaternion<T>{ T{}, x, y, z }; }
+    constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
 
     /** Construct a pure Quaternion
      *  
@@ -223,7 +223,7 @@ public:
      *  
      *  @see make_pure
      */
-    constexpr static Quaternion<T> encode_point(const T x, const T y, const T z) { return make_pure(x, y, z); }
+    constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
 
     /** Encode a 3D point as a pure Quaternion
      *  
@@ -246,7 +246,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const T axis_x, const T axis_y, const T axis_z)
+    constexpr static Quaternion<T> make_rotation(Radian<T> radians, T axis_x, T axis_y, T axis_z)
     {
         return make_rotation(radians, { axis_x, axis_y, axis_z });
     }
@@ -258,7 +258,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const Radian<T> radians, const Vector3D<T> &axis)
+    constexpr static Quaternion<T> make_rotation(Radian<T> radians, const Vector3D<T> &axis)
     {
         T half_angle = radians.value() * T{0.5};
         T cos_theta = cos( half_angle );
@@ -310,7 +310,7 @@ private:
      *  @return @c true if they are equal
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, const T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
                approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
@@ -329,7 +329,7 @@ private:
     /** Implements multiplication of a Quaternion by a scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, const OT scalar)
+    friend constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, OT scalar)
     {
         return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
     }
@@ -337,7 +337,7 @@ private:
     /** Implements multiplication of a scalar by a Quaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator *(const OT scalar, const Quaternion<T> &quaternion)
+    friend constexpr Quaternion<T> operator *(OT scalar, const Quaternion<T> &quaternion)
     {
         return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
     }
@@ -377,7 +377,7 @@ private:
      *  @return the new Quaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, const OT scalar)
+    friend constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, OT scalar)
     {
         return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
     }
@@ -387,7 +387,7 @@ private:
      *  @return the new Quaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator /(const OT scalar, const Quaternion<T> &quaternion)
+    friend constexpr Quaternion<T> operator /(OT scalar, const Quaternion<T> &quaternion)
     {
         return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
     }
@@ -505,19 +505,19 @@ private:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const Quaternion<T> &input, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const Quaternion<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, Quaternion<T>::zero(), tolerance));
     }
@@ -673,7 +673,7 @@ private:
      *  @param end     Destination value
      *  @param percent [0..1] Represents the percentage to interpolate
      */
-    friend constexpr Quaternion<T> slerp(const Quaternion<T> &begin, const Quaternion<T> &end, const T percent)
+    friend constexpr Quaternion<T> slerp(const Quaternion<T> &begin, const Quaternion<T> &end, T percent)
     {
         Quaternion<T> combined{ begin.conjugate() * end };
 

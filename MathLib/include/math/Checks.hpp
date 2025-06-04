@@ -98,47 +98,47 @@ inline bool check_if_not_equal(long double input, long double near_to, long doub
 }
 /// @}
 
-inline void CHECK_IF_EQUAL(const float input, const float near_to, const float tolerance = 0.0002f)
+inline void CHECK_IF_EQUAL(float input, float near_to, float tolerance = 0.0002f)
 {
     assert( check_if_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_EQUAL(const double input, const double near_to, const double tolerance = 0.0002)
+inline void CHECK_IF_EQUAL(double input, double near_to, double tolerance = 0.0002)
 {
     assert( check_if_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_EQUAL(const long double input, const long double near_to, const long double tolerance = 0.0002l)
+inline void CHECK_IF_EQUAL(long double input, long double near_to, long double tolerance = 0.0002l)
 {
     assert( check_if_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_NOT_EQUAL(const float input, const float near_to, const float tolerance = 0.0002f)
+inline void CHECK_IF_NOT_EQUAL(float input, float near_to, float tolerance = 0.0002f)
 {
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_NOT_EQUAL(const double input, const double near_to, const double tolerance = 0.0002)
+inline void CHECK_IF_NOT_EQUAL(double input, double near_to, double tolerance = 0.0002)
 {
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_NOT_EQUAL(const long double input, const long double near_to, const long double tolerance = 0.0002l)
+inline void CHECK_IF_NOT_EQUAL(long double input, long double near_to, long double tolerance = 0.0002l)
 {
     assert( check_if_not_equal(input, near_to, tolerance) );
 }
 
-inline void CHECK_IF_ZERO(const float input, const float tolerance = 0.0002f)
+inline void CHECK_IF_ZERO(float input, float tolerance = 0.0002f)
 {
     assert( check_if_equal(input, 0.0f, tolerance) );
 }
 
-inline void CHECK_IF_ZERO(const double input, const double tolerance = 0.0002)
+inline void CHECK_IF_ZERO(double input, double tolerance = 0.0002)
 {
     assert( check_if_equal(input, 0.0, tolerance) );
 }
 
-inline void CHECK_IF_ZERO(const long double input, const long double tolerance = 0.0002l)
+inline void CHECK_IF_ZERO(long double input, long double tolerance = 0.0002l)
 {
     assert( check_if_equal(input, 0.0l, tolerance) );
 }

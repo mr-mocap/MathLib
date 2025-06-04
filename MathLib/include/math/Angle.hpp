@@ -1,6 +1,7 @@
 #pragma once
 
 #include "math/Functions.hpp"
+#include <concepts>
 
 /** @file
  *  
@@ -22,7 +23,7 @@ class Radian
 {
 public:
     constexpr Radian() = default;
-    explicit constexpr Radian(const T value) : _value(value) { }
+    explicit constexpr Radian(T value) : _value(value) { }
 
     static constexpr Radian<T> zero() { return Radian<T>(); }
 
@@ -32,25 +33,25 @@ public:
     T value() const { return _value; }
     /// @}
 
-    constexpr Radian<T> &operator +=(const Radian other)
+    constexpr Radian<T> &operator +=(Radian other)
     {
         _value += other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator -=(const Radian other)
+    constexpr Radian<T> &operator -=(Radian other)
     {
         _value -= other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator *=(const Radian other)
+    constexpr Radian<T> &operator *=(Radian other)
     {
         _value *= other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator /=(const Radian other)
+    constexpr Radian<T> &operator /=(Radian other)
     {
         _value /= other._value;
         return *this;
@@ -63,11 +64,11 @@ public:
      * 
      *  @{
      */
-    constexpr std::strong_ordering operator <=>(const Radian<T> other) const
+    constexpr std::strong_ordering operator <=>(Radian<T> other) const
     {
         return _value <=> other._value;
     }
-    constexpr std::strong_ordering operator <=>(const T other) const
+    constexpr std::strong_ordering operator <=>(T other) const
     {
         return _value <=> other;
     }
@@ -83,11 +84,11 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const Radian<T> right) const
+    constexpr bool operator ==(Radian<T> right) const
     {
         return value() == right.value();
     }
-    constexpr bool operator ==(const T right) const
+    constexpr bool operator ==(T right) const
     {
         return value() == right;
     }
@@ -112,7 +113,8 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const Radian<T> &value_to_test, const Radian<T> &value_it_should_be, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(Radian<T> value_to_test, Radian<T> value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
@@ -124,27 +126,27 @@ private:
      * 
      *  @{
      */
-    friend constexpr Radian<T> operator +(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator +(Radian<T> left, Radian<T> right)
     {
         return Radian<T>{ left.value() + right.value() };
     }
 
-    friend constexpr Radian<T> operator -(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator -(Radian<T> left, Radian<T> right)
     {
         return Radian<T>{ left.value() - right.value() };
     }
 
-    friend constexpr Radian<T> operator *(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator *(Radian<T> left, Radian<T> right)
     {
         return Radian<T>{ left.value() * right.value() };
     }
 
-    friend constexpr Radian<T> operator /(const Radian<T> left, const Radian<T> right)
+    friend constexpr Radian<T> operator /(Radian<T> left, Radian<T> right)
     {
         return Radian<T>{ left.value() / right.value() };
     }
 
-    friend constexpr Radian<T> operator -(const Radian<T> input)
+    friend constexpr Radian<T> operator -(Radian<T> input)
     {
         return Radian{ -input.value() };
     }
@@ -166,8 +168,8 @@ class Degree
 {
 public:
     constexpr Degree() = default;
-    explicit constexpr Degree(const T value) : _value(value) { }
-    constexpr Degree(const Radian<T> value) : _value( RadiansToDegrees(value.value()) ) { }
+    explicit constexpr Degree(T value) : _value(value) { }
+    constexpr Degree(Radian<T> value) : _value( RadiansToDegrees(value.value()) ) { }
 
     operator Radian<T>() { return Radian<T>{DegreesToRadians(_value)}; }
 
@@ -182,49 +184,49 @@ public:
     /** @name Operators
      *  @{
      */
-    constexpr Degree<T> &operator +=(const Degree<T> other)
+    constexpr Degree<T> &operator +=(Degree<T> other)
     {
         _value += other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator +=(const T other)
+    constexpr Degree<T> &operator +=(T other)
     {
         _value += other;
         return *this;
     }
 
-    constexpr Degree<T> &operator -=(const Degree<T> other)
+    constexpr Degree<T> &operator -=(Degree<T> other)
     {
         _value -= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator -=(const T other)
+    constexpr Degree<T> &operator -=(T other)
     {
         _value -= other;
         return *this;
     }
 
-    constexpr Degree<T> &operator *=(const Degree<T> other)
+    constexpr Degree<T> &operator *=(Degree<T> other)
     {
         _value *= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator *=(const T other)
+    constexpr Degree<T> &operator *=(T other)
     {
         _value *= other;
         return *this;
     }
 
-    constexpr Degree<T> &operator /=(const Degree<T> other)
+    constexpr Degree<T> &operator /=(Degree<T> other)
     {
         _value /= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator /=(const T other)
+    constexpr Degree<T> &operator /=(T other)
     {
         _value /= other;
         return *this;
@@ -238,11 +240,11 @@ public:
      * 
      *  @{
      */
-    constexpr std::strong_ordering operator <=>(const Degree<T> other) const
+    constexpr std::strong_ordering operator <=>(Degree<T> other) const
     {
         return _value <=> other._value;
     }
-    constexpr std::strong_ordering operator <=>(const T other) const
+    constexpr std::strong_ordering operator <=>(T other) const
     {
         return _value <=> other;
     }
@@ -258,11 +260,11 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const Degree<T> right) const
+    constexpr bool operator ==(Degree<T> right) const
     {
         return value() == right.value();
     }
-    constexpr bool operator ==(const T right) const
+    constexpr bool operator ==(T right) const
     {
         return value() == right;
     }
@@ -295,7 +297,8 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
@@ -307,47 +310,47 @@ private:
      * 
      *  @{
      */
-    friend constexpr Degree<T> operator +(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator +(Degree<T> left, Degree<T> right)
     {
         return Degree<T>{ left.value() + right.value() };
     }
 
-    friend constexpr Degree<T> operator -(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator -(Degree<T> left, Degree<T> right)
     {
         return Degree<T>{ left.value() - right.value() };
     }
 
-    friend constexpr Degree<T> operator *(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator *(Degree<T> left, Degree<T> right)
     {
         return Degree<T>{ left.value() * right.value() };
     }
 
-    friend constexpr Degree<T> operator /(const Degree<T> left, const Degree<T> right)
+    friend constexpr Degree<T> operator /(Degree<T> left, Degree<T> right)
     {
         return Degree<T>{ left.value() / right.value() };
     }
 
-    friend constexpr Degree<T> operator +(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator +(Degree<T> left, T right)
     {
         return Degree<T>{ left.value() + right };
     }
 
-    friend constexpr Degree<T> operator -(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator -(Degree<T> left, T right)
     {
         return Degree<T>{ left.value() - right };
     }
 
-    friend constexpr Degree<T> operator *(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator *(Degree<T> left, T right)
     {
         return Degree<T>{ left.value() * right };
     }
 
-    friend constexpr Degree<T> operator /(const Degree<T> left, const T right)
+    friend constexpr Degree<T> operator /(Degree<T> left, T right)
     {
         return Degree<T>{ left.value() / right };
     }
 
-    friend constexpr Degree<T> operator -(const Degree<T> input)
+    friend constexpr Degree<T> operator -(Degree<T> input)
     {
         return Degree{ -input.value() };
     }

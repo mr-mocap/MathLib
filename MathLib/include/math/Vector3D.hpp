@@ -2,6 +2,7 @@
 
 #include "math/Functions.hpp"
 #include "math/Vector2D.hpp"
+#include <concepts>
 
 /** @file
  *  
@@ -116,7 +117,8 @@ struct Vector3D
          *  
          *  @return @c true if they are equal
          */
-        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, const float tolerance = 0.0002f)
+        template <std::floating_point OT = float>
+        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, OT tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
@@ -225,7 +227,7 @@ struct Vector3D
             return Vector3D<Type>( std::modf(input.x), std::modf(input.y), std::modf(input.z) );
         }
 
-        constexpr Vector3D<Type> saturate(const Ref &input, const Type lower_bound, const Type upper_bound)
+        constexpr Vector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
         {
             return Vector3D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                    Math::saturate(input.y, lower_bound, upper_bound),
@@ -247,14 +249,14 @@ struct Vector3D
         z{z_in}
     {
     }
-    constexpr Vector3D(const Vector2D<Type> &other, const Type z_in = 0)
+    constexpr Vector3D(const Vector2D<Type> &other, Type z_in = 0)
         :
         x{other.x},
         y{other.y},
         z{z_in}
     {
     }
-    constexpr Vector3D(const Type x_in, const Vector2D<Type> &other)
+    constexpr Vector3D(Type x_in, const Vector2D<Type> &other)
         :
         x{x_in},
         y{other.x},
@@ -360,7 +362,8 @@ struct Vector3D
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const Vector3D<Type> &value_to_test, const Vector3D<Type> &value_it_should_be, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const Vector3D<Type> &value_to_test, const Vector3D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
@@ -417,7 +420,7 @@ struct Vector3D
         return Vector3D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z };
     }
 
-    friend constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, const Type right)
+    friend constexpr Vector3D<Type> operator *(const Vector3D<Type> &left, Type right)
     {
         return Vector3D<Type>{ left.x * right, left.y * right, left.z * right };
     }
@@ -433,7 +436,7 @@ struct Vector3D
         return Vector3D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z };
     }
 
-    friend constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, const Type right)
+    friend constexpr Vector3D<Type> operator /(const Vector3D<Type> &left, Type right)
     {
         return Vector3D<Type>{ left.x / right, left.y / right, left.z / right };
     }
@@ -536,7 +539,7 @@ struct Vector3D
         return Vector3D<Type>( std::modf(input.x), std::modf(input.y), std::modf(input.z) );
     }
 
-    friend constexpr Vector3D<Type> saturate(const Vector3D<Type> &input, const Type lower_bound, const Type upper_bound)
+    friend constexpr Vector3D<Type> saturate(const Vector3D<Type> &input, Type lower_bound, Type upper_bound)
     {
         return Vector3D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                Math::saturate(input.y, lower_bound, upper_bound),
@@ -559,7 +562,8 @@ struct Vector3D
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
-    friend bool check_if_equal(const Vector3D<Type> &input, const Vector3D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const Vector3D<Type> &input, const Vector3D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -586,7 +590,8 @@ struct Vector3D
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
-    friend bool check_if_not_equal(const Vector3D<Type> &input, const Vector3D<Type> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const Vector3D<Type> &input, const Vector3D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -603,17 +608,20 @@ struct Vector3D
         return true;
     }
 
-    friend void CHECK_IF_EQUAL(const Vector3D<Type> &input, const Vector3D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const Vector3D<Type> &input, const Vector3D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_NOT_EQUAL(const Vector3D<Type> &input, const Vector3D<Type> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const Vector3D<Type> &input, const Vector3D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_ZERO(const Vector3D<Type> &input, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_ZERO(const Vector3D<Type> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, Vector3D<Type>::zero(), tolerance));
     }

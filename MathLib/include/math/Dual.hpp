@@ -124,7 +124,7 @@ public:
     /** Defines multiplication of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator *(const OT scalar, const Dual<T> &d)
+    friend constexpr Dual<T> operator *(OT scalar, const Dual<T> &d)
     {
         return Dual<T>( T(scalar) ) * d;
     }
@@ -132,7 +132,7 @@ public:
     /** Defines multiplication of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator *(const Dual<T> &left, const OT scalar)
+    friend constexpr Dual<T> operator *(const Dual<T> &left, OT scalar)
     {
         return left * Dual<T>( T(scalar) );
     }
@@ -152,7 +152,7 @@ public:
     /** Defines division of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator /(const OT scalar, const Dual<T> &d)
+    friend constexpr Dual<T> operator /(OT scalar, const Dual<T> &d)
     {
         return Dual<T>( T(scalar) ) / d;
     }
@@ -160,7 +160,7 @@ public:
     /** Defines division of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator /(const Dual<T> &left, const OT scalar)
+    friend constexpr Dual<T> operator /(const Dual<T> &left, OT scalar)
     {
         return left / Dual<T>( T(scalar) );
     }
@@ -179,7 +179,7 @@ public:
     /** Defines addition of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator +(const OT scalar, const Dual<T> &d)
+    friend constexpr Dual<T> operator +(OT scalar, const Dual<T> &d)
     {
         return Dual<T>( T(scalar) ) + d;
     }
@@ -187,7 +187,7 @@ public:
     /** Defines addition of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator +(const Dual<T> &left, const OT scalar)
+    friend constexpr Dual<T> operator +(const Dual<T> &left, OT scalar)
     {
         return left + Dual<T>( T(scalar) );
     }
@@ -206,7 +206,7 @@ public:
     /** Defines subtraction of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator -(const OT scalar, const Dual<T> &d)
+    friend constexpr Dual<T> operator -(OT scalar, const Dual<T> &d)
     {
         return Dual<T>( T(scalar) ) - d;
     }
@@ -214,7 +214,7 @@ public:
     /** Defines subtraction of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator -(const Dual<T> &left, const OT scalar)
+    friend constexpr Dual<T> operator -(const Dual<T> &left, OT scalar)
     {
         return left - Dual<T>( T(scalar) );
     }
@@ -371,19 +371,19 @@ public:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const Dual<T> &input, const Dual<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const Dual<T> &input, const Dual<T> &near_to, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const Dual<T> &input, const OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const Dual<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, Dual<T>::zero(), tolerance));
     }

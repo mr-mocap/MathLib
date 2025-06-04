@@ -44,32 +44,32 @@ public:
     constexpr value_type g() const { return _green; }
     constexpr value_type b() const { return _blue; }
 
-    constexpr void red(const value_type input)
+    constexpr void red(value_type input)
     {
         _red = input;
     }
 
-    constexpr void green(const value_type input)
+    constexpr void green(value_type input)
     {
         _green = input;
     }
 
-    constexpr void blue(const value_type input)
+    constexpr void blue(value_type input)
     {
         _blue = input;
     }
 
-    constexpr void r(const value_type input)
+    constexpr void r(value_type input)
     {
         red( input );
     }
 
-    constexpr void g(const value_type input)
+    constexpr void g(value_type input)
     {
         green( input );
     }
 
-    constexpr void b(const value_type input)
+    constexpr void b(value_type input)
     {
         blue( input );
     }
@@ -134,7 +134,7 @@ protected:
                           );
     }
 
-    friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, const T right)
+    friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, T right)
     {
         return BasicRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
                             Math::saturate( left.green() * right, min().green(), max().green() ),
@@ -215,38 +215,38 @@ public:
     constexpr value_type g() const { return _green; }
     constexpr value_type b() const { return _blue; }
 
-    constexpr void red(const value_type input)
+    constexpr void red(value_type input)
     {
         assert( _isInBounds( input ) );
 
         _red = input;
     }
 
-    constexpr void green(const value_type input)
+    constexpr void green(value_type input)
     {
         assert( _isInBounds( input ) );
 
         _green = input;
     }
 
-    constexpr void blue(const value_type input)
+    constexpr void blue(value_type input)
     {
         assert( _isInBounds( input ) );
 
         _blue = input;
     }
 
-    constexpr void r(const value_type input)
+    constexpr void r(value_type input)
     {
         red( input );
     }
 
-    constexpr void g(const value_type input)
+    constexpr void g(value_type input)
     {
         green( input );
     }
 
-    constexpr void b(const value_type input)
+    constexpr void b(value_type input)
     {
         blue( input );
     }
@@ -267,7 +267,7 @@ protected:
     value_type _green{};
     value_type _blue{};
 
-    constexpr bool _isInBounds(const value_type component) const
+    constexpr bool _isInBounds(value_type component) const
     {
         return (component >= value_type{0.0}) && (component <= value_type{1.0});
     }
@@ -286,7 +286,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, const T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.red(),   value_it_should_be.red(),   tolerance) &&
                approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
@@ -349,7 +349,7 @@ protected:
                             );
     }
 
-    friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const T right)
+    friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, T right)
     {
         return BasicUnitRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
                                 Math::saturate( left.green() * right, min().green(), max().green() ),
@@ -378,7 +378,7 @@ public:
     };
 
     constexpr BasicHSV() = default;
-    constexpr BasicHSV(const Math::Degree<value_type> h, const value_type s, const value_type v)
+    constexpr BasicHSV(Math::Degree<value_type> h, value_type s, value_type v)
         :
         _hue{ h },
         _saturation{ s },
@@ -442,19 +442,19 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(const Math::Degree<value_type> input)
+    constexpr void hue(Math::Degree<value_type> input)
     {
         _hue = input;
     }
 
-    constexpr void saturation(const value_type input)
+    constexpr void saturation(value_type input)
     {
         assert( _isInBounds( input ) );
 
         _saturation = input;
     }
 
-    constexpr void value(const value_type input)
+    constexpr void value(value_type input)
     {
         assert( _isInBounds( input ) );
 
@@ -477,12 +477,12 @@ protected:
     value_type               _saturation{};
     value_type               _value{};
 
-    constexpr bool _isInBounds(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    constexpr bool _isInBounds(value_type component, value_type lower_bound = 0.0, value_type upper_bound = 1.0) const
     {
         return (component >= lower_bound) && (component <= upper_bound);
     }
 
-    constexpr bool _isInBoundsUpTo(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    constexpr bool _isInBoundsUpTo(value_type component, value_type lower_bound = 0.0, value_type upper_bound = 1.0) const
     {
         return (component >= lower_bound) && (component < upper_bound);
     }
@@ -501,7 +501,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, const T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().value(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),  tolerance) &&
@@ -571,7 +571,7 @@ public:
     };
 
     constexpr BasicHSL() = default;
-    constexpr BasicHSL(const Math::Degree<value_type> h, const value_type s, const value_type l)
+    constexpr BasicHSL(Math::Degree<value_type> h, value_type s, value_type l)
         :
         _hue{ h },
         _saturation{ s },
@@ -635,19 +635,19 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(const Math::Degree<value_type> input)
+    constexpr void hue(Math::Degree<value_type> input)
     {
         _hue = input;
     }
 
-    constexpr void saturation(const value_type input)
+    constexpr void saturation(value_type input)
     {
         assert( _isInBounds( input ) );
 
         _saturation = input;
     }
 
-    constexpr void lightness(const value_type input)
+    constexpr void lightness(value_type input)
     {
         assert( _isInBounds( input ) );
 
@@ -670,12 +670,12 @@ protected:
     value_type               _saturation{};
     value_type               _lightness{};
 
-    constexpr bool _isInBounds(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    constexpr bool _isInBounds(value_type component, value_type lower_bound = 0.0, value_type upper_bound = 1.0) const
     {
         return (component >= lower_bound) && (component <= upper_bound);
     }
 
-    constexpr bool _isInBoundsUpTo(const value_type component, const value_type lower_bound = 0.0, const value_type upper_bound = 1.0) const
+    constexpr bool _isInBoundsUpTo(value_type component, value_type lower_bound = 0.0, value_type upper_bound = 1.0) const
     {
         return (component >= lower_bound) && (component < upper_bound);
     }
@@ -694,7 +694,7 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, const T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
