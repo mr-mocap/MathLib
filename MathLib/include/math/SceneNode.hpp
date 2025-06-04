@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <string_view>
 
 
 /** @file
@@ -59,7 +60,7 @@ public:
               std::weak_ptr<SceneNode>  parent,
               const Math::Vector3D<Type>     &translation,
               const Math::Quaternion<Type>   &rotation,
-              const std::string        &name)
+                    std::string_view          name)
         :
         _coordinate_system{ Math::DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
         _parent{parent},
@@ -88,12 +89,11 @@ public:
     const Math::DualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
           Math::DualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
 
-    const std::string &name() const { return _name; }
-          std::string &name()       { return _name; }
+    std::string_view name() const { return _name; }
 
     std::weak_ptr<SceneNode<Type>> createChildNode(const Math::Vector3D<Type>   &translation = Math::Vector3D<Type>::zero(),
                                                    const Math::Quaternion<Type> &rotation    = Math::Quaternion<Type>::identity(),
-                                                   const std::string      &name        = std::string())
+                                                         std::string_view        name        = std::string_view())
     {
         std::shared_ptr<SceneNode<Type>> new_node = make( this->weak_from_this(), translation, rotation, name );
 
@@ -162,7 +162,7 @@ private:
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
                                                  const Math::Vector3D<Type>     &translation,
                                                  const Math::Quaternion<Type>   &rotation,
-                                                 const std::string        &name)
+                                                       std::string_view          name)
     {
         return std::make_shared<SceneNode<Type>>(Private{}, parent, translation, rotation, name);
     }
