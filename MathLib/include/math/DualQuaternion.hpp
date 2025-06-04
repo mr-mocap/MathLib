@@ -5,6 +5,7 @@
 #include "math/Vector3D.hpp"
 #include "math/Functions.hpp"
 #include <cassert>
+#include <concepts>
 
 /** @file
  *  
@@ -339,7 +340,8 @@ private:
      *  
      *  @see DualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator *(const T scalar, const DualQuaternion<T> &dual_quaternion)
+    template <std::floating_point OT = double>
+    friend constexpr DualQuaternion<T> operator *(const OT scalar, const DualQuaternion<T> &dual_quaternion)
     {
         return DualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
     }
@@ -353,7 +355,8 @@ private:
      *  
      *  @see DualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const T scalar)
+    template <std::floating_point OT = double>
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const OT scalar)
     {
         return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
     }
@@ -420,7 +423,8 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         // Just use the underlying Dual number's version of the same function...
         return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
@@ -449,7 +453,8 @@ private:
      *  @param end        The ending state
      *  @param percentage The percentage blend between the two (typically [0..1])
      */
-    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const float percentage)
+    template <std::floating_point OT = float>
+    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, const OT percentage)
     {
         auto blended = beginning + (end - beginning) * percentage;
 
@@ -480,7 +485,8 @@ private:
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
-    friend bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -507,7 +513,8 @@ private:
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
-    friend bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -524,17 +531,20 @@ private:
         return true;
     }
 
-    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, const OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, const float tolerance = 0.0002f)
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, const OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
     }
