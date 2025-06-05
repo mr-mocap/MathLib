@@ -297,7 +297,7 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, T tolerance = O{0.0002})
+    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
