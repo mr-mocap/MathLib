@@ -113,8 +113,7 @@ private:
      *  
      *  @see Equality
      */
-    template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(Radian<T> value_to_test, Radian<T> value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(Radian<T> value_to_test, Radian<T> value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
@@ -269,6 +268,7 @@ public:
         return value() == right;
     }
     /// @}
+
     static constexpr T modulus() { return 360; }
 
     constexpr Degree<T> modulo() const
@@ -297,8 +297,7 @@ private:
      *  
      *  @see Equality
      */
-    template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, T tolerance = O{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
