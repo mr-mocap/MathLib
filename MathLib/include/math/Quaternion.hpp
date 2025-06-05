@@ -310,7 +310,7 @@ private:
      *  @return @c true if they are equal
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
                approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
