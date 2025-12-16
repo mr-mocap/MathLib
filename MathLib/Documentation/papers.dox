@@ -1,0 +1,23 @@
+/** @page Papers Papers
+ *
+ *  This is a list of some papers that were used to
+ *  understand and implement parts of the library.
+ *
+ *  - Quaternion
+ *    - [YouTube: 3Blue1Brown - Visualizing the 4D Numbers Quaternions](https://www.youtube.com/watch?v=d4EgbgTm0Bg&list=PLZHQObOWTQDN52m7Y21ePrTbvXkPaWVSg&index=26)
+ *    - [Interactive Website: Visualizing Quaternions](https://eater.net/quaternions)
+ *    - [Quaternion on Wikipedia](https://en.wikipedia.org/wiki/Quaternion)
+ *  - Dual DualNumber
+ *    - [Dual Numbers Book (PDF)](https://fs.unm.edu/DualNumbers.pdf)
+ *    - [Dual Number on Wikipedia](https://en.wikipedia.org/wiki/Dual_number)
+ *    - [Math for Game Programmers (PDF)](http://dtecta.com/files/GDC13_vandenBergen_Gino_Math_Tut.pdf)
+ *    - [The Journey to Dual Numbers and Automatic Differentiation (PDF)](https://tomrocksmaths.com/wp-content/uploads/2024/07/tom_rocks_2-4-syed-daniyal-qadri-student.pdf)
+ *  - Dual-Quaternion
+ *    - [A Beginners Guide to Dual-Quaternions (PDF)](https://cs.gmu.edu/~jmlien/teaching/cs451/uploads/Main/dual-quaternion.pdf)
+ *    - [Dual Quaternions (PDF)](https://faculty.sites.iastate.edu/jia/files/inline-files/dual-quaternion.pdf)
+ *    - [Dual Quaternion on Wikipedia](https://en.wikipedia.org/wiki/Dual_quaternion)
+ *  - Color Spaces
+ *    - [RGB Color Model](https://en.wikipedia.org/wiki/RGB_color_model)
+ *    - [HSL and HSV Color Models](https://en.wikipedia.org/wiki/HSL_and_HSV)
+ *
+ */
