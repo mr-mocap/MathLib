@@ -422,11 +422,13 @@ struct Vector2D
     constexpr Vector2D<Type> yy() const { return { y, y }; }
     constexpr Vector2D<Type> yy()       { return { y, y }; }
 
-    constexpr const Ref xy() const { return { x, y }; }
-    constexpr       Ref xy()       { return { x, y }; }
+    constexpr const Ref      xy() const &  { return { x, y }; }
+    constexpr       Ref      xy()       &  { return { x, y }; }
+    constexpr Vector2D<Type> xy()       && { return { x, y }; }
 
-    constexpr const Ref yx() const { return { y, x }; }
-    constexpr       Ref yx()       { return { y, x }; }
+    constexpr const Ref      yx() const &  { return { y, x }; }
+    constexpr       Ref      yx()       &  { return { y, x }; }
+    constexpr Vector2D<Type> yx()       && { return { y, x }; }
     /// @} {Swizzle operations}
 
 

@@ -293,32 +293,41 @@ struct Vector3D
     /** @name Swizzle operations
      *  @{
      */
-    constexpr const Vector2D<Type>::Ref xy() const { return { x, y }; }
-    constexpr       Vector2D<Type>::Ref xy()       { return { x, y }; }
+    constexpr const Vector2D<Type>::Ref xy() const &  { return { x, y }; }
+    constexpr       Vector2D<Type>::Ref xy()       &  { return { x, y }; }
+    constexpr       Vector2D<Type>      xy()       && { return { x, y }; }
 
-    constexpr const Vector2D<Type>::Ref xz() const { return { x, z }; }
-    constexpr       Vector2D<Type>::Ref xz()       { return { x, z }; }
+    constexpr const Vector2D<Type>::Ref xz() const &  { return { x, z }; }
+    constexpr       Vector2D<Type>::Ref xz()       &  { return { x, z }; }
+    constexpr       Vector2D<Type>      xz()       && { return { x, z }; }
 
-    constexpr const Vector2D<Type>::Ref yx() const { return { y, x }; }
-    constexpr       Vector2D<Type>::Ref yx()       { return { y, x }; }
+    constexpr const Vector2D<Type>::Ref yx() const &  { return { y, x }; }
+    constexpr       Vector2D<Type>::Ref yx()       &  { return { y, x }; }
+    constexpr       Vector2D<Type>      yx()       && { return { y, x }; }
 
-    constexpr const Vector2D<Type>::Ref yz() const { return { y, z }; }
-    constexpr       Vector2D<Type>::Ref yz()       { return { y, z }; }
+    constexpr const Vector2D<Type>::Ref yz() const &  { return { y, z }; }
+    constexpr       Vector2D<Type>::Ref yz()       &  { return { y, z }; }
+    constexpr       Vector2D<Type>      yz()       && { return { y, z }; }
 
-    constexpr const Vector2D<Type>::Ref zx() const { return { z, x }; }
-    constexpr       Vector2D<Type>::Ref zx()       { return { z, x }; }
+    constexpr const Vector2D<Type>::Ref zx() const &  { return { z, x }; }
+    constexpr       Vector2D<Type>::Ref zx()       &  { return { z, x }; }
+    constexpr       Vector2D<Type>      zx()       && { return { z, x }; }
 
-    constexpr const Ref xyz() const { return { x, y, z }; }
-    constexpr       Ref xyz()       { return { x, y, z }; }
+    constexpr const Ref            xyz() const &  { return { x, y, z }; }
+    constexpr       Ref            xyz()       &  { return { x, y, z }; }
+    constexpr       Vector3D<Type> xyz()       && { return { x, y, z }; }
 
-    constexpr const Ref xzy() const { return { x, z, y }; }
-    constexpr       Ref xzy()       { return { x, z, y }; }
+    constexpr const Ref            xzy() const &  { return { x, z, y }; }
+    constexpr       Ref            xzy()       &  { return { x, z, y }; }
+    constexpr       Vector3D<Type> xzy()       && { return { x, z, y }; }
 
-    constexpr const Ref zxy() const { return { z, x, y }; }
-    constexpr       Ref zxy()       { return { z, x, y }; }
+    constexpr const Ref            zxy() const &  { return { z, x, y }; }
+    constexpr       Ref            zxy()       &  { return { z, x, y }; }
+    constexpr       Vector3D<Type> zxy()       && { return { z, x, y }; }
 
-    constexpr const Ref zyx() const { return { z, y, x }; }
-    constexpr       Ref zyx()       { return { z, y, x }; }
+    constexpr const Ref            zyx() const &  { return { z, y, x }; }
+    constexpr       Ref            zyx()       &  { return { z, y, x }; }
+    constexpr       Vector3D<Type> zyx()       && { return { z, y, x }; }
     /// @}
 
     /** Defines equality of two Vector3D objects
