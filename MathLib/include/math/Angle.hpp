@@ -18,7 +18,7 @@ namespace Math
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
  */
-template <class T>
+template <std::floating_point T>
 class Radian
 {
 public:
@@ -172,7 +172,7 @@ private:
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
  */
-template <class T>
+template <std::floating_point T>
 class Degree
 {
 public:

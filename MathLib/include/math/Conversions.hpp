@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numbers>
+#include <concepts>
 
 
 /** @file
@@ -18,17 +19,17 @@ namespace Math
  *  @{
  */
 /// Convert degrees to radians
-template <class T>
+template <std::floating_point T>
 constexpr inline T DegreesToRadians(T degrees)
 {
-    return degrees * (T{std::numbers::pi} / T{180});
+    return degrees * (std::numbers::pi_v<T> / T{180});
 }
 
 /// Convert radians to degrees
-template <class T>
+template <std::floating_point T>
 constexpr inline T RadiansToDegrees(T radians)
 {
-    return radians * (T{180} / T{std::numbers::pi});
+    return radians * (T{180} / std::numbers::pi_v<T>);
 }
 /// @}
 
