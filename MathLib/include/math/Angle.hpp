@@ -64,11 +64,8 @@ public:
      * 
      *  @{
      */
-    constexpr std::strong_ordering operator <=>(Radian<T> other) const
-    {
-        return _value <=> other._value;
-    }
-    constexpr std::strong_ordering operator <=>(T other) const
+    constexpr auto operator <=>(const Radian<T> &other) const = default;
+    constexpr auto operator <=>(const T &other) const
     {
         return _value <=> other;
     }
@@ -84,11 +81,11 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(Radian<T> right) const
+    constexpr bool operator ==(const Radian<T> &right) const
     {
         return value() == right.value();
     }
-    constexpr bool operator ==(T right) const
+    constexpr bool operator ==(const T &right) const
     {
         return value() == right;
     }
@@ -249,11 +246,8 @@ public:
      * 
      *  @{
      */
-    constexpr std::strong_ordering operator <=>(Degree<T> other) const
-    {
-        return _value <=> other._value;
-    }
-    constexpr std::strong_ordering operator <=>(T other) const
+    constexpr auto operator <=>(const Degree<T> &other) const = default;
+    constexpr auto operator <=>(T other) const
     {
         return _value <=> other;
     }
@@ -279,8 +273,8 @@ public:
     }
     /// @}
 
+    
     static constexpr T modulus() { return 360; }
-
     constexpr Degree<T> modulo() const
     {
         T modded;
