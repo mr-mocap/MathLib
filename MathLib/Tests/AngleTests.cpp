@@ -36,11 +36,50 @@ void CommonUsage()
     TestFunctionTakingRadian( Radian{std::numbers::pi_v<float>} );
 }
 
+void UsingUserDefinedLiterals()
+{
+    // Float
+    {
+        Degreef a = 32.0_deg_f;
+        Degreef b = 32.0_deg_F;
+        Degreef c = 32.0_degf;
+        Degreef d = 32.0_degF;
+
+        assert( a == 32.0f );
+        assert( b == 32.0f );
+        assert( c == 32.0f );
+        assert( d == 32.0f );
+    }
+
+    // Double
+    {
+        Degree a = 32.0_deg;
+        Degreed b = 32.0_deg;
+
+        assert( a == 32.0 );
+        assert( b == 32.0 );
+    }
+
+    // Long Double
+    {
+        Degreel a = 32.0_deg_l;
+        Degreel b = 32.0_deg_L;
+        Degreel c = 32.0_degl;
+        Degreel d = 32.0_degL;
+
+        assert( a == 32.0l );
+        assert( b == 32.0l );
+        assert( c == 32.0l );
+        assert( d == 32.0l );
+    }
+}
+
 void Run()
 {
     std::cout << "Running Angle Tests..." << std::endl;
 
     CommonUsage();
+    UsingUserDefinedLiterals();
 
     std::cout << "PASSED!" << std::endl;
 }

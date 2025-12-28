@@ -18,7 +18,7 @@ namespace Math
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
  */
-template <std::floating_point T>
+template <std::floating_point T = double>
 class Radian
 {
 public:
@@ -172,7 +172,7 @@ private:
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
  */
-template <std::floating_point T>
+template <std::floating_point T = double>
 class Degree
 {
 public:
@@ -259,7 +259,7 @@ public:
     }
     /// @}
 
-    /** Defines equality of two Radians
+    /** Defines equality of two Degrees
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -391,14 +391,96 @@ constexpr Degree<float> operator ""_deg_f(long double degrees)
     return Degree<float>{ static_cast<float>(degrees) };
 }
 
+constexpr Degree<float> operator ""_deg_F(long double degrees)
+{
+    return Degree<float>{ static_cast<float>(degrees) };
+}
+
+constexpr Degree<float> operator ""_degf(long double degrees)
+{
+    return Degree<float>{ static_cast<float>(degrees) };
+}
+
+constexpr Degree<float> operator ""_degF(long double degrees)
+{
+    return Degree<float>{ static_cast<float>(degrees) };
+}
+
 constexpr Degree<double> operator ""_deg(long double degrees)
 {
     return Degree<double>{ static_cast<double>(degrees) };
 }
 
-constexpr Degree<long double> operator ""_deg_ld(long double degrees)
+constexpr Degree<long double> operator ""_deg_l(long double degrees)
 {
-    return Degree{degrees};
+    return Degree<long double>{degrees};
+}
+
+constexpr Degree<long double> operator ""_deg_L(long double degrees)
+{
+    return Degree<long double>{degrees};
+}
+
+constexpr Degree<long double> operator ""_degl(long double degrees)
+{
+    return Degree<long double>{degrees};
+}
+
+constexpr Degree<long double> operator ""_degL(long double degrees)
+{
+    return Degree<long double>{degrees};
+}
+/// @}  {User-Defined Literals}
+
+/** @name User-Defined Literals
+ * 
+ *  @relates Radian
+ * 
+ *  @{
+ */
+constexpr Radian<float> operator ""_rad_f(long double radians)
+{
+    return Radian<float>{ static_cast<float>(radians) };
+}
+
+constexpr Radian<float> operator ""_rad_F(long double radians)
+{
+    return Radian<float>{ static_cast<float>(radians) };
+}
+
+constexpr Radian<float> operator ""_radf(long double radians)
+{
+    return Radian<float>{ static_cast<float>(radians) };
+}
+
+constexpr Radian<float> operator ""_radF(long double radians)
+{
+    return Radian<float>{ static_cast<float>(radians) };
+}
+
+constexpr Radian<double> operator ""_rad(long double radians)
+{
+    return Radian<double>{ static_cast<double>(radians) };
+}
+
+constexpr Radian<long double> operator ""_rad_l(long double radians)
+{
+    return Radian<long double>{radians};
+}
+
+constexpr Radian<long double> operator ""_rad_L(long double radians)
+{
+    return Radian<long double>{radians};
+}
+
+constexpr Radian<long double> operator ""_radl(long double radians)
+{
+    return Radian<long double>{radians};
+}
+
+constexpr Radian<long double> operator ""_radL(long double radians)
+{
+    return Radian<long double>{radians};
 }
 /// @}  {User-Defined Literals}
 }
@@ -411,7 +493,7 @@ constexpr Degree<long double> operator ""_deg_ld(long double degrees)
  */
 using Degreef  = Degree<float>;
 using Degreed  = Degree<double>;
-using Degreeld = Degree<long double>;
+using Degreel  = Degree<long double>;
 /// @} {Degree Type Aliases}
 
 /** @name Radian Type Aliases
@@ -422,7 +504,7 @@ using Degreeld = Degree<long double>;
  */
 using Radianf  = Radian<float>;
 using Radiand  = Radian<double>;
-using Radianld = Radian<long double>;
+using Radianl  = Radian<long double>;
 /// @}  {Radian Type Aliases}
 
 }
