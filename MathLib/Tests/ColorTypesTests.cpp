@@ -1,5 +1,6 @@
 #include "ColorTypesTests.hpp"
 #include "color/Types.hpp"
+#include "math/ApproximatelyEqualTo.hpp"
 #include <cassert>
 #include <iostream>
 
@@ -93,6 +94,61 @@ void RGB()
     ConstructingAUnitRGBfFromRGBb();
 }
 
+void DefaultConstructedHue()
+{
+    Hue a;
+
+    assert( a.value() == 0.0 );
+}
+
+void HueValueReturnsConstructedValue()
+{
+    double init_value = 1.1;
+    Hue a( init_value );
+
+    assert( approximately_equal_to( a.value(),init_value ) ); 
+}
+
+void HueValueIsAdjustToRangeOfMinAndMaxWhenConstructedWithANegativeNumber()
+{
+    double init_value = -12.66;
+    Hue a( init_value );
+    Hue b( 0.0 );
+    Hue c( 365.0 );
+
+    // Check if positive
+    assert( a.value() >= Hue::min() );
+    assert( a.value() <= Hue::max() );
+    assert( approximately_equal_to( a.value(), 360.0 - std::abs(init_value) ) ); 
+
+    assert( b.value() >= Hue::min() );
+    assert( b.value() <= Hue::max() );
+    assert( approximately_equal_to( b.value(), 0.0 ) );
+
+    assert( c.value() >= Hue::min() );
+    assert( c.value() <= Hue::max() );
+    assert( approximately_equal_to( c.value(), 5.0 ) );
+}
+
+void HueMinValueIsZero()
+{
+    assert( Hue::min().value() == 0.0 );
+}
+
+void HueMaxValueIs360()
+{
+    assert( Hue::max().value() == 360.0 );
+}
+
+void Hue()
+{
+    DefaultConstructedHue();
+    HueValueReturnsConstructedValue();
+    HueValueIsAdjustToRangeOfMinAndMaxWhenConstructedWithANegativeNumber();
+    HueMinValueIsZero();
+    HueMaxValueIs360();
+}
+
 void DefaultConstructedUnitHSV()
 {
     std::cout << __func__ << std::endl;
@@ -147,6 +203,7 @@ void Run()
 
     RGB();
     HSV();
+    Hue();
 
     std::cout << "PASSED!" << std::endl;
 }

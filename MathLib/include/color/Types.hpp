@@ -362,6 +362,298 @@ protected:
 };
 
 
+template <std::floating_point T>
+class BasicHue
+{
+    struct not_checked { };
+
+    explicit constexpr BasicHue(T init_value, struct not_checked )
+        :
+        _value( init_value )
+    {
+    }
+
+public:
+    using value_type = T;
+
+    constexpr BasicHue() = default;
+    constexpr BasicHue(Math::Degree<T> init_value)
+        :
+        _value( init_value.modulo() )
+    {
+    }
+
+    explicit constexpr BasicHue(T init_value)
+        :
+        _value( Math::Degree<T>{ init_value }.modulo() )
+    {
+    }
+
+    /** @name Element Access
+     *  @{
+     */
+    T value() const { return _value.value(); }
+    /// @}
+
+    operator T() const { return _value.value(); }
+
+    operator Math::Degree<T>() const { return _value; }
+
+    static constexpr BasicHue<T> min() { return zero(); }
+
+    static constexpr BasicHue<T> max() { return BasicHue<T>( Math::Degree<T>::modulus(), not_checked{} ); }
+
+    static constexpr BasicHue<T> zero() { return BasicHue<T>(); }
+    
+    constexpr BasicHue<T> modulo() const { return BasicHue<T>( _value.modulo() ); }
+
+    constexpr bool isNaN() const
+    {
+        return _value.isNan();
+    }
+
+    constexpr bool isInf() const
+    {
+        return _value.isInf();
+    }
+
+    /** @name Operators
+     *  @{
+     */
+    constexpr BasicHue<T> &operator +=(BasicHue<T> other)
+    {
+        _value += other._value;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator +=(Math::Degree<T> other)
+    {
+        _value += other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator +=(T other)
+    {
+        _value += other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator -=(BasicHue<T> other)
+    {
+        _value -= other._value;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator -=(Math::Degree<T> other)
+    {
+        _value -= other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator -=(T other)
+    {
+        _value -= other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator *=(BasicHue<T> other)
+    {
+        _value *= other._value;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator *=(Math::Degree<T> other)
+    {
+        _value *= other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator *=(T other)
+    {
+        _value *= other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator /=(BasicHue<T> other)
+    {
+        _value /= other._value;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator /=(Math::Degree<T> other)
+    {
+        _value /= other;
+        return *this;
+    }
+
+    constexpr BasicHue<T> &operator /=(T other)
+    {
+        _value /= other;
+        return *this;
+    }
+    /// @}  {Operators}
+
+    /** Define the spaceship operator
+     *   
+     *  @note We define ONLY the <=> AND == operators in order to get all the
+     *        other relational operators (C++20).
+     * 
+     *  @{
+     */
+    constexpr auto operator <=>(const BasicHue<T> &other) const = default;
+    constexpr auto operator <=>(const Math::Degree<T> &other) const
+    {
+        return _value.value() <=> other.value();
+    }
+    constexpr auto operator <=>(const T &other) const
+    {
+        return _value.value() <=> other;
+    }
+    /// @}
+
+    /** Defines equality of two BasicHues
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @note Use C++20's ability to generate the operator !=() from operator ==()
+     * 
+     *  @see Equality
+     * 
+     *  @{
+     */
+    constexpr bool operator ==(const BasicHue<T> &right) const
+    {
+        return _value == right._value;
+    }
+    constexpr bool operator ==(const Math::Degree<T> &right) const
+    {
+        return _value == right;
+    }
+    constexpr bool operator ==(const T &right) const
+    {
+        return _value.value() == right;
+    }
+    /// @}
+
+protected:
+    Math::Degree<T> _value{};
+
+    /** @addtogroup Equality
+     * 
+     *  @relates BasicHue
+     *  
+     *  @{
+     * 
+     *  Compares two BasicHue inputs equal to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     *  
+     *  @see Equality
+     */
+    friend constexpr bool approximately_equal_to(const BasicHue<T> &value_to_test, const BasicHue<T> &value_it_should_be, T tolerance = T{0.0002})
+    {
+        return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
+    }
+    /// @}
+
+    /** @name BasicHue Global Operators
+     * 
+     *  @relates BasicHue
+     * 
+     *  @{
+     */
+    friend constexpr BasicHue<T> operator +(BasicHue<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() + right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator +(BasicHue<T> left, Math::Degree<T> right)
+    {
+        return BasicHue<T>{ left.value() + right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator +(Math::Degree<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() + right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator -(BasicHue<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() - right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator -(BasicHue<T> left, Math::Degree<T> right)
+    {
+        return BasicHue<T>{ left.value() - right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator -(Math::Degree<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() - right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator *(BasicHue<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() * right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator *(BasicHue<T> left, Math::Degree<T> right)
+    {
+        return BasicHue<T>{ left.value() * right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator *(Math::Degree<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() * right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator /(BasicHue<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() / right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator /(BasicHue<T> left, Math::Degree<T> right)
+    {
+        return BasicHue<T>{ left.value() / right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator /(Math::Degree<T> left, BasicHue<T> right)
+    {
+        return BasicHue<T>{ left.value() / right.value() };
+    }
+
+    friend constexpr BasicHue<T> operator +(BasicHue<T> left, T right)
+    {
+        return BasicHue<T>{ left.value() + right };
+    }
+
+    friend constexpr BasicHue<T> operator -(BasicHue<T> left, T right)
+    {
+        return BasicHue<T>{ left.value() - right };
+    }
+
+    friend constexpr BasicHue<T> operator *(BasicHue<T> left, T right)
+    {
+        return BasicHue<T>{ left.value() * right };
+    }
+
+    friend constexpr BasicHue<T> operator /(BasicHue<T> left, T right)
+    {
+        return BasicHue<T>{ left.value() / right };
+    }
+
+    friend constexpr BasicHue<T> operator -(BasicHue<T> input)
+    {
+        return BasicHue{ -input.value() };
+    }
+    /// @}  {BasicHue}
+};
+
+
 template <std::floating_point T = float>
 class BasicHSV
 {
@@ -747,6 +1039,11 @@ protected:
     /// @}  {BasicHSLAlgebra}
     /// @}  {GlobalOperators}
 };
+
+typedef BasicHue<float>  Huef;
+typedef BasicHue<double> Hue;
+typedef BasicHue<double> Hued;
+typedef BasicHue<long double> Huel;
 
 template <class T>
 using RGB = BasicRGB<T>;
