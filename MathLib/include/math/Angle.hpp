@@ -94,6 +94,16 @@ public:
     }
     /// @}
 
+    constexpr bool isNaN() const
+    {
+        return std::isnan(_value);
+    }
+
+    constexpr bool isInf() const
+    {
+        return std::isinf(_value);
+    }
+
 private:
     T _value{};
 
@@ -278,6 +288,17 @@ public:
         // Make in range of 0 - 360
         return Degree{ (0.0 <= (modded = std::fmod( _value, modulus() )) ? modded : modulus() + modded) };
     }
+
+    constexpr bool isNaN() const
+    {
+        return std::isnan(_value);
+    }
+
+    constexpr bool isInf() const
+    {
+        return std::isinf(_value);
+    }
+
 private:
     T _value{};
 
