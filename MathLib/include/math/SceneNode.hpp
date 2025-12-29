@@ -59,7 +59,7 @@ public:
     SceneNode(Private ,
               std::weak_ptr<SceneNode>  parent,
               const Math::Vector3D<Type>     &translation,
-              const Math::Quaternion<Type>   &rotation,
+              const Math::BasicQuaternion<Type>   &rotation,
                     std::string_view          name)
         :
         _coordinate_system{ Math::DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
@@ -92,7 +92,7 @@ public:
     std::string_view name() const { return _name; }
 
     std::weak_ptr<SceneNode<Type>> createChildNode(const Math::Vector3D<Type>   &translation = Math::Vector3D<Type>::zero(),
-                                                   const Math::Quaternion<Type> &rotation    = Math::Quaternion<Type>::identity(),
+                                                   const Math::BasicQuaternion<Type> &rotation    = Math::BasicQuaternion<Type>::identity(),
                                                          std::string_view        name        = std::string_view())
     {
         std::shared_ptr<SceneNode<Type>> new_node = make( this->weak_from_this(), translation, rotation, name );
@@ -130,9 +130,9 @@ public:
         DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
 
         // NOTE: From here on out, we cuse the algebraically-simplified form of multiplying it out with DualQuaternions...
-        Quaternion<Type> encoded_point{ Quaternion<Type>::encode_point( local_coordinate ) };
-        Quaternion<Type> encoded_translation{ Quaternion<Type>::encode_point( transforms_to_parent.translation() ) };
-        DualQuaternion<Type> result{ Quaternion<Type>::identity(), transforms_to_parent.real() * encoded_point * transforms_to_parent.real().conjugate() + encoded_translation };
+        BasicQuaternion<Type> encoded_point{ BasicQuaternion<Type>::encode_point( local_coordinate ) };
+        BasicQuaternion<Type> encoded_translation{ BasicQuaternion<Type>::encode_point( transforms_to_parent.translation() ) };
+        DualQuaternion<Type> result{ BasicQuaternion<Type>::identity(), transforms_to_parent.real() * encoded_point * transforms_to_parent.real().conjugate() + encoded_translation };
 
         return result.dual().imaginary();
 #else
@@ -161,7 +161,7 @@ private:
 
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
                                                  const Math::Vector3D<Type>     &translation,
-                                                 const Math::Quaternion<Type>   &rotation,
+                                                 const Math::BasicQuaternion<Type>   &rotation,
                                                        std::string_view          name)
     {
         return std::make_shared<SceneNode<Type>>(Private{}, parent, translation, rotation, name);

@@ -10,7 +10,7 @@
 
 /** @file
  *  
- *  Contains the definition of the Quaternion class along with
+ *  Contains the definition of the BasicQuaternion class along with
  *  various helper functions
  *
  *  @hideincludegraph
@@ -25,42 +25,42 @@ namespace Math
  *        of the complex number system.
  *        Its main use is for encoding rotation in 3-dimensional space.
  *
- *  @headerfile "math/Quaternion.hpp"
+ *  @headerfile "math/BasicQuaternion.hpp"
  */
 template <class T>
-class Quaternion
+class BasicQuaternion
 {
 public:
     using value_type = T;
 
-    Quaternion() = default;
-    explicit constexpr Quaternion(T real_number) : _w(real_number) { } ///< Constructs a Quaternion equivalent to the given real number
-    explicit constexpr Quaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
+    BasicQuaternion() = default;
+    explicit constexpr BasicQuaternion(T real_number) : _w(real_number) { } ///< Constructs a BasicQuaternion equivalent to the given real number
+    explicit constexpr BasicQuaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
 
     /** @name Constants
      *  @{
      */
-    /// Quaternion representation of the real number 1
-    constexpr static Quaternion<T> identity() { return Quaternion{ T{1}, T{}, T{}, T{} }; }
+    /// BasicQuaternion representation of the real number 1
+    constexpr static BasicQuaternion<T> identity() { return BasicQuaternion{ T{1}, T{}, T{}, T{} }; }
 
-    /// Quaternion representation of the real number 0
-    constexpr static Quaternion<T> zero() { return Quaternion{}; }
-    constexpr static Quaternion<T> unit_real() { return identity(); }
-    constexpr static Quaternion<T> unit_i() { return Quaternion{ T{}, T{1}, T{},  T{} }; }
-    constexpr static Quaternion<T> unit_j() { return Quaternion{ T{}, T{},  T{1}, T{} }; }
-    constexpr static Quaternion<T> unit_k() { return Quaternion{ T{}, T{},  T{},  T{1} }; }
+    /// BasicQuaternion representation of the real number 0
+    constexpr static BasicQuaternion<T> zero() { return BasicQuaternion{}; }
+    constexpr static BasicQuaternion<T> unit_real() { return identity(); }
+    constexpr static BasicQuaternion<T> unit_i() { return BasicQuaternion{ T{}, T{1}, T{},  T{} }; }
+    constexpr static BasicQuaternion<T> unit_j() { return BasicQuaternion{ T{}, T{},  T{1}, T{} }; }
+    constexpr static BasicQuaternion<T> unit_k() { return BasicQuaternion{ T{}, T{},  T{},  T{1} }; }
     /// @}
 
-    constexpr Quaternion<T> conjugate() const
+    constexpr BasicQuaternion<T> conjugate() const
     {
         if constexpr (std::is_floating_point_v<T>)
-            return Quaternion<T>{ _w, -_i, -_j, -_k };
+            return BasicQuaternion<T>{ _w, -_i, -_j, -_k };
         else
-            return Quaternion<T>{ _w, conjugate(_i), conjugate(_j), conjugate(_k) };
+            return BasicQuaternion<T>{ _w, conjugate(_i), conjugate(_j), conjugate(_k) };
     }
 
-    /// Computes this Quaternion raised to a real power
-    Quaternion<T> pow(T exponent) const
+    /// Computes this BasicQuaternion raised to a real power
+    BasicQuaternion<T> pow(T exponent) const
     {
         assert( isUnit() );
 
@@ -68,7 +68,7 @@ public:
 
         // Are we a purely real number?
         if ( approximately_equal_to(magnitude, T{0}) )
-            return Quaternion{ std::pow( w(), exponent ) }; // Yes, so only compute the real part
+            return BasicQuaternion{ std::pow( w(), exponent ) }; // Yes, so only compute the real part
 
         // Calculate the angle
         T theta{ std::atan2(magnitude, w()) };
@@ -78,50 +78,50 @@ public:
         // NOW we can calculate to the power of "exponent"...
         T temp{ w() * w() + magnitude * magnitude };
 
-        return Quaternion<T>{ std::cos(new_theta),
+        return BasicQuaternion<T>{ std::cos(new_theta),
                               coefficient * i(),
                               coefficient * j(),
                               coefficient * k() } * std::pow(temp, exponent);
     }
 
-    /** Computes the exponential form of this Quaternion
+    /** Computes the exponential form of this BasicQuaternion
      *
-     *  @note It is possible for this routine to output a non-unit Quaternion
-     *        when given a unit Quaternion as input.  It is for this reason that
+     *  @note It is possible for this routine to output a non-unit BasicQuaternion
+     *        when given a unit BasicQuaternion as input.  It is for this reason that
      *        the implementation of log() has been adjusted to automatically handle
      *        non-unit Quaternions.
      */
-    Quaternion<T> exp() const
+    BasicQuaternion<T> exp() const
     {
         T e_to_the_w{ std::exp( w() ) };
         T vector_part_magnitude{ imaginary().magnitude() };
         T cos_v{ std::cos(vector_part_magnitude) };
         T sin_v{ (vector_part_magnitude > T{0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0} };
 
-        return Quaternion{ cos_v,
+        return BasicQuaternion{ cos_v,
                            sin_v * i(),
                            sin_v * j(),
                            sin_v * k() } * e_to_the_w;
     }
 
-    /** Computes the log base e of this Quaternion
+    /** Computes the log base e of this BasicQuaternion
      *  
      *  @note We handle non-unit Quaternions in this version so that we can satisfy the relationship:
      *        log( exp( x ) ) == x
      */
-    Quaternion<T> log() const
+    BasicQuaternion<T> log() const
     {
         T magnitude_of_imaginary_part{ imaginary().magnitude() };
 
         // Are we purely a real number?
         if ( approximately_equal_to(magnitude_of_imaginary_part, T{0}) )
-            return Quaternion{ std::log( w() ) }; // YES, so just set the w() component (the others will be zero)
+            return BasicQuaternion{ std::log( w() ) }; // YES, so just set the w() component (the others will be zero)
 
         T this_norm{ norm() };
         T theta{ std::acos( w() / this_norm ) };
         T coefficient{ theta / magnitude_of_imaginary_part };
 
-        return Quaternion{ std::log(this_norm),
+        return BasicQuaternion{ std::log(this_norm),
                            coefficient * i(),
                            coefficient * j(),
                            coefficient * k() };
@@ -133,14 +133,14 @@ public:
     T    magnitudeSquared() const { return normSquared(); }
     T    magnitude() const { return norm(); }
 
-    constexpr Quaternion<T> normalized() const
+    constexpr BasicQuaternion<T> normalized() const
     {
-        assert( Quaternion<T>{*this / magnitude()}.isUnit() ); // Verify that we actually return a unit-length Quaternion
+        assert( BasicQuaternion<T>{*this / magnitude()}.isUnit() ); // Verify that we actually return a unit-length BasicQuaternion
 
         return *this / this->magnitude();
     }
 
-    Quaternion<T> inverse() const { return conjugate() / normSquared(); }
+    BasicQuaternion<T> inverse() const { return conjugate() / normSquared(); }
 
     BasicRadian<T> angle() const
     {
@@ -162,7 +162,7 @@ public:
     const T &j() const { return _j; }
     const T &k() const { return _k; }
 
-    /// Extracts the imaginary part of a Quaternion as a Vector3D
+    /// Extracts the imaginary part of a BasicQuaternion as a Vector3D
     constexpr Vector3D<T> imaginary() const { return { _i, _j, _k }; }
     /// @}
 
@@ -193,51 +193,51 @@ public:
     /** @name Convenience Creation Functions
      *  @{
      */
-    /** Construct a pure Quaternion
+    /** Construct a pure BasicQuaternion
      *  
      *  @post output.w() == 0
      *        output.real() == 0
 
-     *  @note A pure Quaternion is one in which the w, or real, component
+     *  @note A pure BasicQuaternion is one in which the w, or real, component
      *        is 0.
      */
-    constexpr static Quaternion<T> make_pure(T x, T y, T z) { return Quaternion<T>{ T{}, x, y, z }; }
+    constexpr static BasicQuaternion<T> make_pure(T x, T y, T z) { return BasicQuaternion<T>{ T{}, x, y, z }; }
 
-    /** Construct a pure Quaternion
+    /** Construct a pure BasicQuaternion
      *  
      *  @post output.w() == 0
      *        output.real() == 0
 
-     *  @note A pure Quaternion is one in which the w, or real, component
+     *  @note A pure BasicQuaternion is one in which the w, or real, component
      *        is 0.
      */
-    constexpr static Quaternion<T> make_pure(const Vector3D<T> &t) { return Quaternion<T>{ T{}, t.x, t.y, t.z }; }
+    constexpr static BasicQuaternion<T> make_pure(const Vector3D<T> &t) { return BasicQuaternion<T>{ T{}, t.x, t.y, t.z }; }
 
-    /** Encode a 3D point as a pure Quaternion
+    /** Encode a 3D point as a pure BasicQuaternion
      *  
      *  @post output.w() == 0
      *        output.real() == 0
 
-     *  @note A pure Quaternion is one in which the w, or real, component
-     *        is 0.
-     *  
-     *  @see make_pure
-     */
-    constexpr static Quaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
-
-    /** Encode a 3D point as a pure Quaternion
-     *  
-     *  @post output.w() == 0
-     *        output.real() == 0
-
-     *  @note A pure Quaternion is one in which the w, or real, component
+     *  @note A pure BasicQuaternion is one in which the w, or real, component
      *        is 0.
      *  
      *  @see make_pure
      */
-    constexpr static Quaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
+    constexpr static BasicQuaternion<T> encode_point(T x, T y, T z) { return make_pure(x, y, z); }
 
-    /** Enocde a rotation into a Quaternion
+    /** Encode a 3D point as a pure BasicQuaternion
+     *  
+     *  @post output.w() == 0
+     *        output.real() == 0
+
+     *  @note A pure BasicQuaternion is one in which the w, or real, component
+     *        is 0.
+     *  
+     *  @see make_pure
+     */
+    constexpr static BasicQuaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
+
+    /** Enocde a rotation into a BasicQuaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
      *  @param axis_x  The X component of the vector to rotate around
@@ -246,26 +246,26 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const BasicRadian<T> &radians, T axis_x, T axis_y, T axis_z)
+    constexpr static BasicQuaternion<T> make_rotation(const BasicRadian<T> &radians, T axis_x, T axis_y, T axis_z)
     {
         return make_rotation(radians, { axis_x, axis_y, axis_z });
     }
 
-    /** Enocde a rotation into a Quaternion
+    /** Enocde a rotation into a BasicQuaternion
      *  
      *  @param radians The amount of rotation to apply (in radians)
      *  @param axis    The axis to rotate around
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(const BasicRadian<T> &radians, const Vector3D<T> &axis)
+    constexpr static BasicQuaternion<T> make_rotation(const BasicRadian<T> &radians, const Vector3D<T> &axis)
     {
         T half_angle = radians.value() * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
         Vector3D<T> n{ axis.normalized() };
 
-        return Quaternion<T>{ cos_theta,
+        return BasicQuaternion<T>{ cos_theta,
                               sin_theta * n.x,
                               sin_theta * n.y,
                               sin_theta * n.z };
@@ -290,18 +290,18 @@ private:
      * 
      *  @see Equality
      */
-    friend constexpr bool operator ==(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr bool operator ==(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return approximately_equal_to(left, right);
     }
 
     /** @addtogroup Equality
      * 
-     *  @relates Quaternion
+     *  @relates BasicQuaternion
      * 
      *  @{
      * 
-     *  Compares two Quaternion inputs equal, component-wise, to within a tolerance
+     *  Compares two BasicQuaternion inputs equal, component-wise, to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -310,7 +310,7 @@ private:
      *  @return @c true if they are equal
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Quaternion<T> &value_to_test, const Quaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicQuaternion<T> &value_to_test, const BasicQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.w(), value_it_should_be.w(), tolerance) &&
                approximately_equal_to(value_to_test.i(), value_it_should_be.i(), tolerance) &&
@@ -319,36 +319,36 @@ private:
     }
     /// @}  {Equality}
 
-    /** @addtogroup QuaternionAlgebra Quaternion Algebra
+    /** @addtogroup QuaternionAlgebra BasicQuaternion Algebra
      *  @{
      */
 
     /** @name Multiplication
      *  @{
      */
-    /** Implements multiplication of a Quaternion by a scalar
+    /** Implements multiplication of a BasicQuaternion by a scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator *(const Quaternion<T> &quaternion, OT scalar)
+    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
     {
-        return Quaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
+        return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
     }
 
-    /** Implements multiplication of a scalar by a Quaternion
+    /** Implements multiplication of a scalar by a BasicQuaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator *(OT scalar, const Quaternion<T> &quaternion)
+    friend constexpr BasicQuaternion<T> operator *(OT scalar, const BasicQuaternion<T> &quaternion)
     {
-        return Quaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
+        return BasicQuaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
     }
 
     /** Defines multiplication of two Quaternions
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
-    friend constexpr Quaternion<T> operator *(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return Quaternion<T>{left.w() * right.w() - (left.i() * right.i() +
+        return BasicQuaternion<T>{left.w() * right.w() - (left.i() * right.i() +
                                                      left.j() * right.j() +
                                                      left.k() * right.k()),
                              left.w() * right.i() +
@@ -372,31 +372,31 @@ private:
     /** @name Division
      *  @{
      */
-    /** Defines division of a Quaternion by a scalar
+    /** Defines division of a BasicQuaternion by a scalar
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator /(const Quaternion<T> &quaternion, OT scalar)
+    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, OT scalar)
     {
-        return Quaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
+        return BasicQuaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
     }
 
-    /** Defines division of a scalar by a Quaternion
+    /** Defines division of a scalar by a BasicQuaternion
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
     template <std::floating_point OT = double>
-    friend constexpr Quaternion<T> operator /(OT scalar, const Quaternion<T> &quaternion)
+    friend constexpr BasicQuaternion<T> operator /(OT scalar, const BasicQuaternion<T> &quaternion)
     {
-        return Quaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
+        return BasicQuaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
     }
 
     /** Defines division of two Quaternions
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
-    friend constexpr Quaternion<T> operator /(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return left * right.inverse();
     }
@@ -407,11 +407,11 @@ private:
      */
     /** Defines addition of two Quaternions
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
-    friend constexpr Quaternion<T> operator +(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr BasicQuaternion<T> operator +(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return Quaternion<T>{ left.w() + right.w(),
+        return BasicQuaternion<T>{ left.w() + right.w(),
                               left.i() + right.i(),
                               left.j() + right.j(),
                               left.k() + right.k()
@@ -424,11 +424,11 @@ private:
      */
     /** Defines subtraction of two Quaternions
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      */
-    friend constexpr Quaternion<T> operator -(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return Quaternion<T>{ left.w() - right.w(),
+        return BasicQuaternion<T>{ left.w() - right.w(),
                               left.i() - right.i(),
                               left.j() - right.j(),
                               left.k() - right.k()
@@ -436,15 +436,15 @@ private:
     }
     /// @}
 
-    /** Defines negation of a Quaternion
+    /** Defines negation of a BasicQuaternion
      *  
-     *  @return the new Quaternion
+     *  @return the new BasicQuaternion
      * 
      *  @name Negation
      */
-    friend constexpr Quaternion<T> operator -(const Quaternion<T> &q)
+    friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &q)
     {
-        return Quaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
+        return BasicQuaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
     }
     /// @}  {QuaternionAlgebra}
 
@@ -459,7 +459,7 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicQuaternion<T> &input, const BasicQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -487,7 +487,7 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicQuaternion<T> &input, const BasicQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -505,26 +505,26 @@ private:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicQuaternion<T> &input, const BasicQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const Quaternion<T> &input, const Quaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicQuaternion<T> &input, const BasicQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const Quaternion<T> &input, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const BasicQuaternion<T> &input, OT tolerance = OT{0.0002})
     {
-        assert( check_if_equal(input, Quaternion<T>::zero(), tolerance));
+        assert( check_if_equal(input, BasicQuaternion<T>::zero(), tolerance));
     }
 
     /** @name Global Functions
      * 
-     *  @relates Quaternion
+     *  @relates BasicQuaternion
      * 
      *  @{
      */
@@ -534,7 +534,7 @@ private:
      *        separate 4-tuples and the dot product of those are
      *        calculated.
      */
-    friend constexpr T dot(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr T dot(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return left.w() * right.w() +
                left.i() * right.i() +
@@ -542,7 +542,7 @@ private:
                left.k() * right.k();
     }
 
-    friend constexpr T dot_normalized(const Quaternion<T> &left, const Quaternion<T> &right)
+    friend constexpr T dot_normalized(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return ( left.w() * right.w() +
                  left.i() * right.i() +
@@ -558,15 +558,15 @@ private:
      *  
      *  @return The passively rotated encoded point
      *  
-     *  @pre  @p rotation is a unit Quaternion.
+     *  @pre  @p rotation is a unit BasicQuaternion.
      *        @p encoded_point is a pure Auaternion.
-     *  @post The output is a pure Quaternion
+     *  @post The output is a pure BasicQuaternion
      *  
      *  @note This is a passive rotation, meaning that the coordinate system is
      *        rotated with respect to the point.
      *        This is also known as a local rotation.
      */
-    friend constexpr Quaternion<T> passively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+    friend constexpr BasicQuaternion<T> passively_rotate_encoded_point(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &encoded_point)
     {
         assert( rotation.isUnit() );
         assert( encoded_point.isPure() );
@@ -578,7 +578,7 @@ private:
      *  
      *  @see passively_rotate_encoded_point
      */
-    friend constexpr Quaternion<T> locally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+    friend constexpr BasicQuaternion<T> locally_rotate_encoded_point(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &encoded_point)
     {
         return passively_rotate_encoded_point(rotation, encoded_point);
     }
@@ -590,15 +590,15 @@ private:
      *  
      *  @return The actively rotated encoded point
      *  
-     *  @pre  @p rotation is a unit Quaternion.
-     *        @p encoded_point is a pure Quaternion.
-     *  @post The output is a pure Quaternion
+     *  @pre  @p rotation is a unit BasicQuaternion.
+     *        @p encoded_point is a pure BasicQuaternion.
+     *  @post The output is a pure BasicQuaternion
      *  
      *  @note This is an active rotation, meaning that the point is rotated with
      *        respect to the coordinate system.
      *        This is also known as a global rotation.
      */
-    friend constexpr Quaternion<T> actively_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+    friend constexpr BasicQuaternion<T> actively_rotate_encoded_point(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &encoded_point)
     {
         assert( rotation.isUnit() );
         assert( encoded_point.isPure() );
@@ -610,7 +610,7 @@ private:
      *  
      *  @see actively_rotate_encoded_point
      */
-    friend constexpr Quaternion<T> globally_rotate_encoded_point(const Quaternion<T> &rotation, const Quaternion<T> &encoded_point)
+    friend constexpr BasicQuaternion<T> globally_rotate_encoded_point(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &encoded_point)
     {
         return actively_rotate_encoded_point(rotation, encoded_point);
     }
@@ -620,49 +620,49 @@ private:
      *  @param rotation_1 The first rotation to perform
      *  @param rotation_2 The second rotation to perform
      */
-    friend constexpr Quaternion<T> compose_rotations(const Quaternion<T> &rotation_1, const Quaternion<T> &rotation_2)
+    friend constexpr BasicQuaternion<T> compose_rotations(const BasicQuaternion<T> &rotation_1, const BasicQuaternion<T> &rotation_2)
     {
         return rotation_2 * rotation_1;
     }
 
-    /** Creates the normalized form of a Quaternion
+    /** Creates the normalized form of a BasicQuaternion
      *  
-     *  @param input The Quaternion to normalize
+     *  @param input The BasicQuaternion to normalize
      *  
      *  @return The normalized version of @p input
      */
-    friend constexpr Quaternion<T> normalized(const Quaternion<T> &input)
+    friend constexpr BasicQuaternion<T> normalized(const BasicQuaternion<T> &input)
     {
         return input.normalized();
     }
 
-    /** Computes the phase-angle (in radians of a Quaternion)
+    /** Computes the phase-angle (in radians of a BasicQuaternion)
      *
      *  @note This is meant to mirror the behavior of std::arg( std::complex )
      */
-    friend constexpr T arg(const Quaternion<T> &input)
+    friend constexpr T arg(const BasicQuaternion<T> &input)
     {
         return input.angle().value();
     }
 
-    /** Constructs a unit Quaternion from the given axis and angle
+    /** Constructs a unit BasicQuaternion from the given axis and angle
      *
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
-    friend constexpr Quaternion<T> polar(const Vector3D<T> &axis, const BasicRadian<T> angle = BasicRadian<T>{})
+    friend constexpr BasicQuaternion<T> polar(const Vector3D<T> &axis, const BasicRadian<T> angle = BasicRadian<T>{})
     {
         assert( axis.magnitude() == T{1} );
 
-        return Quaternion<T>::make_rotation( angle, axis );
+        return BasicQuaternion<T>::make_rotation( angle, axis );
     }
 
     /** Sums up the components of @p input
      *  
-     *  @param input The Quaternion to operate on
+     *  @param input The BasicQuaternion to operate on
      * 
      *  @return The sum of all the components
      */
-    friend constexpr T accumulate(const Quaternion<T> &input)
+    friend constexpr T accumulate(const BasicQuaternion<T> &input)
     {
         return T{input.real() + input.i() + input.j() + input.k()};
     }
@@ -673,14 +673,14 @@ private:
      *  @param end     Destination value
      *  @param percent [0..1] Represents the percentage to interpolate
      */
-    friend constexpr Quaternion<T> slerp(const Quaternion<T> &begin, const Quaternion<T> &end, T percent)
+    friend constexpr BasicQuaternion<T> slerp(const BasicQuaternion<T> &begin, const BasicQuaternion<T> &end, T percent)
     {
-        Quaternion<T> combined{ begin.conjugate() * end };
+        BasicQuaternion<T> combined{ begin.conjugate() * end };
 
         return begin * combined.pow(percent);
     }
 
-    friend std::string format(const Quaternion<T> &input)
+    friend std::string format(const BasicQuaternion<T> &input)
     {
         return std::format("[w: {}, i: {}, j: {}, k: {}]", input.w(), input.i(), input.j(), input.k());
     }
@@ -689,7 +689,7 @@ private:
      * 
      *   @note This will just call @c input.conjugate()
      */
-    friend constexpr Quaternion<T> conjugate(const Quaternion<T> &input)
+    friend constexpr BasicQuaternion<T> conjugate(const BasicQuaternion<T> &input)
     {
         return input.conjugate();
     }
@@ -698,7 +698,7 @@ private:
      * 
      *   @note This will just call @c input.log()
      */
-    friend constexpr Quaternion<T> log(const Quaternion<T> &input)
+    friend constexpr BasicQuaternion<T> log(const BasicQuaternion<T> &input)
     {
         return input.log();
     }
@@ -707,7 +707,7 @@ private:
      * 
      *   @note This will just call @c input.exp()
      */
-    friend Quaternion<T> exp(const Quaternion<T> &input)
+    friend BasicQuaternion<T> exp(const BasicQuaternion<T> &input)
     {
         return input.exp();
     }
@@ -718,13 +718,14 @@ private:
 
 /** @name Type Aliases
  *
- *  @relates Quaternion
+ *  @relates BasicQuaternion
  * 
  *  @{
  */
-using Quaternionf = Quaternion<float>;
-using Quaterniond = Quaternion<double>;
-using Quaternionld = Quaternion<long double>;
+using Quaternionf  = BasicQuaternion<float>;
+using Quaterniond  = BasicQuaternion<double>;
+using Quaternion   = BasicQuaternion<double>;
+using Quaternionld = BasicQuaternion<long double>;
 /// @}
 
 }
