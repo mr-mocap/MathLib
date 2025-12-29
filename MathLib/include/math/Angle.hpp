@@ -118,7 +118,7 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(BasicRadian<T> value_to_test, BasicRadian<T> value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicRadian<T> &value_to_test, const BasicRadian<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
@@ -130,27 +130,27 @@ private:
      * 
      *  @{
      */
-    friend constexpr BasicRadian<T> operator +(BasicRadian<T> left, BasicRadian<T> right)
+    friend constexpr BasicRadian<T> operator +(const BasicRadian<T> &left, const BasicRadian<T> &right)
     {
         return BasicRadian<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicRadian<T> operator -(BasicRadian<T> left, BasicRadian<T> right)
+    friend constexpr BasicRadian<T> operator -(const BasicRadian<T> &left, const BasicRadian<T> &right)
     {
         return BasicRadian<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicRadian<T> operator *(BasicRadian<T> left, BasicRadian<T> right)
+    friend constexpr BasicRadian<T> operator *(const BasicRadian<T> &left, const BasicRadian<T> &right)
     {
         return BasicRadian<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicRadian<T> operator /(BasicRadian<T> left, BasicRadian<T> right)
+    friend constexpr BasicRadian<T> operator /(const BasicRadian<T> &left, const BasicRadian<T> &right)
     {
         return BasicRadian<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicRadian<T> operator -(BasicRadian<T> input)
+    friend constexpr BasicRadian<T> operator -(const BasicRadian<T> &input)
     {
         return BasicRadian{ -input.value() };
     }
@@ -173,7 +173,7 @@ class BasicDegree
 public:
     constexpr BasicDegree() = default;
     explicit constexpr BasicDegree(T value) : _value(value) { }
-    constexpr BasicDegree(BasicRadian<T> value) : _value( RadiansToDegrees(value.value()) ) { }
+    constexpr BasicDegree(const BasicRadian<T> &value) : _value( RadiansToDegrees(value.value()) ) { }
 
     operator BasicRadian<T>() { return BasicRadian<T>{DegreesToRadians(_value)}; }
 
@@ -188,49 +188,49 @@ public:
     /** @name Operators
      *  @{
      */
-    constexpr BasicDegree<T> &operator +=(BasicDegree<T> other)
+    constexpr BasicDegree<T> &operator +=(const BasicDegree<T> &other)
     {
         _value += other.value();
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator +=(T other)
+    constexpr BasicDegree<T> &operator +=(const T &other)
     {
         _value += other;
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator -=(BasicDegree<T> other)
+    constexpr BasicDegree<T> &operator -=(const BasicDegree<T> &other)
     {
         _value -= other.value();
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator -=(T other)
+    constexpr BasicDegree<T> &operator -=(const T &other)
     {
         _value -= other;
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator *=(BasicDegree<T> other)
+    constexpr BasicDegree<T> &operator *=(const BasicDegree<T> &other)
     {
         _value *= other.value();
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator *=(T other)
+    constexpr BasicDegree<T> &operator *=(const T &other)
     {
         _value *= other;
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator /=(BasicDegree<T> other)
+    constexpr BasicDegree<T> &operator /=(const BasicDegree<T> &other)
     {
         _value /= other.value();
         return *this;
     }
 
-    constexpr BasicDegree<T> &operator /=(T other)
+    constexpr BasicDegree<T> &operator /=(const T &other)
     {
         _value /= other;
         return *this;
@@ -321,47 +321,47 @@ private:
      * 
      *  @{
      */
-    friend constexpr BasicDegree<T> operator +(BasicDegree<T> left, BasicDegree<T> right)
+    friend constexpr BasicDegree<T> operator +(const BasicDegree<T> &left, const BasicDegree<T> &right)
     {
         return BasicDegree<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicDegree<T> operator -(BasicDegree<T> left, BasicDegree<T> right)
+    friend constexpr BasicDegree<T> operator -(const BasicDegree<T> &left, const BasicDegree<T> &right)
     {
         return BasicDegree<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicDegree<T> operator *(BasicDegree<T> left, BasicDegree<T> right)
+    friend constexpr BasicDegree<T> operator *(const BasicDegree<T> &left, const BasicDegree<T> &right)
     {
         return BasicDegree<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicDegree<T> operator /(BasicDegree<T> left, BasicDegree<T> right)
+    friend constexpr BasicDegree<T> operator /(const BasicDegree<T> &left, const BasicDegree<T> &right)
     {
         return BasicDegree<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicDegree<T> operator +(BasicDegree<T> left, T right)
+    friend constexpr BasicDegree<T> operator +(const BasicDegree<T> &left, const T &right)
     {
         return BasicDegree<T>{ left.value() + right };
     }
 
-    friend constexpr BasicDegree<T> operator -(BasicDegree<T> left, T right)
+    friend constexpr BasicDegree<T> operator -(const BasicDegree<T> &left, const T &right)
     {
         return BasicDegree<T>{ left.value() - right };
     }
 
-    friend constexpr BasicDegree<T> operator *(BasicDegree<T> left, T right)
+    friend constexpr BasicDegree<T> operator *(const BasicDegree<T> left, const T &right)
     {
         return BasicDegree<T>{ left.value() * right };
     }
 
-    friend constexpr BasicDegree<T> operator /(BasicDegree<T> left, T right)
+    friend constexpr BasicDegree<T> operator /(const BasicDegree<T> &left, const T &right)
     {
         return BasicDegree<T>{ left.value() / right };
     }
 
-    friend constexpr BasicDegree<T> operator -(BasicDegree<T> input)
+    friend constexpr BasicDegree<T> operator -(const BasicDegree<T> &input)
     {
         return BasicDegree{ -input.value() };
     }
