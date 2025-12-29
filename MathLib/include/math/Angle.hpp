@@ -19,7 +19,7 @@ namespace Math
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
  */
-template <std::floating_point T = double>
+template <std::floating_point T>
 class BasicRadian
 {
 public:
@@ -167,7 +167,7 @@ private:
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
  */
-template <std::floating_point T = double>
+template <std::floating_point T>
 class BasicDegree
 {
 public:
