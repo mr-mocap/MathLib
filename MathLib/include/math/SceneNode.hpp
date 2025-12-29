@@ -62,7 +62,7 @@ public:
               const Math::BasicQuaternion<Type>   &rotation,
                     std::string_view          name)
         :
-        _coordinate_system{ Math::DualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
+        _coordinate_system{ Math::BasicDualQuaternion<Type>::make_coordinate_system(rotation, translation.x, translation.y, translation.z) },
         _parent{parent},
         _name{name}
     {
@@ -86,8 +86,8 @@ public:
 
     const SceneNodeList<Type> &children() const { return _children; }
 
-    const Math::DualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
-          Math::DualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
+    const Math::BasicDualQuaternion<Type> &coordinate_system() const { return _coordinate_system; }
+          Math::BasicDualQuaternion<Type> &coordinate_system()       { return _coordinate_system; }
 
     std::string_view name() const { return _name; }
 
@@ -127,26 +127,26 @@ public:
 #if 1
         using namespace Math;
 
-        DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
+        BasicDualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
 
         // NOTE: From here on out, we cuse the algebraically-simplified form of multiplying it out with DualQuaternions...
         BasicQuaternion<Type> encoded_point{ BasicQuaternion<Type>::encode_point( local_coordinate ) };
         BasicQuaternion<Type> encoded_translation{ BasicQuaternion<Type>::encode_point( transforms_to_parent.translation() ) };
-        DualQuaternion<Type> result{ BasicQuaternion<Type>::identity(), transforms_to_parent.real() * encoded_point * transforms_to_parent.real().conjugate() + encoded_translation };
+        BasicDualQuaternion<Type> result{ BasicQuaternion<Type>::identity(), transforms_to_parent.real() * encoded_point * transforms_to_parent.real().conjugate() + encoded_translation };
 
         return result.dual().imaginary();
 #else
-        // General case using only DualQuaternion operations.
+        // General case using only BasicDualQuaternion operations.
         // TODO: Why doesn't this work?
-        DualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
-        DualQuaternion<Type> encoded_point{ DualQuaternion<Type>::encode_point(local_coordinate) };
-        DualQuaternion<Type> result{ transforms_to_parent * encoded_point * transforms_to_parent.conjugate() };
+        BasicDualQuaternion<Type> transforms_to_parent{ concatenatedTransforms() };
+        BasicDualQuaternion<Type> encoded_point{ BasicDualQuaternion<Type>::encode_point(local_coordinate) };
+        BasicDualQuaternion<Type> result{ transforms_to_parent * encoded_point * transforms_to_parent.conjugate() };
 
         return result.translation();
 #endif
     }
 
-    Math::DualQuaternion<Type> concatenatedTransforms() const
+    Math::BasicDualQuaternion<Type> concatenatedTransforms() const
     {
         if (_parent.expired())
             return _coordinate_system;
@@ -154,10 +154,10 @@ public:
             return _parent.lock()->concatenatedTransforms() * _coordinate_system;
     }
 private:
-    Math::DualQuaternion<Type>     _coordinate_system;
-    std::weak_ptr<SceneNode<Type>> _parent;
-    SceneNodeList<Type>            _children;
-    std::string                    _name;
+    Math::BasicDualQuaternion<Type> _coordinate_system;
+    std::weak_ptr<SceneNode<Type>>  _parent;
+    SceneNodeList<Type>             _children;
+    std::string                     _name;
 
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
                                                  const Math::Vector3D<Type>     &translation,

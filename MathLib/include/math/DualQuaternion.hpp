@@ -28,118 +28,118 @@ namespace Math
  *  @see BasicQuaternion
  */
 template <class T>
-class DualQuaternion
+class BasicDualQuaternion
 {
 public:
     using value_type = T;
 
-    DualQuaternion() = default;
+    BasicDualQuaternion() = default;
 
-    /** Constructs a DualQuaternion directly from the two given quaternions
+    /** Constructs a BasicDualQuaternion directly from the two given quaternions
      *
      *  @param rotation    The BasicQuaternion to place into the real() part
      *  @param translation The BasicQuaternion to place into the dual() part
      *  
      *  @note The user takes full responsibility for the input.  This could possibly be used
-     *        to construct a non-unit DualQuaternion!
+     *        to construct a non-unit BasicDualQuaternion!
      */
-    explicit constexpr DualQuaternion(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &translation) : _frame_of_reference{rotation, translation} { }
+    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation, const BasicQuaternion<T> &translation) : _frame_of_reference{rotation, translation} { }
 
-    /** Constructs a DualQuaternion from a unit BasicQuaternion (rotation) and a translation
+    /** Constructs a BasicDualQuaternion from a unit BasicQuaternion (rotation) and a translation
      *  
-     *  @note This is the proper way to construct a unit DualQuaternion.
+     *  @note This is the proper way to construct a unit BasicDualQuaternion.
      */
-    explicit constexpr DualQuaternion(const BasicQuaternion<T> &rotation,
-                                      T translation_x,
-                                      T translation_y,
-                                      T translation_z)
+    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
+                                           T translation_x,
+                                           T translation_y,
+                                           T translation_z)
         :
         _frame_of_reference{ rotation, T{0.5} * BasicQuaternion<T>::encode_point(translation_x, translation_y, translation_z) * rotation }
     {
         assert( real().isUnit() );
     }
-    explicit constexpr DualQuaternion(const BasicQuaternion<T> &rotation,
-                                      const Vector3D<T>   &translation)
+    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
+                                           const Vector3D<T>   &translation)
         :
         _frame_of_reference{ rotation, T{0.5} * BasicQuaternion<T>::encode_point(translation) * rotation }
     {
         assert( real().isUnit() );
     }
 
-    /** Constructs a DualQuaternion directly from a BasicDual<BasicQuaternion>
+    /** Constructs a BasicDualQuaternion directly from a BasicDual<BasicQuaternion>
      *  
      *  @param underlying_representation The BasicDual number that will ultimately be used as the internal representation
      */
-    explicit constexpr DualQuaternion(const BasicDual<BasicQuaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
+    explicit constexpr BasicDualQuaternion(const BasicDual<BasicQuaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
 
     /** @name Constants
      *  @{
      */
 
-    /** Create a DualQuaternion representing no rotation and no translation
+    /** Create a BasicDualQuaternion representing no rotation and no translation
      *  
-     *  @return A DualQuaternion representing no rotation or translation
+     *  @return A BasicDualQuaternion representing no rotation or translation
      */
-    constexpr static DualQuaternion<T> identity() { return DualQuaternion{}; }
+    constexpr static BasicDualQuaternion<T> identity() { return BasicDualQuaternion{}; }
 
-    /** Create a DualQuaternion that is all zeros
+    /** Create a BasicDualQuaternion that is all zeros
      */
-    constexpr static DualQuaternion<T> zero() { return DualQuaternion{ BasicQuaternion<T>::zero(), BasicQuaternion<T>::zero() }; }
+    constexpr static BasicDualQuaternion<T> zero() { return BasicDualQuaternion{ BasicQuaternion<T>::zero(), BasicQuaternion<T>::zero() }; }
     /// @}
 
     /** @name Convenience Creation Functions
      *  @{
      */
-    /** Creates a DualQuaternion containing a rotation only
+    /** Creates a BasicDualQuaternion containing a rotation only
      *  
      *  @param rotation The rotation to apply, expressed as a BasicQuaternion
      *
-     *  @return A DualQuaternion representing a rotation only
+     *  @return A BasicDualQuaternion representing a rotation only
      *  
      *  @pre @p rotation is a unit BasicQuaternion
      *  @post result.real == @p rotation.
      *        result.dual == BasicQuaternion::zero()
      */
-    constexpr static DualQuaternion<T> make_rotation(const BasicQuaternion<T> &rotation)
+    constexpr static BasicDualQuaternion<T> make_rotation(const BasicQuaternion<T> &rotation)
     {
         // A pure rotation has the dual part set to zero.
-        return DualQuaternion<T>{ rotation, BasicQuaternion<T>::zero() };
+        return BasicDualQuaternion<T>{ rotation, BasicQuaternion<T>::zero() };
     }
 
-    /** Create a DualQuaternion containing a translation only
+    /** Create a BasicDualQuaternion containing a translation only
      *  
      *  @param translation_x The X component of the translation vector
      *  @param translation_y The Y component of the translation vector
      *  @param translation_z The Z component of the translation vector
      *  
-     *  @return A DualQuaternion representing a translation only
+     *  @return A BasicDualQuaternion representing a translation only
      *  
      *  @post result.real == BasicQuaternion::identity()
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_translation(T translation_x, T translation_y, T translation_z)
+    constexpr static BasicDualQuaternion<T> make_translation(T translation_x, T translation_y, T translation_z)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
-        return DualQuaternion<T>{ BasicQuaternion<T>::identity(),
+        return BasicDualQuaternion<T>{ BasicQuaternion<T>::identity(),
                                   T{0.5} * BasicQuaternion<T>::encode_point(translation_x, translation_y, translation_z)
                                 };
     }
 
-    /** Create a DualQuaternion containing a translation only
+    /** Create a BasicDualQuaternion containing a translation only
      * 
      *  @param translation The translation to apply
      *  
-     *  @return A DualQuaternion representing a translation only
+     *  @return A BasicDualQuaternion representing a translation only
      *  
      *  @post result.real == BasicQuaternion::identity()
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_translation(const Vector3D<T> &translation)
+    constexpr static BasicDualQuaternion<T> make_translation(const Vector3D<T> &translation)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
-        return DualQuaternion<T>{ BasicQuaternion<T>::identity(),
+        return BasicDualQuaternion<T>{ BasicQuaternion<T>::identity(),
                                   T{0.5} * BasicQuaternion<T>::encode_point(translation)
                                 };
     }
@@ -151,45 +151,45 @@ public:
      *  @param translation_y The Y component of the translation vector
      *  @param translation_z The Z component of the translation vector
      *  
-     *  @return A DualQuaternion containing both the rotation and translation
+     *  @return A BasicDualQuaternion containing both the rotation and translation
      *  
      *  @pre @p rotation is a unit BasicQuaternion
      *  @post result.real == @p rotation.
      *        result.dual.isPure()
      */
-    constexpr static DualQuaternion<T> make_coordinate_system(const BasicQuaternion<T> &rotation,
+    constexpr static BasicDualQuaternion<T> make_coordinate_system(const BasicQuaternion<T> &rotation,
                                                                                T   translation_x,
                                                                                T   translation_y,
                                                                                T   translation_z)
     {
         assert( rotation.isUnit() );
 
-        return DualQuaternion<T>{ rotation, translation_x, translation_y, translation_z };
+        return BasicDualQuaternion<T>{ rotation, translation_x, translation_y, translation_z };
     }
 
-    constexpr static DualQuaternion<T> encode_point(const Vector3D<T> &point)
+    constexpr static BasicDualQuaternion<T> encode_point(const Vector3D<T> &point)
     {
-        return DualQuaternion<T>{ BasicQuaternion<T>::identity(), point };
+        return BasicDualQuaternion<T>{ BasicQuaternion<T>::identity(), point };
     }
     /// @}
 
-    constexpr static Vector3D<T> decode_point(const DualQuaternion<T>& encoded_point)
+    constexpr static Vector3D<T> decode_point(const BasicDualQuaternion<T>& encoded_point)
     {
         return encoded_point.translation();
     }
 
-    /** Create the conjugate of a DualQuaternion
+    /** Create the conjugate of a BasicDualQuaternion
      *  
      *  @return the conjugate of this object
      *  
      *  @note This is a bit different from the definition of a conjugate for
      *        a BasicDual, in that the conjugate of a BasicDual is just { real, dual.conjugate() },
-     *        while for a DualQuaternion the operation needs to be
+     *        while for a BasicDualQuaternion the operation needs to be
      *        { real.conjugate(), dual.conjugate() }.
      */
-    constexpr DualQuaternion<T> conjugate() const
+    constexpr BasicDualQuaternion<T> conjugate() const
     {
-        return DualQuaternion<T>{ real().conjugate(), dual().conjugate() };
+        return BasicDualQuaternion<T>{ real().conjugate(), dual().conjugate() };
     }
 
     /** Create the square of the norm of the input
@@ -200,7 +200,7 @@ public:
      */
     constexpr BasicDual<T> normsquared() const
     {
-        DualQuaternion<T> normsquared{ *this * this->conjugate() };
+        BasicDualQuaternion<T> normsquared{ *this * this->conjugate() };
 
         // We should have a dual scalar now
         // Make that assumption clear
@@ -217,7 +217,7 @@ public:
         return BasicDual<T>{ normsquared.real().real(), normsquared.dual().real() };
     }
 
-    /** Create the norm of a DualQuaternion
+    /** Create the norm of a BasicDualQuaternion
      *  
      *  @return A BasicDual that is the norm of the object
      *
@@ -228,7 +228,7 @@ public:
         return dualscalar_sqrt( normsquared() );
     }
 
-    /** Creates the magnitude of a DualQuaternion
+    /** Creates the magnitude of a BasicDualQuaternion
      *  
      *  @return A BasicDual that is the magnitude of the object
      *  
@@ -242,40 +242,40 @@ public:
     const BasicQuaternion<T> &rotation()    const { return real(); }
           Vector3D<T>    translation() const { return BasicQuaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
 
-    /** Create the normalized version of a DualQuaternion
+    /** Create the normalized version of a BasicDualQuaternion
      *  
-     *  @return A DualQuaternion that is the normalized version of the object
+     *  @return A BasicDualQuaternion that is the normalized version of the object
      *
      *  @see norm
      */
-    constexpr DualQuaternion<T> normalized() const
+    constexpr BasicDualQuaternion<T> normalized() const
     {
         return *this / norm();
     }
 
-    /** Checks for a DualQuaternion's rotation component has a magnitude of one
+    /** Checks for a BasicDualQuaternion's rotation component has a magnitude of one
      *  
      *  @return @c true of the magnitude of the rotation is 1, @c false otherwise
      *  
-     *  @note This is part of the definition of a unit DualQuaternion
+     *  @note This is part of the definition of a unit BasicDualQuaternion
      */
     constexpr bool rotation_magnitude_is_one() const
     {
         return approximately_equal_to( dot(real(), real()), T{1} );
     }
 
-    /** Checks if a DualQuaternion has orthogonal rotation and translation axes
+    /** Checks if a BasicDualQuaternion has orthogonal rotation and translation axes
      *  
      *  @return @c true if they are orthogonal, @c false otherwise
      *  
-     *  @note This is part of the definition of a unit DualQuaternion
+     *  @note This is part of the definition of a unit BasicDualQuaternion
      */
     constexpr bool rotation_and_translation_are_orthogonal() const
     {
         return approximately_equal_to( dot(real(), dual()), T{0} );
     }
 
-    /** Checks if a DualQuaternion is a "unit" representation
+    /** Checks if a BasicDualQuaternion is a "unit" representation
      *  
      *  @return @c true if it is in unit form, @c false otherwise
      */
@@ -292,7 +292,7 @@ private:
 
     /** @name Global Operators
      * 
-     *  @relates DualQuaternion
+     *  @relates BasicDualQuaternion
      * 
      *  @{
      */
@@ -305,7 +305,7 @@ private:
      * 
      *  @see Equality
      */
-    friend constexpr bool operator ==(const DualQuaternion<T> &left,  const DualQuaternion<T> &right)
+    friend constexpr bool operator ==(const BasicDualQuaternion<T> &left,  const BasicDualQuaternion<T> &right)
     {
         return approximately_equal_to(left, right);
     }
@@ -321,9 +321,9 @@ private:
      *  
      *  We basically just add the underlying BasicDual numbers
      */
-    friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
+    friend constexpr BasicDualQuaternion<T> operator +(const BasicDualQuaternion<T> &left_side, const BasicDualQuaternion<T> &right_side)
     {
-        return DualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
+        return BasicDualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
     }
     /// @}  {Addition}
 
@@ -331,77 +331,77 @@ private:
     /** @name Multiplication
      *  @{
      */
-    /** Defines scaling a DualQuaternion
+    /** Defines scaling a BasicDualQuaternion
      *
-     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_quaternion The BasicDualQuaternion to scale
      *  @param dual_scalar     The amount to scale by
      *  
-     *  @return The scaled DualQuaternion
+     *  @return The scaled BasicDualQuaternion
      *  
-     *  @see DualQuaternion Algebra
+     *  @see BasicDualQuaternion Algebra
      */
     template <std::floating_point OT = double>
-    friend constexpr DualQuaternion<T> operator *(OT scalar, const DualQuaternion<T> &dual_quaternion)
+    friend constexpr BasicDualQuaternion<T> operator *(OT scalar, const BasicDualQuaternion<T> &dual_quaternion)
     {
-        return DualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
+        return BasicDualQuaternion<T>{ scalar * dual_quaternion._frame_of_reference };
     }
 
-    /** Defines scaling a DualQuaternion
+    /** Defines scaling a BasicDualQuaternion
      *
      *  @param dual_scalar     The amount to scale by
-     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_quaternion The BasicDualQuaternion to scale
      *  
-     *  @return The scaled DualQuaternion
+     *  @return The scaled BasicDualQuaternion
      *  
-     *  @see DualQuaternion Algebra
+     *  @see BasicDualQuaternion Algebra
      */
     template <std::floating_point OT = double>
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, OT scalar)
+    friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &dual_quaternion, OT scalar)
     {
-        return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
+        return BasicDualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
     }
 
-    /** Defines multiplication of a DualQuaternion by a BasicDual
+    /** Defines multiplication of a BasicDualQuaternion by a BasicDual
      *
-     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_quaternion The BasicDualQuaternion to scale
      *  @param dual_scalar     The amount to scale by
      *  
-     *  @return The scaled DualQuaternion
+     *  @return The scaled BasicDualQuaternion
      *  
-     *  @see DualQuaternion Algebra
+     *  @see BasicDualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
+    friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
     {
-        return dual_quaternion * DualQuaternion<T>{ BasicQuaternion<T>{dual_scalar.real}, BasicQuaternion<T>{dual_scalar.dual} };
+        return dual_quaternion * BasicDualQuaternion<T>{ BasicQuaternion<T>{dual_scalar.real}, BasicQuaternion<T>{dual_scalar.dual} };
     }
 
     /** Defines multiplication of two DualQuaternions
      *
-     *  @return The resulting DualQuaternion
+     *  @return The resulting BasicDualQuaternion
      *  
-     *  @see DualQuaternion Algebra
+     *  @see BasicDualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
+    friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &left_side, const BasicDualQuaternion<T> &right_side)
     {
-        return DualQuaternion<T>{ left_side._frame_of_reference * right_side._frame_of_reference };
+        return BasicDualQuaternion<T>{ left_side._frame_of_reference * right_side._frame_of_reference };
     }
     /// @}  {Multiplication}
 
     /** @name Division
      *  @{
      */
-    /** Defines division of a DualQuaternion by a BasicDual
+    /** Defines division of a BasicDualQuaternion by a BasicDual
      *
-     *  @param dual_quaternion The DualQuaternion to scale
+     *  @param dual_quaternion The BasicDualQuaternion to scale
      *  @param dual_scalar     The amount to scale by
      *  
-     *  @return The scaled DualQuaternion
+     *  @return The scaled BasicDualQuaternion
      *  
-     *  @see DualQuaternion Algebra
+     *  @see BasicDualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
+    friend constexpr BasicDualQuaternion<T> operator /(const BasicDualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
     {
-        return DualQuaternion<T>{ DualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
+        return BasicDualQuaternion<T>{ BasicDualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
     }
     /// @}  {Division}
     /// @}  {DualQuaternionAlgebra}
@@ -409,11 +409,11 @@ private:
 
     /** @addtogroup Equality
      * 
-     *  @relates DualQuaternion
+     *  @relates BasicDualQuaternion
      * 
      *  @{
      * 
-     *  Compares two DualQuaternion inputs equal, component-wise, to within a tolerance
+     *  Compares two BasicDualQuaternion inputs equal, component-wise, to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -424,7 +424,7 @@ private:
      *  @see Equality
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicDualQuaternion<T> &value_to_test, const BasicDualQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         // Just use the underlying BasicDual number's version of the same function...
         return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
@@ -433,35 +433,35 @@ private:
 
     /** @name Global Functions
      * 
-     *  @relates DualQuaternion
+     *  @relates BasicDualQuaternion
      * 
      *  @{
      */
-    /** Creates the normalized form of a DualQuaternion
+    /** Creates the normalized form of a BasicDualQuaternion
      *  
-     *  @param input The DualQuaternion to normalize
+     *  @param input The BasicDualQuaternion to normalize
      *  
      *  @return The normalized version of @p input
      */
-    friend constexpr DualQuaternion<T> normalized(const DualQuaternion<T> &input)
+    friend constexpr BasicDualQuaternion<T> normalized(const BasicDualQuaternion<T> &input)
     {
         return input.normalized();
     }
-    /** Generates a linear blend between two DualQuaternion objects
+    /** Generates a linear blend between two BasicDualQuaternion objects
      *  
      *  @param beginning  The start state
      *  @param end        The ending state
      *  @param percentage The percentage blend between the two (typically [0..1])
      */
     template <std::floating_point OT = float>
-    friend constexpr DualQuaternion<T> blend(const DualQuaternion<T> &beginning, const DualQuaternion<T> &end, OT percentage)
+    friend constexpr BasicDualQuaternion<T> blend(const BasicDualQuaternion<T> &beginning, const BasicDualQuaternion<T> &end, OT percentage)
     {
         auto blended = beginning + (end - beginning) * percentage;
 
         return blended.normalized();
     }
 
-    friend std::string format(const DualQuaternion<T> &input)
+    friend std::string format(const BasicDualQuaternion<T> &input)
     {
         return std::format("[real: {}, dual: {}]", input.real(), input.dual());
     }
@@ -470,7 +470,7 @@ private:
      * 
      *   @note This will just call @c input.conjugate()
      */
-    friend constexpr DualQuaternion<T> conjugate(const DualQuaternion<T> &input)
+    friend constexpr BasicDualQuaternion<T> conjugate(const BasicDualQuaternion<T> &input)
     {
         return input.conjugate();
     }
@@ -486,7 +486,7 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -514,7 +514,7 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -532,21 +532,21 @@ private:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const DualQuaternion<T> &input, const DualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const DualQuaternion<T> &input, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const BasicDualQuaternion<T> &input, OT tolerance = OT{0.0002})
     {
-        assert( check_if_equal(input, DualQuaternion<T>::zero(), tolerance));
+        assert( check_if_equal(input, BasicDualQuaternion<T>::zero(), tolerance));
     }
     /// @}  {GlobalFunctions}
 };
@@ -554,13 +554,14 @@ private:
 
 /** @name Type Aliases
  * 
- *  @relates DualQuaternion
+ *  @relates BasicDualQuaternion
  * 
  *  @{
  */
-using DualQuaternionf = DualQuaternion<float>;
-using DualQuaterniond = DualQuaternion<double>;
-using DualQuaternionld = DualQuaternion<long double>;
+using DualQuaternionf  = BasicDualQuaternion<float>;
+using DualQuaterniond  = BasicDualQuaternion<double>;
+using DualQuaternion   = BasicDualQuaternion<double>;
+using DualQuaternionld = BasicDualQuaternion<long double>;
 /// @}
 
 }
