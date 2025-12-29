@@ -8,7 +8,7 @@
 
 /** @file
  *  
- *  Contains the definition of the Dual class along with
+ *  Contains the definition of the BasicDual class along with
  *  various helper functions.
  *
  *  @hideincludegraph
@@ -22,28 +22,28 @@ namespace Math
  *  @headerfile "math/Dual.hpp"
  */
 template<class T>
-class Dual
+class BasicDual
 {
 public:
     using value_type = T;
 
-    Dual() = default;
-    explicit constexpr Dual(const T &r) : real(r) { }
-    explicit constexpr Dual(const T &r, const T &e) : real(r), dual(e) { }
+    BasicDual() = default;
+    explicit constexpr BasicDual(const T &r) : real(r) { }
+    explicit constexpr BasicDual(const T &r, const T &e) : real(r), dual(e) { }
 
     /** @name Constants
      *  @{
      */
-    constexpr static Dual<T> identity() { return Dual{ T{1}, T{0} }; }
-    constexpr static Dual<T> zero() { return Dual{}; }
+    constexpr static BasicDual<T> identity() { return BasicDual{ T{1}, T{0} }; }
+    constexpr static BasicDual<T> zero() { return BasicDual{}; }
     /// @}
 
-    constexpr Dual<T> conjugate() const
+    constexpr BasicDual<T> conjugate() const
     {
         if constexpr (std::is_floating_point_v<T>)
-            return Dual{ real, -dual };
+            return BasicDual{ real, -dual };
         else
-            return Dual{ real, conjugate(dual) };
+            return BasicDual{ real, conjugate(dual) };
     }
 
     constexpr T       magnitude() const { return real; }
@@ -51,18 +51,18 @@ public:
     /** @name Convenience Creation Functions
      *  @{
      */
-    /** Creates a pure Dual with @c input
+    /** Creates a pure BasicDual with @c input
      *  
      *  @param input
      *  
      *  @post output.real == 0
      *        output.dual == @c input
      *  
-     *  @note A pure Dual is one which has the real component set to 0
+     *  @note A pure BasicDual is one which has the real component set to 0
      */
-    constexpr static Dual<T> make_pure(const T &input)
+    constexpr static BasicDual<T> make_pure(const T &input)
     {
-        return Dual<T>{ T{}, input };
+        return BasicDual<T>{ T{}, input };
     }
     /// @}
 
@@ -101,12 +101,12 @@ public:
      * 
      *  @see Equality
      */
-    friend constexpr bool operator ==(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr bool operator ==(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return approximately_equal_to(left, right);
     }
 
-    /** @addtogroup DualAlgebra Dual Number Algebra
+    /** @addtogroup DualAlgebra BasicDual Number Algebra
      *  @{
      */
 
@@ -115,26 +115,26 @@ public:
      */
     /** Defines multiplication of two Duals
      */
-    friend constexpr Dual<T> operator *(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr BasicDual<T> operator *(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return Dual<T>(left.real * right.real,
+        return BasicDual<T>(left.real * right.real,
                        left.real * right.dual + right.real * left.dual);
     }
 
-    /** Defines multiplication of a single-precision scalar and a Dual
+    /** Defines multiplication of a single-precision scalar and a BasicDual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator *(OT scalar, const Dual<T> &d)
+    friend constexpr BasicDual<T> operator *(OT scalar, const BasicDual<T> &d)
     {
-        return Dual<T>( T(scalar) ) * d;
+        return BasicDual<T>( T(scalar) ) * d;
     }
 
-    /** Defines multiplication of a Dual and a single-precision scalar
+    /** Defines multiplication of a BasicDual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator *(const Dual<T> &left, OT scalar)
+    friend constexpr BasicDual<T> operator *(const BasicDual<T> &left, OT scalar)
     {
-        return left * Dual<T>( T(scalar) );
+        return left * BasicDual<T>( T(scalar) );
     }
     /// @}
 
@@ -143,26 +143,26 @@ public:
      */
     /** Defines division of two Duals
      */
-    friend constexpr Dual<T> operator /(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return Dual<T>(left.real * right.real / (right.real * right.real),
+        return BasicDual<T>(left.real * right.real / (right.real * right.real),
                        (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
     }
 
-    /** Defines division of a single-precision scalar and a Dual
+    /** Defines division of a single-precision scalar and a BasicDual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator /(OT scalar, const Dual<T> &d)
+    friend constexpr BasicDual<T> operator /(OT scalar, const BasicDual<T> &d)
     {
-        return Dual<T>( T(scalar) ) / d;
+        return BasicDual<T>( T(scalar) ) / d;
     }
 
-    /** Defines division of a Dual and a single-precision scalar
+    /** Defines division of a BasicDual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator /(const Dual<T> &left, OT scalar)
+    friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, OT scalar)
     {
-        return left / Dual<T>( T(scalar) );
+        return left / BasicDual<T>( T(scalar) );
     }
     /// @}
 
@@ -171,25 +171,25 @@ public:
      */
     /** Defines addition of two Duals
      */
-    friend constexpr Dual<T> operator +(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return Dual<T>(left.real + right.real, left.dual + right.dual);
+        return BasicDual<T>(left.real + right.real, left.dual + right.dual);
     }
 
-    /** Defines addition of a single-precision scalar and a Dual
+    /** Defines addition of a single-precision scalar and a BasicDual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator +(OT scalar, const Dual<T> &d)
+    friend constexpr BasicDual<T> operator +(OT scalar, const BasicDual<T> &d)
     {
-        return Dual<T>( T(scalar) ) + d;
+        return BasicDual<T>( T(scalar) ) + d;
     }
 
-    /** Defines addition of a Dual and a single-precision scalar
+    /** Defines addition of a BasicDual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator +(const Dual<T> &left, OT scalar)
+    friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, OT scalar)
     {
-        return left + Dual<T>( T(scalar) );
+        return left + BasicDual<T>( T(scalar) );
     }
     /// @}
 
@@ -198,25 +198,25 @@ public:
      */
     /** Defines subtraction of two Duals
      */
-    friend constexpr Dual<T> operator -(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return Dual<T>(left.real - right.real, left.dual - right.dual);
+        return BasicDual<T>(left.real - right.real, left.dual - right.dual);
     }
 
-    /** Defines subtraction of a single-precision scalar and a Dual
+    /** Defines subtraction of a single-precision scalar and a BasicDual
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator -(OT scalar, const Dual<T> &d)
+    friend constexpr BasicDual<T> operator -(OT scalar, const BasicDual<T> &d)
     {
-        return Dual<T>( T(scalar) ) - d;
+        return BasicDual<T>( T(scalar) ) - d;
     }
 
-    /** Defines subtraction of a Dual and a single-precision scalar
+    /** Defines subtraction of a BasicDual and a single-precision scalar
      */
     template <std::floating_point OT = double>
-    friend constexpr Dual<T> operator -(const Dual<T> &left, OT scalar)
+    friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, OT scalar)
     {
-        return left - Dual<T>( T(scalar) );
+        return left - BasicDual<T>( T(scalar) );
     }
     /// @}  {Subtraction}
     /// @}  {DualAlgebra}
@@ -233,10 +233,10 @@ public:
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      * 
-     *  @relates Dual
+     *  @relates BasicDual
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Dual<T> &value_to_test, const Dual<T> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test, const BasicDual<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
                approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
@@ -247,55 +247,55 @@ public:
      *  
      *  @return The dot-product of the two inputs
      *  
-     *  @note This treats the Dual number as a pair of numbers,
+     *  @note This treats the BasicDual number as a pair of numbers,
      *        or 2D vector, and calculates the dot product as
      *        as expected of that.
      *
-     *  @relates Dual
+     *  @relates BasicDual
      */
-    friend constexpr T dot(const Dual<T> &left, const Dual<T> &right)
+    friend constexpr T dot(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return left.real * right.real +
                left.dual * right.dual;
     }
 
-    /** Calculates the square root of a Dual
+    /** Calculates the square root of a BasicDual
      *  
-     *  This treats the input as a Dual scalar and
+     *  This treats the input as a BasicDual scalar and
      *  calculates the square root based on that expectation.
      *  
-     *  @return The Dual as a dual scalar
+     *  @return The BasicDual as a dual scalar
      *
-     *  @relates Dual
+     *  @relates BasicDual
      */
-    friend constexpr Dual<T> dualscalar_sqrt(const Dual<T> &input)
+    friend constexpr BasicDual<T> dualscalar_sqrt(const BasicDual<T> &input)
     {
         // Expect that T is a scalar type (float, double, int, etc.)
         T root = std::sqrt(input.real);
 
-        return Dual<T>{ root, input.dual / (T{2} * root)};
+        return BasicDual<T>{ root, input.dual / (T{2} * root)};
     }
 
     /** Calculates the square of the norm
      * 
-     *  @relates Dual
+     *  @relates BasicDual
      */
-    friend constexpr T dualscalar_normsquared(const Dual<T> &d)
+    friend constexpr T dualscalar_normsquared(const BasicDual<T> &d)
     {
-        Dual<T> result = d * d.conjugate();
+        BasicDual<T> result = d * d.conjugate();
 
         assert( approximately_equal_to(result.dual, T{0}) );
 
         return result.real;
     }
 
-    /** Accumulates the components of the input Dual
+    /** Accumulates the components of the input BasicDual
      *  
      *  @return A scalar that is the sum of the components
      * 
-     *  @relates Dual
+     *  @relates BasicDual
      */
-    friend constexpr T accumulate(const Dual<T> &input)
+    friend constexpr T accumulate(const BasicDual<T> &input)
     {
         return T{input.real + input.dual};
     }
@@ -304,12 +304,12 @@ public:
      * 
      *   @note This will just call @c input.conjugate()
      */
-    friend constexpr Dual<T> conjugate(const Dual<T> &input)
+    friend constexpr BasicDual<T> conjugate(const BasicDual<T> &input)
     {
         return input.conjugate();
     }
 
-    friend std::string format(const Dual<T> &input)
+    friend std::string format(const BasicDual<T> &input)
     {
         return std::format("[real: {}, dual: {}]", input.real, input.dual);
     }
@@ -325,7 +325,7 @@ public:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -353,7 +353,7 @@ public:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -371,21 +371,21 @@ public:
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const Dual<T> &input, const Dual<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const Dual<T> &input, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const BasicDual<T> &input, OT tolerance = OT{0.0002})
     {
-        assert( check_if_equal(input, Dual<T>::zero(), tolerance));
+        assert( check_if_equal(input, BasicDual<T>::zero(), tolerance));
     }
     /// @} {Hidden Friend Functions}
 };
@@ -393,13 +393,14 @@ public:
 
 /** @name Type Aliases
  * 
- *  @relates Dual
+ *  @relates BasicDual
  * 
  *  @{
  */
-using Dualf = Dual<float>;
-using Duald = Dual<double>;
-using Dualld = Dual<long double>;
+using Dualf = BasicDual<float>;
+using Duald = BasicDual<double>;
+using Dual  = BasicDual<double>;
+using Dualld = BasicDual<long double>;
 /// @}
 
 }

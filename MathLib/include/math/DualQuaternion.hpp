@@ -19,12 +19,12 @@ namespace Math
 
 /** The definition of a DualQuaternion
  *  
- *  Here, we just compose the ideas of the Dual and Quaternion classes
+ *  Here, we just compose the ideas of the BasicDual and Quaternion classes
  *  together to create a DualQuaternion class.
  * 
  *  @headerfile "math/DualQuaternion.hpp"
  * 
- *  @see Dual
+ *  @see BasicDual
  *  @see Quaternion
  */
 template <class T>
@@ -66,11 +66,11 @@ public:
         assert( real().isUnit() );
     }
 
-    /** Constructs a DualQuaternion directly from a Dual<Quaternion>
+    /** Constructs a DualQuaternion directly from a BasicDual<Quaternion>
      *  
-     *  @param underlying_representation The Dual number that will ultimately be used as the internal representation
+     *  @param underlying_representation The BasicDual number that will ultimately be used as the internal representation
      */
-    explicit constexpr DualQuaternion(const Dual<Quaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
+    explicit constexpr DualQuaternion(const BasicDual<Quaternion<T>> &underlying_representation) : _frame_of_reference(underlying_representation) { }
 
     /** @name Constants
      *  @{
@@ -183,7 +183,7 @@ public:
      *  @return the conjugate of this object
      *  
      *  @note This is a bit different from the definition of a conjugate for
-     *        a Dual, in that the conjugate of a Dual is just { real, dual.conjugate() },
+     *        a BasicDual, in that the conjugate of a BasicDual is just { real, dual.conjugate() },
      *        while for a DualQuaternion the operation needs to be
      *        { real.conjugate(), dual.conjugate() }.
      */
@@ -194,11 +194,11 @@ public:
 
     /** Create the square of the norm of the input
      *  
-     *  @return A Dual that is the square of the norm of this object
+     *  @return A BasicDual that is the square of the norm of this object
      *
      *  @note The @c norm is also known as the @c magnitude
      */
-    constexpr Dual<T> normsquared() const
+    constexpr BasicDual<T> normsquared() const
     {
         DualQuaternion<T> normsquared{ *this * this->conjugate() };
 
@@ -214,27 +214,27 @@ public:
         assert( approximately_equal_to(normsquared.dual().k(), T{0}) );
 #endif
 
-        return Dual<T>{ normsquared.real().real(), normsquared.dual().real() };
+        return BasicDual<T>{ normsquared.real().real(), normsquared.dual().real() };
     }
 
     /** Create the norm of a DualQuaternion
      *  
-     *  @return A Dual that is the norm of the object
+     *  @return A BasicDual that is the norm of the object
      *
      *  @note The @c norm is also known as the @c magnitude
      */
-    constexpr Dual<T> norm() const
+    constexpr BasicDual<T> norm() const
     {
         return dualscalar_sqrt( normsquared() );
     }
 
     /** Creates the magnitude of a DualQuaternion
      *  
-     *  @return A Dual that is the magnitude of the object
+     *  @return A BasicDual that is the magnitude of the object
      *  
      *  @see norm
      */
-    constexpr Dual<T> magnitude() const { return norm(); }
+    constexpr BasicDual<T> magnitude() const { return norm(); }
 
     const Quaternion<T> &real() const { return _frame_of_reference.real; }
     const Quaternion<T> &dual() const { return _frame_of_reference.dual; }
@@ -288,7 +288,7 @@ public:
     bool isInf() const { return _frame_of_reference.real.isInf() || _frame_of_reference.dual.isInf(); }
 
 private:
-    Dual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
+    BasicDual<Quaternion<T>> _frame_of_reference{ Quaternion<T>::identity(), Quaternion<T>::zero() }; // The default value is an identity transformation
 
     /** @name Global Operators
      * 
@@ -310,7 +310,7 @@ private:
         return approximately_equal_to(left, right);
     }
 
-    /** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
+    /** @addtogroup DualQuaternionAlgebra BasicDual Quaternion Algebra
      *  @{
      */
 
@@ -319,7 +319,7 @@ private:
      */
     /** Defines addition
      *  
-     *  We basically just add the underlying Dual numbers
+     *  We basically just add the underlying BasicDual numbers
      */
     friend constexpr DualQuaternion<T> operator +(const DualQuaternion<T> &left_side, const DualQuaternion<T> &right_side)
     {
@@ -361,7 +361,7 @@ private:
         return DualQuaternion<T>{ dual_quaternion._frame_of_reference * scalar };
     }
 
-    /** Defines multiplication of a DualQuaternion by a Dual
+    /** Defines multiplication of a DualQuaternion by a BasicDual
      *
      *  @param dual_quaternion The DualQuaternion to scale
      *  @param dual_scalar     The amount to scale by
@@ -370,7 +370,7 @@ private:
      *  
      *  @see DualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
+    friend constexpr DualQuaternion<T> operator *(const DualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
     {
         return dual_quaternion * DualQuaternion<T>{ Quaternion<T>{dual_scalar.real}, Quaternion<T>{dual_scalar.dual} };
     }
@@ -390,7 +390,7 @@ private:
     /** @name Division
      *  @{
      */
-    /** Defines division of a DualQuaternion by a Dual
+    /** Defines division of a DualQuaternion by a BasicDual
      *
      *  @param dual_quaternion The DualQuaternion to scale
      *  @param dual_scalar     The amount to scale by
@@ -399,7 +399,7 @@ private:
      *  
      *  @see DualQuaternion Algebra
      */
-    friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const Dual<T> &dual_scalar)
+    friend constexpr DualQuaternion<T> operator /(const DualQuaternion<T> &dual_quaternion, const BasicDual<T> &dual_scalar)
     {
         return DualQuaternion<T>{ DualQuaternion<T>(dual_quaternion * dual_scalar.conjugate())._frame_of_reference / dualscalar_normsquared(dual_scalar) };
     }
@@ -426,7 +426,7 @@ private:
     template <std::floating_point OT = float>
     friend constexpr bool approximately_equal_to(const DualQuaternion<T> &value_to_test, const DualQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
     {
-        // Just use the underlying Dual number's version of the same function...
+        // Just use the underlying BasicDual number's version of the same function...
         return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
     }
     /// @}  {Equality}
