@@ -142,7 +142,7 @@ public:
 
     Quaternion<T> inverse() const { return conjugate() / normSquared(); }
 
-    Radian<T> angle() const
+    BasicRadian<T> angle() const
     {
         return T{2} * std::atan2( imaginary().magnitude(), w() );
     }
@@ -246,7 +246,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(Radian<T> radians, T axis_x, T axis_y, T axis_z)
+    constexpr static Quaternion<T> make_rotation(const BasicRadian<T> &radians, T axis_x, T axis_y, T axis_z)
     {
         return make_rotation(radians, { axis_x, axis_y, axis_z });
     }
@@ -258,7 +258,7 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static Quaternion<T> make_rotation(Radian<T> radians, const Vector3D<T> &axis)
+    constexpr static Quaternion<T> make_rotation(const BasicRadian<T> &radians, const Vector3D<T> &axis)
     {
         T half_angle = radians.value() * T{0.5};
         T cos_theta = cos( half_angle );
@@ -649,7 +649,7 @@ private:
      *
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
-    friend constexpr Quaternion<T> polar(const Vector3D<T> &axis, const Radian<T> angle = Radian<T>{})
+    friend constexpr Quaternion<T> polar(const Vector3D<T> &axis, const BasicRadian<T> angle = BasicRadian<T>{})
     {
         assert( axis.magnitude() == T{1} );
 

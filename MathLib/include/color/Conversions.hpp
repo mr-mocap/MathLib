@@ -72,7 +72,7 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
 
     // When delta is zero, avoid dividing by delta (0)
     if ( Math::approximately_equal_to( cmax, cmin ) )
-        return HSV<T>{ Math::Degree<T>(), T{}, v};
+        return HSV<T>{ Math::BasicDegree<T>(), T{}, v};
 
     // Saturation
     if ( Math::approximately_equal_to( v, T{} ) )
@@ -99,7 +99,7 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
     hue = std::fmod( hue / T{6.0}, T{1.0} );
 
     // But make hue be 0 - 360 upon return...
-    return HSV<T>{ Math::Degree<T>(hue * Math::Degree<T>::modulus()).modulo(), saturation, v };
+    return HSV<T>{ Math::BasicDegree<T>(hue * Math::BasicDegree<T>::modulus()).modulo(), saturation, v };
 #else
     // https://web.archive.org/web/20200207113336/http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
     using namespace Math;
@@ -112,7 +112,7 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
     T e = 1.0e-10;
 
     return HSV<T>(
-                   Degree<T>( std::abs(q.z + (q.w - q.y) / (T{6.0} * d + e)) ) * Degree<T>::modulus(),
+                   BasicDegree<T>( std::abs(q.z + (q.w - q.y) / (T{6.0} * d + e)) ) * BasicDegree<T>::modulus(),
                    d / (q.x + e),
                    q.x
                  );
@@ -127,7 +127,7 @@ UnitRGB<T> ToRGB(const HSV<T> &input_hsv)
     if ( Math::approximately_equal_to( input_hsv.saturation(), T{0} ) )
         return UnitRGB<T>{ input_hsv.value(), input_hsv.value(), input_hsv.value() };
 
-    Math::Degree<T> hh = input_hsv.hue().modulo();
+    Math::BasicDegree<T> hh = input_hsv.hue().modulo();
 
     hh /= T{60.0};
 

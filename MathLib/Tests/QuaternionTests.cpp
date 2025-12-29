@@ -461,7 +461,7 @@ void ARotationIsStoredAsTheHalfAngle()
     {
         float       degrees_of_rotation = 90.0f;
         float       half_angle = degrees_of_rotation / 2.0f;
-        Quaternionf rotation = Quaternionf::make_rotation( Degree(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degreef(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
 
         CHECK_IF_EQUAL( rotation.norm(), 1.0f );
         CHECK_IF_EQUAL( rotation.w(), std::cos( DegreesToRadians(half_angle) ) );
@@ -474,7 +474,7 @@ void ARotationIsStoredAsTheHalfAngle()
     {
         float       degrees_of_rotation = 60.0f;
         float       half_angle = degrees_of_rotation / 2.0f;
-        Quaternionf rotation = Quaternionf::make_rotation( Degree(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degreef(degrees_of_rotation), 1.0f, 0.0f, 0.0f );
 
         CHECK_IF_EQUAL( rotation.norm(), 1.0f );
         CHECK_IF_EQUAL( rotation.w(), std::cos( DegreesToRadians(half_angle) ) );
@@ -491,7 +491,7 @@ void MakingARotationIsAccurate()
     // Rotate 90 deg around X axis.
     // A unit in Y becomes a unit in Z.
     {
-        Quaternionf rotation = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degreef(90.0f), 1.0f, 0.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
 
@@ -504,7 +504,7 @@ void MakingARotationIsAccurate()
     // Rotate 90 deg around Y axis.
     // A unit in X becomes a unit in -Z.
     {
-        Quaternionf rotation = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation = Quaternionf::make_rotation( Degreef(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(1.0f, 0.0f, 0.0f);
         Quaternionf transformed_point = rotation * encoded_point * rotation.conjugate();
 
@@ -520,8 +520,8 @@ void PerformTwoConsecutiveRotations()
     std::cout << __func__ << std::endl;
 
     {
-        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
-        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degreef(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degreef(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = passively_rotate_encoded_point(rotation_90_x, encoded_point);
 
@@ -535,8 +535,8 @@ void PerformTwoConsecutiveRotations()
 
     // Same thing, but compose the rotations first
     {
-        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degree(90.0f), 1.0f, 0.0f, 0.0f );
-        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degree(90.0f), 0.0f, 1.0f, 0.0f );
+        Quaternionf rotation_90_x = Quaternionf::make_rotation( Degreef(90.0f), 1.0f, 0.0f, 0.0f );
+        Quaternionf rotation_90_y = Quaternionf::make_rotation( Degreef(90.0f), 0.0f, 1.0f, 0.0f );
         Quaternionf composed_rotation = compose_rotations( rotation_90_x, rotation_90_y );
         Quaternionf encoded_point = Quaternionf::encode_point(0.0f, 1.0f, 0.0f);
         Quaternionf transformed_point = passively_rotate_encoded_point(composed_rotation, encoded_point);

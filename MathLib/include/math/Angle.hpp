@@ -2,6 +2,7 @@
 
 #include "math/Functions.hpp"
 #include <concepts>
+#include <compare>
 
 /** @file
  *  
@@ -19,13 +20,13 @@ namespace Math
  *  the units are that are being constructed and passed around.
  */
 template <std::floating_point T = double>
-class Radian
+class BasicRadian
 {
 public:
-    constexpr Radian() = default;
-    explicit constexpr Radian(T value) : _value(value) { }
+    constexpr BasicRadian() = default;
+    explicit constexpr BasicRadian(T value) : _value(value) { }
 
-    static constexpr Radian<T> zero() { return Radian<T>(); }
+    static constexpr BasicRadian<T> zero() { return BasicRadian<T>(); }
 
     /** @name Element Access
      *  @{
@@ -33,25 +34,25 @@ public:
     T value() const { return _value; }
     /// @}
 
-    constexpr Radian<T> &operator +=(Radian other)
+    constexpr BasicRadian<T> &operator +=(BasicRadian other)
     {
         _value += other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator -=(Radian other)
+    constexpr BasicRadian<T> &operator -=(BasicRadian other)
     {
         _value -= other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator *=(Radian other)
+    constexpr BasicRadian<T> &operator *=(BasicRadian other)
     {
         _value *= other._value;
         return *this;
     }
 
-    constexpr Radian<T> &operator /=(Radian other)
+    constexpr BasicRadian<T> &operator /=(BasicRadian other)
     {
         _value /= other._value;
         return *this;
@@ -64,14 +65,14 @@ public:
      * 
      *  @{
      */
-    constexpr auto operator <=>(const Radian<T> &other) const = default;
+    constexpr auto operator <=>(const BasicRadian<T> &other) const = default;
     constexpr auto operator <=>(const T &other) const
     {
         return _value <=> other;
     }
     /// @}
 
-    /** Defines equality of two Radians
+    /** Defines equality of two BasicRadians
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -81,10 +82,7 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const Radian<T> &right) const
-    {
-        return value() == right.value();
-    }
+    constexpr bool operator ==(const BasicRadian<T> &right) const = default;
     constexpr bool operator ==(const T &right) const
     {
         return value() == right;
@@ -106,11 +104,11 @@ private:
 
     /** @addtogroup Equality
      * 
-     *  @relates Radian
+     *  @relates BasicRadian
      *  
      *  @{
      * 
-     *  Compares two Radian inputs equal to within a tolerance
+     *  Compares two BasicRadian inputs equal to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -120,43 +118,43 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(Radian<T> value_to_test, Radian<T> value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(BasicRadian<T> value_to_test, BasicRadian<T> value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
     /// @}
 
-    /** @name Radian Global Operators
+    /** @name BasicRadian Global Operators
      * 
-     *  @relates Radian
+     *  @relates BasicRadian
      * 
      *  @{
      */
-    friend constexpr Radian<T> operator +(Radian<T> left, Radian<T> right)
+    friend constexpr BasicRadian<T> operator +(BasicRadian<T> left, BasicRadian<T> right)
     {
-        return Radian<T>{ left.value() + right.value() };
+        return BasicRadian<T>{ left.value() + right.value() };
     }
 
-    friend constexpr Radian<T> operator -(Radian<T> left, Radian<T> right)
+    friend constexpr BasicRadian<T> operator -(BasicRadian<T> left, BasicRadian<T> right)
     {
-        return Radian<T>{ left.value() - right.value() };
+        return BasicRadian<T>{ left.value() - right.value() };
     }
 
-    friend constexpr Radian<T> operator *(Radian<T> left, Radian<T> right)
+    friend constexpr BasicRadian<T> operator *(BasicRadian<T> left, BasicRadian<T> right)
     {
-        return Radian<T>{ left.value() * right.value() };
+        return BasicRadian<T>{ left.value() * right.value() };
     }
 
-    friend constexpr Radian<T> operator /(Radian<T> left, Radian<T> right)
+    friend constexpr BasicRadian<T> operator /(BasicRadian<T> left, BasicRadian<T> right)
     {
-        return Radian<T>{ left.value() / right.value() };
+        return BasicRadian<T>{ left.value() / right.value() };
     }
 
-    friend constexpr Radian<T> operator -(Radian<T> input)
+    friend constexpr BasicRadian<T> operator -(BasicRadian<T> input)
     {
-        return Radian{ -input.value() };
+        return BasicRadian{ -input.value() };
     }
-    /// @}  {Radian Global Operators}
+    /// @}  {BasicRadian Global Operators}
 };
 
 
@@ -170,16 +168,16 @@ private:
  *  Degree to Radian and vice versa.
  */
 template <std::floating_point T = double>
-class Degree
+class BasicDegree
 {
 public:
-    constexpr Degree() = default;
-    explicit constexpr Degree(T value) : _value(value) { }
-    constexpr Degree(Radian<T> value) : _value( RadiansToDegrees(value.value()) ) { }
+    constexpr BasicDegree() = default;
+    explicit constexpr BasicDegree(T value) : _value(value) { }
+    constexpr BasicDegree(BasicRadian<T> value) : _value( RadiansToDegrees(value.value()) ) { }
 
-    operator Radian<T>() { return Radian<T>{DegreesToRadians(_value)}; }
+    operator BasicRadian<T>() { return BasicRadian<T>{DegreesToRadians(_value)}; }
 
-    static constexpr Degree<T> zero() { return Degree<T>(); }
+    static constexpr BasicDegree<T> zero() { return BasicDegree<T>(); }
 
     /** @name Element Access
      *  @{
@@ -190,49 +188,49 @@ public:
     /** @name Operators
      *  @{
      */
-    constexpr Degree<T> &operator +=(Degree<T> other)
+    constexpr BasicDegree<T> &operator +=(BasicDegree<T> other)
     {
         _value += other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator +=(T other)
+    constexpr BasicDegree<T> &operator +=(T other)
     {
         _value += other;
         return *this;
     }
 
-    constexpr Degree<T> &operator -=(Degree<T> other)
+    constexpr BasicDegree<T> &operator -=(BasicDegree<T> other)
     {
         _value -= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator -=(T other)
+    constexpr BasicDegree<T> &operator -=(T other)
     {
         _value -= other;
         return *this;
     }
 
-    constexpr Degree<T> &operator *=(Degree<T> other)
+    constexpr BasicDegree<T> &operator *=(BasicDegree<T> other)
     {
         _value *= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator *=(T other)
+    constexpr BasicDegree<T> &operator *=(T other)
     {
         _value *= other;
         return *this;
     }
 
-    constexpr Degree<T> &operator /=(Degree<T> other)
+    constexpr BasicDegree<T> &operator /=(BasicDegree<T> other)
     {
         _value /= other.value();
         return *this;
     }
 
-    constexpr Degree<T> &operator /=(T other)
+    constexpr BasicDegree<T> &operator /=(T other)
     {
         _value /= other;
         return *this;
@@ -243,17 +241,19 @@ public:
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
      *        other relational operators (C++20).
+     *        If we only allowed comparison of ONLY this class type to itself then
+     *        we would only need the defaulted <=> operator.
      * 
      *  @{
      */
-    constexpr auto operator <=>(const Degree<T> &other) const = default;
+    constexpr auto operator <=>(const BasicDegree<T> &other) const = default;
     constexpr auto operator <=>(T other) const
     {
         return _value <=> other;
     }
     /// @}
 
-    /** Defines equality of two Degrees
+    /** Defines equality of two BasicDegrees
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -263,10 +263,7 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(Degree<T> right) const
-    {
-        return value() == right.value();
-    }
+    constexpr bool operator ==(const BasicDegree<T> &right) const = default;
     constexpr bool operator ==(T right) const
     {
         return value() == right;
@@ -275,12 +272,12 @@ public:
 
     
     static constexpr T modulus() { return 360; }
-    constexpr Degree<T> modulo() const
+    constexpr BasicDegree<T> modulo() const
     {
         T modded;
 
         // Make in range of 0 - 360
-        return Degree{ (0.0 <= (modded = std::fmod( _value, modulus() )) ? modded : modulus() + modded) };
+        return BasicDegree<T>{ (0.0 <= (modded = std::fmod( _value, modulus() )) ? modded : modulus() + modded) };
     }
 
     constexpr bool isNaN() const
@@ -298,11 +295,11 @@ private:
 
     /** @addtogroup Equality
      * 
-     *  @relates Degree
+     *  @relates BasicDegree
      *  
      *  @{
      * 
-     *  Compares two Degree inputs equal to within a tolerance
+     *  Compares two BasicDegree inputs equal to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -312,63 +309,63 @@ private:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const Degree<T> &value_to_test, const Degree<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicDegree<T> &value_to_test, const BasicDegree<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
     /// @}
 
-    /** @name Degree Global Operators
+    /** @name BasicDegree Global Operators
      * 
-     *  @relates Degree
+     *  @relates BasicDegree
      * 
      *  @{
      */
-    friend constexpr Degree<T> operator +(Degree<T> left, Degree<T> right)
+    friend constexpr BasicDegree<T> operator +(BasicDegree<T> left, BasicDegree<T> right)
     {
-        return Degree<T>{ left.value() + right.value() };
+        return BasicDegree<T>{ left.value() + right.value() };
     }
 
-    friend constexpr Degree<T> operator -(Degree<T> left, Degree<T> right)
+    friend constexpr BasicDegree<T> operator -(BasicDegree<T> left, BasicDegree<T> right)
     {
-        return Degree<T>{ left.value() - right.value() };
+        return BasicDegree<T>{ left.value() - right.value() };
     }
 
-    friend constexpr Degree<T> operator *(Degree<T> left, Degree<T> right)
+    friend constexpr BasicDegree<T> operator *(BasicDegree<T> left, BasicDegree<T> right)
     {
-        return Degree<T>{ left.value() * right.value() };
+        return BasicDegree<T>{ left.value() * right.value() };
     }
 
-    friend constexpr Degree<T> operator /(Degree<T> left, Degree<T> right)
+    friend constexpr BasicDegree<T> operator /(BasicDegree<T> left, BasicDegree<T> right)
     {
-        return Degree<T>{ left.value() / right.value() };
+        return BasicDegree<T>{ left.value() / right.value() };
     }
 
-    friend constexpr Degree<T> operator +(Degree<T> left, T right)
+    friend constexpr BasicDegree<T> operator +(BasicDegree<T> left, T right)
     {
-        return Degree<T>{ left.value() + right };
+        return BasicDegree<T>{ left.value() + right };
     }
 
-    friend constexpr Degree<T> operator -(Degree<T> left, T right)
+    friend constexpr BasicDegree<T> operator -(BasicDegree<T> left, T right)
     {
-        return Degree<T>{ left.value() - right };
+        return BasicDegree<T>{ left.value() - right };
     }
 
-    friend constexpr Degree<T> operator *(Degree<T> left, T right)
+    friend constexpr BasicDegree<T> operator *(BasicDegree<T> left, T right)
     {
-        return Degree<T>{ left.value() * right };
+        return BasicDegree<T>{ left.value() * right };
     }
 
-    friend constexpr Degree<T> operator /(Degree<T> left, T right)
+    friend constexpr BasicDegree<T> operator /(BasicDegree<T> left, T right)
     {
-        return Degree<T>{ left.value() / right };
+        return BasicDegree<T>{ left.value() / right };
     }
 
-    friend constexpr Degree<T> operator -(Degree<T> input)
+    friend constexpr BasicDegree<T> operator -(BasicDegree<T> input)
     {
-        return Degree{ -input.value() };
+        return BasicDegree{ -input.value() };
     }
-    /// @}  {Degree}
+    /// @}  {BasicDegree}
 };
 
 
@@ -376,105 +373,105 @@ namespace Literals
 {
 /** @name User-Defined Literals
  * 
- *  @relates Degree
+ *  @relates BasicDegree
  * 
  *  @{
  */
-constexpr Degree<float> operator ""_deg_f(long double degrees)
+constexpr BasicDegree<float> operator ""_deg_f(long double degrees)
 {
-    return Degree<float>{ static_cast<float>(degrees) };
+    return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-constexpr Degree<float> operator ""_deg_F(long double degrees)
+constexpr BasicDegree<float> operator ""_deg_F(long double degrees)
 {
-    return Degree<float>{ static_cast<float>(degrees) };
+    return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-constexpr Degree<float> operator ""_degf(long double degrees)
+constexpr BasicDegree<float> operator ""_degf(long double degrees)
 {
-    return Degree<float>{ static_cast<float>(degrees) };
+    return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-constexpr Degree<float> operator ""_degF(long double degrees)
+constexpr BasicDegree<float> operator ""_degF(long double degrees)
 {
-    return Degree<float>{ static_cast<float>(degrees) };
+    return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-constexpr Degree<double> operator ""_deg(long double degrees)
+constexpr BasicDegree<double> operator ""_deg(long double degrees)
 {
-    return Degree<double>{ static_cast<double>(degrees) };
+    return BasicDegree<double>{ static_cast<double>(degrees) };
 }
 
-constexpr Degree<long double> operator ""_deg_l(long double degrees)
+constexpr BasicDegree<long double> operator ""_deg_l(long double degrees)
 {
-    return Degree<long double>{degrees};
+    return BasicDegree<long double>{degrees};
 }
 
-constexpr Degree<long double> operator ""_deg_L(long double degrees)
+constexpr BasicDegree<long double> operator ""_deg_L(long double degrees)
 {
-    return Degree<long double>{degrees};
+    return BasicDegree<long double>{degrees};
 }
 
-constexpr Degree<long double> operator ""_degl(long double degrees)
+constexpr BasicDegree<long double> operator ""_degl(long double degrees)
 {
-    return Degree<long double>{degrees};
+    return BasicDegree<long double>{degrees};
 }
 
-constexpr Degree<long double> operator ""_degL(long double degrees)
+constexpr BasicDegree<long double> operator ""_degL(long double degrees)
 {
-    return Degree<long double>{degrees};
+    return BasicDegree<long double>{degrees};
 }
 /// @}  {User-Defined Literals}
 
 /** @name User-Defined Literals
  * 
- *  @relates Radian
+ *  @relates BasicRadian
  * 
  *  @{
  */
-constexpr Radian<float> operator ""_rad_f(long double radians)
+constexpr BasicRadian<float> operator ""_rad_f(long double radians)
 {
-    return Radian<float>{ static_cast<float>(radians) };
+    return BasicRadian<float>{ static_cast<float>(radians) };
 }
 
-constexpr Radian<float> operator ""_rad_F(long double radians)
+constexpr BasicRadian<float> operator ""_rad_F(long double radians)
 {
-    return Radian<float>{ static_cast<float>(radians) };
+    return BasicRadian<float>{ static_cast<float>(radians) };
 }
 
-constexpr Radian<float> operator ""_radf(long double radians)
+constexpr BasicRadian<float> operator ""_radf(long double radians)
 {
-    return Radian<float>{ static_cast<float>(radians) };
+    return BasicRadian<float>{ static_cast<float>(radians) };
 }
 
-constexpr Radian<float> operator ""_radF(long double radians)
+constexpr BasicRadian<float> operator ""_radF(long double radians)
 {
-    return Radian<float>{ static_cast<float>(radians) };
+    return BasicRadian<float>{ static_cast<float>(radians) };
 }
 
-constexpr Radian<double> operator ""_rad(long double radians)
+constexpr BasicRadian<double> operator ""_rad(long double radians)
 {
-    return Radian<double>{ static_cast<double>(radians) };
+    return BasicRadian<double>{ static_cast<double>(radians) };
 }
 
-constexpr Radian<long double> operator ""_rad_l(long double radians)
+constexpr BasicRadian<long double> operator ""_rad_l(long double radians)
 {
-    return Radian<long double>{radians};
+    return BasicRadian<long double>{radians};
 }
 
-constexpr Radian<long double> operator ""_rad_L(long double radians)
+constexpr BasicRadian<long double> operator ""_rad_L(long double radians)
 {
-    return Radian<long double>{radians};
+    return BasicRadian<long double>{radians};
 }
 
-constexpr Radian<long double> operator ""_radl(long double radians)
+constexpr BasicRadian<long double> operator ""_radl(long double radians)
 {
-    return Radian<long double>{radians};
+    return BasicRadian<long double>{radians};
 }
 
-constexpr Radian<long double> operator ""_radL(long double radians)
+constexpr BasicRadian<long double> operator ""_radL(long double radians)
 {
-    return Radian<long double>{radians};
+    return BasicRadian<long double>{radians};
 }
 /// @}  {User-Defined Literals}
 }
@@ -485,9 +482,10 @@ constexpr Radian<long double> operator ""_radL(long double radians)
  * 
  *  @{
  */
-using Degreef  = Degree<float>;
-using Degreed  = Degree<double>;
-using Degreel  = Degree<long double>;
+using Degreef  = BasicDegree<float>;
+using Degreed  = BasicDegree<double>;
+using Degree   = BasicDegree<double>;
+using Degreel  = BasicDegree<long double>;
 /// @} {Degree Type Aliases}
 
 /** @name Radian Type Aliases
@@ -496,9 +494,10 @@ using Degreel  = Degree<long double>;
  * 
  *  @{
  */
-using Radianf  = Radian<float>;
-using Radiand  = Radian<double>;
-using Radianl  = Radian<long double>;
+using Radianf  = BasicRadian<float>;
+using Radiand  = BasicRadian<double>;
+using Radian   = BasicRadian<double>;
+using Radianl  = BasicRadian<long double>;
 /// @}  {Radian Type Aliases}
 
 }

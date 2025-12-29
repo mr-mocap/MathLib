@@ -377,7 +377,7 @@ public:
     using value_type = T;
 
     constexpr BasicHue() = default;
-    constexpr BasicHue(Math::Degree<T> init_value)
+    constexpr BasicHue(Math::BasicDegree<T> init_value)
         :
         _value( init_value.modulo() )
     {
@@ -385,7 +385,7 @@ public:
 
     explicit constexpr BasicHue(T init_value)
         :
-        _value( Math::Degree<T>{ init_value }.modulo() )
+        _value( Math::BasicDegree<T>{ init_value }.modulo() )
     {
     }
 
@@ -397,11 +397,11 @@ public:
 
     operator T() const { return _value.value(); }
 
-    operator Math::Degree<T>() const { return _value; }
+    operator Math::BasicDegree<T>() const { return _value; }
 
     static constexpr BasicHue<T> min() { return zero(); }
 
-    static constexpr BasicHue<T> max() { return BasicHue<T>( Math::Degree<T>::modulus(), not_checked{} ); }
+    static constexpr BasicHue<T> max() { return BasicHue<T>( Math::BasicDegree<T>::modulus(), not_checked{} ); }
 
     static constexpr BasicHue<T> zero() { return BasicHue<T>(); }
     
@@ -426,7 +426,7 @@ public:
         return *this;
     }
 
-    constexpr BasicHue<T> &operator +=(Math::Degree<T> other)
+    constexpr BasicHue<T> &operator +=(Math::BasicDegree<T> other)
     {
         _value += other;
         return *this;
@@ -444,7 +444,7 @@ public:
         return *this;
     }
 
-    constexpr BasicHue<T> &operator -=(Math::Degree<T> other)
+    constexpr BasicHue<T> &operator -=(Math::BasicDegree<T> other)
     {
         _value -= other;
         return *this;
@@ -462,7 +462,7 @@ public:
         return *this;
     }
 
-    constexpr BasicHue<T> &operator *=(Math::Degree<T> other)
+    constexpr BasicHue<T> &operator *=(Math::BasicDegree<T> other)
     {
         _value *= other;
         return *this;
@@ -480,7 +480,7 @@ public:
         return *this;
     }
 
-    constexpr BasicHue<T> &operator /=(Math::Degree<T> other)
+    constexpr BasicHue<T> &operator /=(Math::BasicDegree<T> other)
     {
         _value /= other;
         return *this;
@@ -501,7 +501,7 @@ public:
      *  @{
      */
     constexpr auto operator <=>(const BasicHue<T> &other) const = default;
-    constexpr auto operator <=>(const Math::Degree<T> &other) const
+    constexpr auto operator <=>(const Math::BasicDegree<T> &other) const
     {
         return _value.value() <=> other.value();
     }
@@ -525,7 +525,7 @@ public:
     {
         return _value == right._value;
     }
-    constexpr bool operator ==(const Math::Degree<T> &right) const
+    constexpr bool operator ==(const Math::BasicDegree<T> &right) const
     {
         return _value == right;
     }
@@ -536,7 +536,7 @@ public:
     /// @}
 
 protected:
-    Math::Degree<T> _value{};
+    Math::BasicDegree<T> _value{};
 
     /** @addtogroup Equality
      * 
@@ -571,12 +571,12 @@ protected:
         return BasicHue<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicHue<T> operator +(BasicHue<T> left, Math::Degree<T> right)
+    friend constexpr BasicHue<T> operator +(BasicHue<T> left, Math::BasicDegree<T> right)
     {
         return BasicHue<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicHue<T> operator +(Math::Degree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator +(Math::BasicDegree<T> left, BasicHue<T> right)
     {
         return BasicHue<T>{ left.value() + right.value() };
     }
@@ -586,12 +586,12 @@ protected:
         return BasicHue<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicHue<T> operator -(BasicHue<T> left, Math::Degree<T> right)
+    friend constexpr BasicHue<T> operator -(BasicHue<T> left, Math::BasicDegree<T> right)
     {
         return BasicHue<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicHue<T> operator -(Math::Degree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator -(Math::BasicDegree<T> left, BasicHue<T> right)
     {
         return BasicHue<T>{ left.value() - right.value() };
     }
@@ -601,12 +601,12 @@ protected:
         return BasicHue<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicHue<T> operator *(BasicHue<T> left, Math::Degree<T> right)
+    friend constexpr BasicHue<T> operator *(BasicHue<T> left, Math::BasicDegree<T> right)
     {
         return BasicHue<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicHue<T> operator *(Math::Degree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator *(Math::BasicDegree<T> left, BasicHue<T> right)
     {
         return BasicHue<T>{ left.value() * right.value() };
     }
@@ -616,12 +616,12 @@ protected:
         return BasicHue<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicHue<T> operator /(BasicHue<T> left, Math::Degree<T> right)
+    friend constexpr BasicHue<T> operator /(BasicHue<T> left, Math::BasicDegree<T> right)
     {
         return BasicHue<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicHue<T> operator /(Math::Degree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator /(Math::BasicDegree<T> left, BasicHue<T> right)
     {
         return BasicHue<T>{ left.value() / right.value() };
     }
@@ -670,7 +670,7 @@ public:
     };
 
     constexpr BasicHSV() = default;
-    constexpr BasicHSV(Math::Degree<value_type> h, value_type s, value_type v)
+    constexpr BasicHSV(Math::BasicDegree<value_type> h, value_type s, value_type v)
         :
         _hue{ h },
         _saturation{ s },
@@ -703,21 +703,21 @@ public:
 
     static constexpr BasicHSV<T> min()
     {
-        return BasicHSV<T>( Math::Degree<value_type>(), value_type{0.0}, value_type{0.0} );
+        return BasicHSV<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
     }
 
     static constexpr BasicHSV<T> max()
     {
-        return BasicHSV<T>( Math::Degree<value_type>{ Math::Degree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
+        return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
     }
 
-    constexpr Math::Degree<value_type> hue() const { return _hue; }
+    constexpr Math::BasicDegree<value_type> hue() const { return _hue; }
     constexpr value_type saturation() const { return _saturation; }
     constexpr value_type value() const { return _value; }
 
     constexpr enum Color hueColor() const
     {
-        const Math::Degree<value_type> mod = _hue.modulo();
+        const Math::BasicDegree<value_type> mod = _hue.modulo();
 
         if ( _isInBoundsUpTo( mod.value(), 0.0, 60.0 ) )
             return Red;
@@ -734,7 +734,7 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(Math::Degree<value_type> input)
+    constexpr void hue(Math::BasicDegree<value_type> input)
     {
         _hue = input;
     }
@@ -755,7 +755,7 @@ public:
 
     constexpr bool isNormalized() const
     {
-        return _isInBoundsUpTo( _hue.value(), value_type{0.0}, Math::Degree<value_type>::modulus() ) &&
+        return _isInBoundsUpTo( _hue.value(), value_type{0.0}, Math::BasicDegree<value_type>::modulus() ) &&
                _isInBounds( _saturation ) &&
                _isInBounds( _value );
     }
@@ -765,7 +765,7 @@ public:
     bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_value); }
 
 protected:
-    Math::Degree<value_type> _hue{};
+    Math::BasicDegree<value_type> _hue{};
     value_type               _saturation{};
     value_type               _value{};
 
@@ -822,7 +822,7 @@ protected:
      */
     friend constexpr BasicHSV<T> operator +(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
-        return BasicHSV<T>( Math::Degree<T>(left.hue() + right.hue()).modulo(),
+        return BasicHSV<T>( Math::BasicDegree<T>(left.hue() + right.hue()).modulo(),
                             Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
                             Math::saturate( left.value()      + right.value(),      min().value(),      max().value()      )
                             );
@@ -836,7 +836,7 @@ protected:
      */
     friend constexpr BasicHSV<T> operator -(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
-        return BasicHSV<T>( Math::Degree<T>(left.hue() - right.hue()).modulo(),
+        return BasicHSV<T>( Math::BasicDegree<T>(left.hue() - right.hue()).modulo(),
                             Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
                             Math::saturate( left.value()      - right.value(),      min().value(),      max().value()      )
                             );
@@ -863,7 +863,7 @@ public:
     };
 
     constexpr BasicHSL() = default;
-    constexpr BasicHSL(Math::Degree<value_type> h, value_type s, value_type l)
+    constexpr BasicHSL(Math::BasicDegree<value_type> h, value_type s, value_type l)
         :
         _hue{ h },
         _saturation{ s },
@@ -896,21 +896,21 @@ public:
 
     static constexpr BasicHSL<T> min()
     {
-        return BasicHSL<T>( Math::Degree<value_type>(), value_type{0.0}, value_type{0.0} );
+        return BasicHSL<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
     }
 
     static constexpr BasicHSV<T> max()
     {
-        return BasicHSV<T>( Math::Degree<value_type>{ Math::Degree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
+        return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
     }
 
-    constexpr Math::Degree<value_type> hue() const { return _hue; }
+    constexpr Math::BasicDegree<value_type> hue() const { return _hue; }
     constexpr value_type saturation() const { return _saturation; }
     constexpr value_type lightness() const { return _lightness; }
 
     constexpr enum Color hueColor() const
     {
-        const Math::Degree<value_type> mod = _hue.modulo();
+        const Math::BasicDegree<value_type> mod = _hue.modulo();
 
         if ( _isInBoundsUpTo( mod.value(), 0.0, 60.0 ) )
             return Red;
@@ -927,7 +927,7 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(Math::Degree<value_type> input)
+    constexpr void hue(Math::BasicDegree<value_type> input)
     {
         _hue = input;
     }
@@ -948,7 +948,7 @@ public:
 
     constexpr bool isNormalized() const
     {
-        return _isInBoundsUpTo( _hue, 0.0, Math::Degree<value_type>::modulus() ) &&
+        return _isInBoundsUpTo( _hue, 0.0, Math::BasicDegree<value_type>::modulus() ) &&
                _isInBounds( _saturation ) &&
                _isInBounds( _lightness );
     }
@@ -958,7 +958,7 @@ public:
     bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_lightness); }
 
 protected:
-    Math::Degree<value_type> _hue{};
+    Math::BasicDegree<value_type> _hue{};
     value_type               _saturation{};
     value_type               _lightness{};
 
@@ -1015,7 +1015,7 @@ protected:
      */
     friend constexpr BasicHSL<T> operator +(const BasicHSL<T> &left, const BasicHSL<T> &right)
     {
-        return BasicHSL<T>( Math::Degree<T>(left.hue() + right.hue()).modulo(),
+        return BasicHSL<T>( Math::BasicDegree<T>(left.hue() + right.hue()).modulo(),
                             Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
                             Math::saturate( left.lightness()  + right.lightness(),  min().lightness(),  max().lightness()  )
                           );
@@ -1029,7 +1029,7 @@ protected:
      */
     friend constexpr BasicHSL<T> operator -(const BasicHSL<T> &left, const BasicHSL<T> &right)
     {
-        return BasicHSL<T>( Math::Degree<T>(left.hue() - right.hue()).modulo(),
+        return BasicHSL<T>( Math::BasicDegree<T>(left.hue() - right.hue()).modulo(),
                             Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
                             Math::saturate( left.lightness()  - right.lightness(),  min().lightness(),  max().lightness()  )
                           );

@@ -33,7 +33,7 @@ void CommonUsage()
 
     TestFunctionTakingRadian(90.0_deg_f);
     TestFunctionTakingRadian( Degreef(45.0f) );
-    TestFunctionTakingRadian( Radian{std::numbers::pi_v<float>} );
+    TestFunctionTakingRadian( Radianf{std::numbers::pi_v<float>} );
 }
 
 void UsingUserDefinedLiterals()
@@ -74,12 +74,42 @@ void UsingUserDefinedLiterals()
     }
 }
 
+void RadianHasAllComparisonOperators()
+{
+    Radian a = 0.0_rad;
+    Radian b = a;
+    Radian c{ std::numbers::pi_v<double> / 2.0 };
+    Radian d{ -(std::numbers::pi_v<double> / 2.0) };
+
+    assert( a == b   );
+    assert( a == 0.0 );
+    assert( a == b.value() );
+    assert( a != c );
+    assert( a != (std::numbers::pi_v<double> / 2.0) );
+
+    assert(   d < b   );
+    assert(   d < 0.0 );
+    assert( !(b < d) ); // check that the NOT of the operator holds
+
+    assert( d <= d );
+    assert( d <= -(std::numbers::pi_v<double> / 2.0) );
+
+    assert(   c > b );
+    assert(   c > 0.0 );
+    assert( !(b > c) ); // check that the NOT of the operator holds
+
+    assert( c >= c );
+    assert( c >= (std::numbers::pi_v<double> / 2.0) );
+    assert( c >= d );
+}
+
 void Run()
 {
     std::cout << "Running Angle Tests..." << std::endl;
 
     CommonUsage();
     UsingUserDefinedLiterals();
+    RadianHasAllComparisonOperators();
 
     std::cout << "PASSED!" << std::endl;
 }

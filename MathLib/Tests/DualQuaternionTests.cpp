@@ -116,7 +116,7 @@ void HowToCombineASeparateRotationAndTranslation()
 void CreateRotationAndTestXAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_x() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degreef(degrees_of_rotation), Vector3Df::unit_x() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     CHECK_IF_EQUAL( rotation.real().w(), std::cos( DegreesToRadians(half_angle) ) );
@@ -131,7 +131,7 @@ void CreateRotationAndTestXAxis(float degrees_of_rotation)
 void CreateRotationAndTestYAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_y() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degreef(degrees_of_rotation), Vector3Df::unit_y() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     CHECK_IF_EQUAL( rotation.real().w(), std::cos( DegreesToRadians(half_angle) ) );
@@ -146,7 +146,7 @@ void CreateRotationAndTestYAxis(float degrees_of_rotation)
 void CreateRotationAndTestZAxis(float degrees_of_rotation)
 {
     float half_angle = degrees_of_rotation / 2.0f;
-    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degree(degrees_of_rotation), Vector3Df::unit_z() ) );
+    DualQuaternionf rotation = DualQuaternionf::make_rotation( Quaternionf::make_rotation( Degreef(degrees_of_rotation), Vector3Df::unit_z() ) );
 
     // Rotation is 45 deg angle in right-hand coordinate system
     CHECK_IF_EQUAL( rotation.real().w(), std::cos( DegreesToRadians(half_angle) ) );
