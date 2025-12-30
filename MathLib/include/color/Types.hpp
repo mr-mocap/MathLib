@@ -511,7 +511,7 @@ public:
     }
     /// @}
 
-    /** Defines equality of two BasicHues
+    /** Defines equality of two BasicHue objects
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -521,10 +521,10 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const BasicHue<T> &right) const
-    {
-        return _value == right._value;
-    }
+    constexpr bool operator ==(const BasicHue<T> &right) const = default;
+    // {
+    //     return _value == right._value;
+    // }
     constexpr bool operator ==(const Math::BasicDegree<T> &right) const
     {
         return _value == right;
@@ -566,87 +566,87 @@ protected:
      * 
      *  @{
      */
-    friend constexpr BasicHue<T> operator +(BasicHue<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicHue<T> operator +(BasicHue<T> left, Math::BasicDegree<T> right)
+    friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
         return BasicHue<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicHue<T> operator +(Math::BasicDegree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator +(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() + right.value() };
     }
 
-    friend constexpr BasicHue<T> operator -(BasicHue<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicHue<T> operator -(BasicHue<T> left, Math::BasicDegree<T> right)
+    friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
         return BasicHue<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicHue<T> operator -(Math::BasicDegree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator -(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() - right.value() };
     }
 
-    friend constexpr BasicHue<T> operator *(BasicHue<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicHue<T> operator *(BasicHue<T> left, Math::BasicDegree<T> right)
+    friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
         return BasicHue<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicHue<T> operator *(Math::BasicDegree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator *(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() * right.value() };
     }
 
-    friend constexpr BasicHue<T> operator /(BasicHue<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicHue<T> operator /(BasicHue<T> left, Math::BasicDegree<T> right)
+    friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
         return BasicHue<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicHue<T> operator /(Math::BasicDegree<T> left, BasicHue<T> right)
+    friend constexpr BasicHue<T> operator /(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
         return BasicHue<T>{ left.value() / right.value() };
     }
 
-    friend constexpr BasicHue<T> operator +(BasicHue<T> left, T right)
+    friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const T &right)
     {
         return BasicHue<T>{ left.value() + right };
     }
 
-    friend constexpr BasicHue<T> operator -(BasicHue<T> left, T right)
+    friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const T &right)
     {
         return BasicHue<T>{ left.value() - right };
     }
 
-    friend constexpr BasicHue<T> operator *(BasicHue<T> left, T right)
+    friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const T &right)
     {
         return BasicHue<T>{ left.value() * right };
     }
 
-    friend constexpr BasicHue<T> operator /(BasicHue<T> left, T right)
+    friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const T &right)
     {
         return BasicHue<T>{ left.value() / right };
     }
 
-    friend constexpr BasicHue<T> operator -(BasicHue<T> input)
+    friend constexpr BasicHue<T> operator -(const BasicHue<T> &input)
     {
         return BasicHue{ -input.value() };
     }
