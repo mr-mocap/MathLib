@@ -18,15 +18,31 @@ namespace Math
  *  
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
+ *
+ *  @headerfile "math/Angle.hpp"
  */
 template <std::floating_point T>
 class BasicRadian
 {
 public:
-    constexpr BasicRadian() = default;
-    explicit constexpr BasicRadian(T value) : _value(value) { }
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The underlying implementation type
+    /// @}
 
+    /** @name Constructors
+     *  @{
+     */
+    constexpr BasicRadian() = default; ///< Defaults to 0
+    explicit constexpr BasicRadian(T value) : _value(value) { }
+    /// @}
+
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicRadian<T> zero() { return BasicRadian<T>(); }
+    /// @}
 
     /** @name Element Access
      *  @{
@@ -34,30 +50,37 @@ public:
     T value() const { return _value; }
     /// @}
 
-    constexpr BasicRadian<T> &operator +=(BasicRadian other)
+    /** @name Operators
+     *  @{
+     */
+    constexpr BasicRadian<T> &operator +=(const BasicRadian &other)
     {
         _value += other._value;
         return *this;
     }
 
-    constexpr BasicRadian<T> &operator -=(BasicRadian other)
+    constexpr BasicRadian<T> &operator -=(const BasicRadian &other)
     {
         _value -= other._value;
         return *this;
     }
 
-    constexpr BasicRadian<T> &operator *=(BasicRadian other)
+    constexpr BasicRadian<T> &operator *=(const BasicRadian &other)
     {
         _value *= other._value;
         return *this;
     }
 
-    constexpr BasicRadian<T> &operator /=(BasicRadian other)
+    constexpr BasicRadian<T> &operator /=(const BasicRadian &other)
     {
         _value /= other._value;
         return *this;
     }
+    /// @}
 
+    /** @name Comparison
+     *  @{
+     */
     /** Define the spaceship operator
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
@@ -71,7 +94,11 @@ public:
         return _value <=> other;
     }
     /// @}
+    /// @}
 
+    /** @name Equality
+     *  @{
+     */
     /** Defines equality of two BasicRadians
      *  
      *  @note Uses approximately_equal_to under-the-hood
@@ -88,7 +115,11 @@ public:
         return value() == right;
     }
     /// @}
+    /// @}
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     constexpr bool isNaN() const
     {
         return std::isnan(_value);
@@ -98,6 +129,7 @@ public:
     {
         return std::isinf(_value);
     }
+    /// @}
 
 private:
     T _value{};
@@ -124,7 +156,7 @@ private:
     }
     /// @}
 
-    /** @name BasicRadian Global Operators
+    /** @name Operators
      * 
      *  @relates BasicRadian
      * 
@@ -154,7 +186,7 @@ private:
     {
         return BasicRadian{ -input.value() };
     }
-    /// @}  {BasicRadian Global Operators}
+    /// @}  {Operators}
 };
 
 
@@ -166,6 +198,8 @@ private:
  *  This class is mainly for displaying underlying angular units and
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
+ *
+ *  @headerfile "math/Angle.hpp"
  */
 template <std::floating_point T>
 class BasicDegree
@@ -237,6 +271,9 @@ public:
     }
     /// @}  {Operators}
 
+    /** @name Comparison
+     *  @{
+     */
     /** Define the spaceship operator
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
@@ -251,6 +288,7 @@ public:
     {
         return _value <=> other;
     }
+    /// @}
     /// @}
 
     /** Defines equality of two BasicDegrees
@@ -280,6 +318,9 @@ public:
         return BasicDegree<T>{ (0.0 <= (modded = std::fmod( _value, modulus() )) ? modded : modulus() + modded) };
     }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     constexpr bool isNaN() const
     {
         return std::isnan(_value);
@@ -289,6 +330,7 @@ public:
     {
         return std::isinf(_value);
     }
+    /// @}
 
 private:
     T _value{};
@@ -315,10 +357,7 @@ private:
     }
     /// @}
 
-    /** @name BasicDegree Global Operators
-     * 
-     *  @relates BasicDegree
-     * 
+    /** @name Operators
      *  @{
      */
     friend constexpr BasicDegree<T> operator +(const BasicDegree<T> &left, const BasicDegree<T> &right)
@@ -365,7 +404,7 @@ private:
     {
         return BasicDegree{ -input.value() };
     }
-    /// @}  {BasicDegree}
+    /// @}  {Operators}
 };
 
 
