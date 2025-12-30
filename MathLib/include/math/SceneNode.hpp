@@ -58,7 +58,7 @@ public:
      */
     SceneNode(Private ,
               std::weak_ptr<SceneNode>  parent,
-              const Math::Vector3D<Type>     &translation,
+              const Math::BasicVector3D<Type>     &translation,
               const Math::BasicQuaternion<Type>   &rotation,
                     std::string_view          name)
         :
@@ -91,7 +91,7 @@ public:
 
     std::string_view name() const { return _name; }
 
-    std::weak_ptr<SceneNode<Type>> createChildNode(const Math::Vector3D<Type>   &translation = Math::Vector3D<Type>::zero(),
+    std::weak_ptr<SceneNode<Type>> createChildNode(const Math::BasicVector3D<Type>   &translation = Math::BasicVector3D<Type>::zero(),
                                                    const Math::BasicQuaternion<Type> &rotation    = Math::BasicQuaternion<Type>::identity(),
                                                          std::string_view        name        = std::string_view())
     {
@@ -122,7 +122,7 @@ public:
         node->_parent = this->weak_from_this();
     }
 
-    Math::Vector3D<Type> localToWorld(const Math::Vector3D<Type> &local_coordinate) const
+    Math::BasicVector3D<Type> localToWorld(const Math::BasicVector3D<Type> &local_coordinate) const
     {
 #if 1
         using namespace Math;
@@ -160,7 +160,7 @@ private:
     std::string                     _name;
 
     static std::shared_ptr<SceneNode<Type>> make(std::weak_ptr<SceneNode<Type>> parent,
-                                                 const Math::Vector3D<Type>     &translation,
+                                                 const Math::BasicVector3D<Type>     &translation,
                                                  const Math::BasicQuaternion<Type>   &rotation,
                                                        std::string_view          name)
     {

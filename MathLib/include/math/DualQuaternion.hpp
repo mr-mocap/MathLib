@@ -59,7 +59,7 @@ public:
         assert( real().isUnit() );
     }
     explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
-                                           const Vector3D<T>   &translation)
+                                           const BasicVector3D<T>   &translation)
         :
         _frame_of_reference{ rotation, T{0.5} * BasicQuaternion<T>::encode_point(translation) * rotation }
     {
@@ -135,7 +135,7 @@ public:
      *  @post result.real == BasicQuaternion::identity()
      *        result.dual.isPure()
      */
-    constexpr static BasicDualQuaternion<T> make_translation(const Vector3D<T> &translation)
+    constexpr static BasicDualQuaternion<T> make_translation(const BasicVector3D<T> &translation)
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
@@ -167,13 +167,13 @@ public:
         return BasicDualQuaternion<T>{ rotation, translation_x, translation_y, translation_z };
     }
 
-    constexpr static BasicDualQuaternion<T> encode_point(const Vector3D<T> &point)
+    constexpr static BasicDualQuaternion<T> encode_point(const BasicVector3D<T> &point)
     {
         return BasicDualQuaternion<T>{ BasicQuaternion<T>::identity(), point };
     }
     /// @}
 
-    constexpr static Vector3D<T> decode_point(const BasicDualQuaternion<T>& encoded_point)
+    constexpr static BasicVector3D<T> decode_point(const BasicDualQuaternion<T>& encoded_point)
     {
         return encoded_point.translation();
     }
@@ -240,7 +240,7 @@ public:
     const BasicQuaternion<T> &dual() const { return _frame_of_reference.dual; }
 
     const BasicQuaternion<T> &rotation()    const { return real(); }
-          Vector3D<T>    translation() const { return BasicQuaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
+          BasicVector3D<T>    translation() const { return BasicQuaternion<T>{T{2} * dual() * rotation().conjugate()}.imaginary(); }
 
     /** Create the normalized version of a BasicDualQuaternion
      *  

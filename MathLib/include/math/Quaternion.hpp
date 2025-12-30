@@ -25,7 +25,7 @@ namespace Math
  *        of the complex number system.
  *        Its main use is for encoding rotation in 3-dimensional space.
  *
- *  @headerfile "math/BasicQuaternion.hpp"
+ *  @headerfile "math/Quaternion.hpp"
  */
 template <class T>
 class BasicQuaternion
@@ -147,7 +147,7 @@ public:
         return T{2} * std::atan2( imaginary().magnitude(), w() );
     }
 
-    constexpr Vector3D<T> axis() const
+    constexpr BasicVector3D<T> axis() const
     {
         return imaginary().normalized();
     }
@@ -162,8 +162,8 @@ public:
     const T &j() const { return _j; }
     const T &k() const { return _k; }
 
-    /// Extracts the imaginary part of a BasicQuaternion as a Vector3D
-    constexpr Vector3D<T> imaginary() const { return { _i, _j, _k }; }
+    /// Extracts the imaginary part of a BasicQuaternion as a BasicVector3D
+    constexpr BasicVector3D<T> imaginary() const { return { _i, _j, _k }; }
     /// @}
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
@@ -211,7 +211,7 @@ public:
      *  @note A pure BasicQuaternion is one in which the w, or real, component
      *        is 0.
      */
-    constexpr static BasicQuaternion<T> make_pure(const Vector3D<T> &t) { return BasicQuaternion<T>{ T{}, t.x, t.y, t.z }; }
+    constexpr static BasicQuaternion<T> make_pure(const BasicVector3D<T> &t) { return BasicQuaternion<T>{ T{}, t.x, t.y, t.z }; }
 
     /** Encode a 3D point as a pure BasicQuaternion
      *  
@@ -235,7 +235,7 @@ public:
      *  
      *  @see make_pure
      */
-    constexpr static BasicQuaternion<T> encode_point(const Vector3D<T> &point) { return make_pure(point); }
+    constexpr static BasicQuaternion<T> encode_point(const BasicVector3D<T> &point) { return make_pure(point); }
 
     /** Enocde a rotation into a BasicQuaternion
      *  
@@ -258,12 +258,12 @@ public:
      *  
      *  @post output.isUnit() == true
      */
-    constexpr static BasicQuaternion<T> make_rotation(const BasicRadian<T> &radians, const Vector3D<T> &axis)
+    constexpr static BasicQuaternion<T> make_rotation(const BasicRadian<T> &radians, const BasicVector3D<T> &axis)
     {
         T half_angle = radians.value() * T{0.5};
         T cos_theta = cos( half_angle );
         T sin_theta = sin( half_angle );
-        Vector3D<T> n{ axis.normalized() };
+        BasicVector3D<T> n{ axis.normalized() };
 
         return BasicQuaternion<T>{ cos_theta,
                               sin_theta * n.x,
@@ -649,7 +649,7 @@ private:
      *
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
-    friend constexpr BasicQuaternion<T> polar(const Vector3D<T> &axis, const BasicRadian<T> angle = BasicRadian<T>{})
+    friend constexpr BasicQuaternion<T> polar(const BasicVector3D<T> &axis, const BasicRadian<T> angle = BasicRadian<T>{})
     {
         assert( axis.magnitude() == T{1} );
 

@@ -19,15 +19,15 @@ namespace Math
  * 
  */
 template <class Type>
-struct Vector2D
+struct BasicVector2D
 {
     using value_type = Type;
 
-    /** Class representing a reference to elements of a Vector2D object
+    /** Class representing a reference to elements of a BasicVector2D object
      * 
      *  @note This class exists to support simple vector swizzle operations.
      * 
-     *  @relates Vector2D
+     *  @relates BasicVector2D
      */
     struct Ref
     {
@@ -36,7 +36,7 @@ struct Vector2D
          */
         constexpr Ref(Type &x_in, Type &y_in) : x{x_in}, y{y_in} { }
         constexpr Ref(const Ref &) = default;
-        constexpr Ref(const Vector2D<Type> &other) : x{other.x}, y{other.y} { }
+        constexpr Ref(const BasicVector2D<Type> &other) : x{other.x}, y{other.y} { }
 
         constexpr Ref &operator =(const Ref &input)
         {
@@ -45,19 +45,19 @@ struct Vector2D
             return *this;
         }
 
-        constexpr Ref &operator =(const Vector2D<Type> &input)
+        constexpr Ref &operator =(const BasicVector2D<Type> &input)
         {
             x = input.x;
             y = input.y;
             return *this;
         }
 
-        /** Defines equality of two Vector2D::Ref objects
+        /** Defines equality of two BasicVector2D::Ref objects
          *  
          *  @note Uses approximately_equal_to under-the-hood
          *  
          *  @note We take advantage of the new C++20 rule where if there
-         *        is not an appropriate operator ==(const Vector2D<Type> &) defined
+         *        is not an appropriate operator ==(const BasicVector2D<Type> &) defined
          *        for this class, then the compiler tries a swapped instantiation
          *        in its place.  This allows us to only define the typical operator ==() here
          *        and then define comparison of different types to the other class.
@@ -79,9 +79,9 @@ struct Vector2D
         /** @name Addition
          *  @{
          */
-        /** Defines addition of two Vector2D::Ref objects
+        /** Defines addition of two BasicVector2D::Ref objects
          */
-        friend constexpr Vector2D<Type> operator +(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator +(const Ref &left, const Ref &right)
         {
             return { left.x + right.x, left.y + right.y };
         }
@@ -90,13 +90,13 @@ struct Vector2D
         /** @name Subtraction
          *  @{
          */
-        /** Defines subtraction of two Vector2D::Ref objects
+        /** Defines subtraction of two BasicVector2D::Ref objects
          */
-        friend constexpr Vector2D<Type> operator -(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator -(const Ref &left, const Ref &right)
         {
             return { left.x - right.x, left.y - right.y };
         }
-        friend constexpr Vector2D<Type> operator -(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator -(const Ref &left, const BasicVector2D<Type> &right)
         {
             return { left.x - right.x, left.y - right.y };
         }
@@ -105,68 +105,68 @@ struct Vector2D
         /** @name Multiplication
          *  @{
          */
-        /** Defines multiplication of two Vector2D::Ref objects
+        /** Defines multiplication of two BasicVector2D::Ref objects
          */
-        friend constexpr Vector2D<Type> operator *(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const BasicVector2D<Type> &right)
         {
-            return Vector2D<Type>{ left.x * right.x, left.y * right.y };
+            return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
         }
 
-        friend constexpr Vector2D<Type> operator *(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const Ref &right)
         {
-            return Vector2D<Type>{ left.x * right.x, left.y * right.y };
+            return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
         }
 
-        /** Defines multiplication of a Vector2D::Ref object by a scalar
+        /** Defines multiplication of a BasicVector2D::Ref object by a scalar
          */
-        friend constexpr Vector2D<Type> operator *(const Ref &left, Type scalar)
+        friend constexpr BasicVector2D<Type> operator *(const Ref &left, Type scalar)
         {
-            return Vector2D<Type>{ left.x * scalar, left.y * scalar };
+            return BasicVector2D<Type>{ left.x * scalar, left.y * scalar };
         }
-        /** Defines multiplication of a scalar by a Vector2D::Ref object
+        /** Defines multiplication of a scalar by a BasicVector2D::Ref object
          */
-        friend constexpr Vector2D<Type> operator *(Type scalar, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator *(Type scalar, const Ref &right)
         {
-            return Vector2D<Type>{ scalar * right.x, scalar * right.y };
+            return BasicVector2D<Type>{ scalar * right.x, scalar * right.y };
         }
         /// @}  {Multiplication}
 
         /** @name Division
          *  @{
          */
-        /** Defines division of two Vector2D::Ref objects
+        /** Defines division of two BasicVector2D::Ref objects
          */
-        friend constexpr Vector2D<Type> operator /(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator /(const Ref &left, const Ref &right)
         {
-            return Vector2D<Type>{ left.x / right.x, left.y / right.y };
+            return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
         }
 
-        friend constexpr Vector2D<Type> operator /(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator /(const Ref &left, const BasicVector2D<Type> &right)
         {
-            return Vector2D<Type>{ left.x / right.x, left.y / right.y };
+            return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
         }
 
-        /** Defines division of a Vector2D::Ref object by a scalar
+        /** Defines division of a BasicVector2D::Ref object by a scalar
          */
-        friend constexpr Vector2D<Type> operator /(const Ref &left, Type scalar)
+        friend constexpr BasicVector2D<Type> operator /(const Ref &left, Type scalar)
         {
-            return Vector2D<Type>{ left.x / scalar, left.y / scalar };
+            return BasicVector2D<Type>{ left.x / scalar, left.y / scalar };
         }
-        /** Defines division of a scalar by a Vector2D::Ref object
+        /** Defines division of a scalar by a BasicVector2D::Ref object
          */
-        friend constexpr Vector2D<Type> operator /(Type scalar, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator /(Type scalar, const Ref &right)
         {
-            return Vector2D<Type>{ scalar / right.x, scalar / right.y };
+            return BasicVector2D<Type>{ scalar / right.x, scalar / right.y };
         }
         /// @} {Division}
         /// @} {Vector2DAlgebra}
 
-        /** Vector2D conversion operator
+        /** BasicVector2D conversion operator
          * 
-         *  This allows Ref objects to automatically be converted to Vector2D objects
-         *  for situations like passing to functions or constructors to Vector2D objects.
+         *  This allows Ref objects to automatically be converted to BasicVector2D objects
+         *  for situations like passing to functions or constructors to BasicVector2D objects.
          */
-        constexpr operator Vector2D<Type>() const { return Vector2D<Type>{ x, y }; }
+        constexpr operator BasicVector2D<Type>() const { return BasicVector2D<Type>{ x, y }; }
 
         Type &x;
         Type &y;
@@ -176,11 +176,11 @@ struct Vector2D
          *  @{
          */
 
-        /** Compares two Vector2D inputs equal, component-wise, to within a tolerance
+        /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
          * 
          *  @addtogroup Equality
          * 
-         *  @relates Vector2D
+         *  @relates BasicVector2D
          *  
          *  @param value_to_test
          *  @param value_it_should_be 
@@ -204,7 +204,7 @@ struct Vector2D
         {
             return (left.x * right.x) + (left.y * right.y);
         }
-        friend constexpr Type dot(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr Type dot(const Ref &left, const BasicVector2D<Type> &right)
         {
             return (left.x * right.x) + (left.y * right.y);
         }
@@ -213,7 +213,7 @@ struct Vector2D
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        friend constexpr Type dot_normalized(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr Type dot_normalized(const Ref &left, const BasicVector2D<Type> &right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
@@ -222,24 +222,24 @@ struct Vector2D
         {
             return (left.x * right.y) - (left.y * right.x);
         }
-        friend constexpr Type cross(const Ref &left, const Vector2D<Type> &right)
+        friend constexpr Type cross(const Ref &left, const BasicVector2D<Type> &right)
         {
             return (left.x * right.y) - (left.y * right.x);
         }
 
-        friend constexpr Vector2D<Type> abs(const Ref &input)
+        friend constexpr BasicVector2D<Type> abs(const Ref &input)
         {
-            return Vector2D<Type>( std::abs(input.x), std::abs(input.y) );
+            return BasicVector2D<Type>( std::abs(input.x), std::abs(input.y) );
         }
 
-        friend constexpr Vector2D<Type> fract(const Ref &input)
+        friend constexpr BasicVector2D<Type> fract(const Ref &input)
         {
-            return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
+            return BasicVector2D<Type>( std::modf(input.x), std::modf(input.y) );
         }
 
-        constexpr Vector2D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        constexpr BasicVector2D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
         {
-            return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
+            return BasicVector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                    Math::saturate(input.y, lower_bound, upper_bound) );
         }
 
@@ -250,22 +250,22 @@ struct Vector2D
         /// @} {Private Friend Functions}
     };
 
-    constexpr Vector2D() = default;
-    constexpr Vector2D(const Type &x_in, const Type &y_in = 0)
+    constexpr BasicVector2D() = default;
+    constexpr BasicVector2D(const Type &x_in, const Type &y_in = 0)
         :
         x{x_in},
         y{y_in}
     {
     }
-    constexpr Vector2D<Type> &operator =(const Vector2D<Type> &other) = default;
-    constexpr Vector2D<Type> &operator =(const Vector2D<Type>::Ref &other)
+    constexpr BasicVector2D<Type> &operator =(const BasicVector2D<Type> &other) = default;
+    constexpr BasicVector2D<Type> &operator =(const BasicVector2D<Type>::Ref &other)
     {
         x = other.x;
         y = other.y;
         return *this;
     }
 
-    /** Defines equality of two Vector2D objects
+    /** Defines equality of two BasicVector2D objects
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -274,12 +274,12 @@ struct Vector2D
      * 
      *  @see Equality
      */
-    constexpr bool operator ==(const Vector2D<Type> &right) const
+    constexpr bool operator ==(const BasicVector2D<Type> &right) const
     {
         return approximately_equal_to(*this, right);
     }
 
-    /** Defines equality of a Vector2D and Vector2D<Type>::Ref objects
+    /** Defines equality of a BasicVector2D and BasicVector2D<Type>::Ref objects
      *  
      *  @note Uses approximately_equal_to under-the-hood
      *  
@@ -288,9 +288,9 @@ struct Vector2D
      * 
      *  @see Equality
      */
-    constexpr bool operator ==(const Vector2D<Type>::Ref &right) const
+    constexpr bool operator ==(const BasicVector2D<Type>::Ref &right) const
     {
-        return approximately_equal_to(*this, Vector2D<Type>{right});
+        return approximately_equal_to(*this, BasicVector2D<Type>{right});
     }
 
     /** @addtogroup Vector2DAlgebra 2D Vector Algebra
@@ -303,28 +303,28 @@ struct Vector2D
     /** @name Addition
      *  @{
      */
-    /** Defines addition of two Vector2D objects
+    /** Defines addition of two BasicVector2D objects
      */
-    constexpr Vector2D<Type> operator +(const Vector2D<Type> &other) const
+    constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &other) const
     {
-        return Vector2D<Type>{ x + other.x, y + other.y };
+        return BasicVector2D<Type>{ x + other.x, y + other.y };
     }
-    constexpr Vector2D<Type> operator +(const Ref &other) const
+    constexpr BasicVector2D<Type> operator +(const Ref &other) const
     {
-        return Vector2D<Type>{ x + other.x, y + other.y };
+        return BasicVector2D<Type>{ x + other.x, y + other.y };
     }
     /// @} {Addition}
 
     /** @name Subtraction
      *  @{
      */
-    /** Defines subtraction of two Vector2D objects
+    /** Defines subtraction of two BasicVector2D objects
      */
-    constexpr Vector2D<Type> operator -(const Vector2D<Type> &other) const
+    constexpr BasicVector2D<Type> operator -(const BasicVector2D<Type> &other) const
     {
         return { x - other.x, y - other.y };
     }
-    constexpr Vector2D<Type> operator -(const Ref &other) const
+    constexpr BasicVector2D<Type> operator -(const Ref &other) const
     {
         return { x - other.x, y - other.y };
     }
@@ -333,56 +333,56 @@ struct Vector2D
     /** @name Multiplication
      *  @{
      */
-    /** Defines multiplication of two Vector2D objects
+    /** Defines multiplication of two BasicVector2D objects
      */
-    constexpr Vector2D<Type> operator *(const Vector2D<Type> &right) const
+    constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &right) const
     {
-        return Vector2D<Type>{ x * right.x, y * right.y };
+        return BasicVector2D<Type>{ x * right.x, y * right.y };
     }
 
-    constexpr Vector2D<Type> operator *(const Ref &right) const
+    constexpr BasicVector2D<Type> operator *(const Ref &right) const
     {
-        return Vector2D<Type>{ x * right.x, y * right.y };
+        return BasicVector2D<Type>{ x * right.x, y * right.y };
     }
 
-    constexpr Vector2D<Type> operator *(Type scalar) const
+    constexpr BasicVector2D<Type> operator *(const Type &scalar) const
     {
-        return Vector2D<Type>{ x * scalar, y * scalar };
+        return BasicVector2D<Type>{ x * scalar, y * scalar };
     }
 
-    friend constexpr Vector2D<Type> operator *(Type scalar, const Vector2D<Type> &right)
+    friend constexpr BasicVector2D<Type> operator *(const Type &scalar, const BasicVector2D<Type> &right)
     {
-        return Vector2D<Type>{ scalar * right.x, scalar * right.y };
+        return BasicVector2D<Type>{ scalar * right.x, scalar * right.y };
     }
     /// @}  {Multiplication}
 
     /** @name Division
      *  @{
      */
-    /** Defines division of two Vector2D objects
+    /** Defines division of two BasicVector2D objects
      */
-    constexpr Vector2D<Type> operator /(const Vector2D<Type> &right) const
+    constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &right) const
     {
-        return Vector2D<Type>{ x / right.x, y / right.y };
+        return BasicVector2D<Type>{ x / right.x, y / right.y };
     }
 
-    constexpr Vector2D<Type> operator /(const Ref &right) const
+    constexpr BasicVector2D<Type> operator /(const Ref &right) const
     {
-        return Vector2D<Type>{ x / right.x, y / right.y };
+        return BasicVector2D<Type>{ x / right.x, y / right.y };
     }
 
-    /** Defines division of a Vector2D object by a scalar
+    /** Defines division of a BasicVector2D object by a scalar
      */
-    constexpr Vector2D<Type> operator /(Type scalar) const
+    constexpr BasicVector2D<Type> operator /(const Type &scalar) const
     {
-        return Vector2D<Type>{ x / scalar, y / scalar };
+        return BasicVector2D<Type>{ x / scalar, y / scalar };
     }
 
-    /** Defines division of a scalar by a Vector2D object
+    /** Defines division of a scalar by a BasicVector2D object
      */
-    friend constexpr Vector2D<Type> operator /(Type scalar, const Vector2D<Type> &right)
+    friend constexpr BasicVector2D<Type> operator /(const Type &scalar, const BasicVector2D<Type> &right)
     {
-        return Vector2D<Type>{ scalar / right.x, scalar / right.y };
+        return BasicVector2D<Type>{ scalar / right.x, scalar / right.y };
     }
     /// @}  {Division}
     /// @}  {Vector2DAlgebra}
@@ -390,10 +390,10 @@ struct Vector2D
     /** @name Constants
      *  @{
      */
-    constexpr static Vector2D<Type> unit_x() { return Vector2D{ Type{1}, Type{0} }; }
-    constexpr static Vector2D<Type> unit_y() { return Vector2D{ Type{0}, Type{1} }; }
+    constexpr static BasicVector2D<Type> unit_x() { return BasicVector2D{ Type{1}, Type{0} }; }
+    constexpr static BasicVector2D<Type> unit_y() { return BasicVector2D{ Type{0}, Type{1} }; }
 
-    constexpr static Vector2D<Type> zero() { return Vector2D{}; }
+    constexpr static BasicVector2D<Type> zero() { return BasicVector2D{}; }
     /// @}
 
     constexpr value_type normSquared() const { return (x * x) + (y * y); }
@@ -402,7 +402,7 @@ struct Vector2D
     constexpr value_type magnitudeSquared() const { return normSquared(); }
     constexpr value_type magnitude() const { return norm(); }
 
-    constexpr Vector2D<Type> normalized() const
+    constexpr BasicVector2D<Type> normalized() const
     {
         auto n = norm();
 
@@ -416,19 +416,19 @@ struct Vector2D
     /** @name Swizzle operations
      *  @{
      */
-    constexpr Vector2D<Type> xx() const { return { x, x }; }
-    constexpr Vector2D<Type> xx()       { return { x, x }; }
+    constexpr BasicVector2D<Type> xx() const { return { x, x }; }
+    constexpr BasicVector2D<Type> xx()       { return { x, x }; }
 
-    constexpr Vector2D<Type> yy() const { return { y, y }; }
-    constexpr Vector2D<Type> yy()       { return { y, y }; }
+    constexpr BasicVector2D<Type> yy() const { return { y, y }; }
+    constexpr BasicVector2D<Type> yy()       { return { y, y }; }
 
     constexpr const Ref      xy() const &  { return { x, y }; }
     constexpr       Ref      xy()       &  { return { x, y }; }
-    constexpr Vector2D<Type> xy()       && { return { x, y }; }
+    constexpr BasicVector2D<Type> xy()       && { return { x, y }; }
 
     constexpr const Ref      yx() const &  { return { y, x }; }
     constexpr       Ref      yx()       &  { return { y, x }; }
-    constexpr Vector2D<Type> yx()       && { return { y, x }; }
+    constexpr BasicVector2D<Type> yx()       && { return { y, x }; }
     /// @} {Swizzle operations}
 
 
@@ -443,11 +443,11 @@ struct Vector2D
      *  @{
      */
 
-    /** Compares two Vector2D inputs equal, component-wise, to within a tolerance
+    /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
      * 
      *  @addtogroup Equality
      * 
-     *  @relates Vector2D
+     *  @relates BasicVector2D
      * 
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -456,7 +456,7 @@ struct Vector2D
      *  @return @c true if they are equal
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const Vector2D<Type> &value_to_test, const Vector2D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicVector2D<Type> &value_to_test, const BasicVector2D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
@@ -464,14 +464,14 @@ struct Vector2D
 
     /** Sums up the components of @p input
      *  
-     *  @input The Vector2D to operate on
+     *  @input The BasicVector2D to operate on
      */
-    friend constexpr Type accumulate(const Vector2D<Type> &input)
+    friend constexpr Type accumulate(const BasicVector2D<Type> &input)
     {
         return input.x + input.y;
     }
 
-    /** Calculate the dot product of two Vector2D objects
+    /** Calculate the dot product of two BasicVector2D objects
      *
      *  @param left  The first vector
      *  @param right The second vector
@@ -484,27 +484,27 @@ struct Vector2D
      *
      *  @{
      */
-    friend constexpr Type dot(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    friend constexpr Type dot(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
         return (left.x * right.x) + (left.y * right.y);
     }
-    friend constexpr Type dot(const Vector2D<Type> &left, const Ref &right)
+    friend constexpr Type dot(const BasicVector2D<Type> &left, const Ref &right)
     {
         return (left.x * right.x) + (left.y * right.y);
     }
 
-    /** Creates the normalized form of a Vector2D
+    /** Creates the normalized form of a BasicVector2D
      *  
-     *  @param input The Vector2D to normalize
+     *  @param input The BasicVector2D to normalize
      *  
      *  @return The normalized version of @p input
      */
-    friend constexpr Vector2D<Type> normalized(const Vector2D<Type> &input)
+    friend constexpr BasicVector2D<Type> normalized(const BasicVector2D<Type> &input)
     {
         return input.normalized();
     }
 
-    /** Calculate the normalized dot product of two Vector2D objects
+    /** Calculate the normalized dot product of two BasicVector2D objects
      *
      *  The input vectors are not assumed to be normalized, so we go
      *  ahead and divide through by both the input vectors
@@ -517,17 +517,17 @@ struct Vector2D
      *
      *  @{
      */
-    friend constexpr Type dot_normalized(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    friend constexpr Type dot_normalized(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
-    friend constexpr Type dot_normalized(const Vector2D<Type> &left, const Ref &right)
+    friend constexpr Type dot_normalized(const BasicVector2D<Type> &left, const Ref &right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
     /// @} {dot_normalized}
 
-    /** Calculates a pseudo cross product between two Vector2D objects
+    /** Calculates a pseudo cross product between two BasicVector2D objects
      * 
      *  @param left  The first vector
      *  @param right The second vector
@@ -541,45 +541,45 @@ struct Vector2D
      * 
      *  @{
      */
-    friend constexpr Type cross(const Vector2D<Type> &left, const Vector2D<Type> &right)
+    friend constexpr Type cross(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
         return (left.x * right.y) - (left.y * right.x);
     }
-    friend constexpr Type cross(const Vector2D<Type> &left, const Ref &right)
+    friend constexpr Type cross(const BasicVector2D<Type> &left, const Ref &right)
     {
         return (left.x * right.y) - (left.y * right.x);
     }
     /// @} {cross}
 
-    /** Calculate the absolute value of all components of a Vector2D
+    /** Calculate the absolute value of all components of a BasicVector2D
      *   
-     *   @param input The Vector2D to operate on
+     *   @param input The BasicVector2D to operate on
      *
-     *   @return The Vector2D with only positive values
+     *   @return The BasicVector2D with only positive values
      */
-    friend constexpr Vector2D<Type> abs(const Vector2D<Type> &input)
+    friend constexpr BasicVector2D<Type> abs(const BasicVector2D<Type> &input)
     {
-        return Vector2D<Type>( std::abs(input.x), std::abs(input.y) );
+        return BasicVector2D<Type>( std::abs(input.x), std::abs(input.y) );
     }
 
-    /** Calculate the fractional part of all components of a Vector2D
+    /** Calculate the fractional part of all components of a BasicVector2D
      *   
-     *   @param input The Vector2D to operate on
+     *   @param input The BasicVector2D to operate on
      *
-     *   @return The Vector2D with only fractional values
+     *   @return The BasicVector2D with only fractional values
      */
-    friend constexpr Vector2D<Type> fract(const Vector2D<Type> &input)
+    friend constexpr BasicVector2D<Type> fract(const BasicVector2D<Type> &input)
     {
-        return Vector2D<Type>( std::modf(input.x), std::modf(input.y) );
+        return BasicVector2D<Type>( std::modf(input.x), std::modf(input.y) );
     }
 
-    friend constexpr Vector2D<Type> saturate(const Vector2D<Type> &input, const Type lower_bound, Type upper_bound)
+    friend constexpr BasicVector2D<Type> saturate(const BasicVector2D<Type> &input, const Type lower_bound, Type upper_bound)
     {
-        return Vector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
+        return BasicVector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
                                Math::saturate(input.y, lower_bound, upper_bound) );
     }
 
-    friend std::string format(const Vector2D<Type> &input)
+    friend std::string format(const BasicVector2D<Type> &input)
     {
         return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
     }
@@ -595,7 +595,7 @@ struct Vector2D
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -623,7 +623,7 @@ struct Vector2D
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -641,49 +641,48 @@ struct Vector2D
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const Vector2D<Type> &input, const Vector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
     template <std::floating_point OT = float>
-    friend void CHECK_IF_ZERO(const Vector2D<Type> &input, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_ZERO(const BasicVector2D<Type> &input, OT tolerance = OT{0.0002})
     {
-        assert( check_if_equal(input, Vector2D<Type>::zero(), tolerance));
+        assert( check_if_equal(input, BasicVector2D<Type>::zero(), tolerance));
     }
     /// @} {Hidden Friend Functions}
 };
 
-/** @name Vector2D::Ref Type Aliases
+/** @name BasicVector2D::Ref Type Aliases
  *  
- *  @relates Vector2D
+ *  @relates BasicVector2D
  * 
  *  @{
  */
-template <class T>
-using Vector2DRef = typename Vector2D<T>::Ref;
-
-using Vector2DfRef = Vector2DRef<float>;
-using Vector2DdRef = Vector2DRef<double>;
-using Vector2DldRef = Vector2DRef<long double>;
-///@}  {Vector2D::Ref Type Aliases}
+using Vector2DfRef = BasicVector2D<float>::Ref;
+using Vector2DdRef = BasicVector2D<double>::Ref;
+using Vector2DRef  = BasicVector2D<double>::Ref;
+using Vector2DlRef = BasicVector2D<long double>::Ref;
+///@}  {BasicVector2D::Ref Type Aliases}
 
 
-/** @name Vector2D Type Aliases
+/** @name BasicVector2D Type Aliases
  *  
- *  @relates Vector2D
+ *  @relates BasicVector2D
  * 
  *  @{
  */
-using Vector2Df = Vector2D<float>;
-using Vector2Dd = Vector2D<double>;
-using Vector2Dld = Vector2D<long double>;
-///@}  {Vector2D Type Aliases}
+using Vector2Df = BasicVector2D<float>;
+using Vector2Dd = BasicVector2D<double>;
+using Vector2D  = BasicVector2D<double>;
+using Vector2Dl = BasicVector2D<long double>;
+///@}  {BasicVector2D Type Aliases}
 
 }
