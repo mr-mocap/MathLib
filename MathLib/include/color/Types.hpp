@@ -26,11 +26,22 @@ template <std::integral T>
 class BasicRGB
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The type of the underlying implementation for each color
+    /// @}
 
-    constexpr BasicRGB() = default;
+    /** @name Constructors
+     *  @{
+     */
+    constexpr BasicRGB() = default; ///< Defaults to (0, 0, 0)
     explicit constexpr BasicRGB(value_type r, value_type g, value_type b) : _red{ r }, _green{ g }, _blue{ b } { }
+    /// @}
 
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicRGB<T> min()
     {
         const T mn = std::numeric_limits<T>::min();
@@ -46,6 +57,7 @@ public:
     }
 
     static constexpr BasicRGB<T> zero() { return BasicRGB<T>(); }
+    /// @}
 
     /** @name Element Access
      *  @{
@@ -94,28 +106,14 @@ protected:
     value_type _green{};
     value_type _blue{};
 
-    /** @name Hidden Friend Functions
+    /** @name Operators
      *  @{
      */
-
-    /** @name Global Operators
-     * 
-     *  @relates BasicRGB
-     * 
-     *  @{
-     */
-
-    /** @addtogroup BasicRGBColorAlgebra Color Algebra
+    /** @addtogroup BasicRGBColorAlgebra RGB Color Algebra
      * 
      *  RGB Color Algebra
      * 
      *  @{
-     */
-
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two BasicRGB objects
      */
     friend constexpr BasicRGB<T> operator +(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
@@ -124,13 +122,7 @@ protected:
                             Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
                           );
     }
-    /// @}  {Addition}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two BasicRGB objects
-     */
     friend constexpr BasicRGB<T> operator -(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
         return BasicRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
@@ -138,13 +130,7 @@ protected:
                             Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
                           );
     }
-    /// @}  {Subtraction}
 
-    /** @name Multiplication
-     *  @{
-     */
-    /** Defines multiplication of two BasicRGB objects
-     */
     friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
         return BasicRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
@@ -160,10 +146,8 @@ protected:
                             Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
                           );
     }
-    /// @}  {Multiplication}
-    /// @}  {BasicRGBColorAlgebra}
-    /// @}  {Global Operators}
-    /// @}  {Hidden Friend Functions}
+    /// @} {BasicRGBColorAlgebra}
+    /// @} {Operators}
 };
 
 
@@ -177,9 +161,17 @@ template <std::floating_point T>
 class BasicUnitRGB
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The type of the underlying implementation for each color
+    /// @}
 
+    /** @name Constructors
+     *  @{
+     */
     constexpr BasicUnitRGB() = default;
+
     explicit constexpr BasicUnitRGB(value_type r, value_type g, value_type b)
         :
         _red{ r },
@@ -190,6 +182,7 @@ public:
         assert( _isInBounds( _green ) );
         assert( _isInBounds( _blue ) );
     }
+
     constexpr BasicUnitRGB(const BasicUnitRGB<T> &other)
         :
         _red{   other._red   },
@@ -198,19 +191,7 @@ public:
     {
         assert( other.isNormalized() );
     }
-    constexpr BasicUnitRGB<T> &operator =(const BasicUnitRGB<T> &other)
-    {
-        assert( other.isNormalized() );
 
-        if ( this == &other )
-            return *this;
-        
-        _red   = other._red;
-        _green = other._green;
-        _blue  = other._blue;
-
-        return *this;
-    }
     template<std::integral OtherT>
     constexpr BasicUnitRGB(const BasicRGB<OtherT> &other)
         :
@@ -226,13 +207,35 @@ public:
 
         assert( isNormalized() );
     }
+    /// @}
 
+    constexpr BasicUnitRGB<T> &operator =(const BasicUnitRGB<T> &other)
+    {
+        assert( other.isNormalized() );
+
+        if ( this == &other )
+            return *this;
+        
+        _red   = other._red;
+        _green = other._green;
+        _blue  = other._blue;
+
+        return *this;
+    }
+
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicUnitRGB<T> min() { return zero(); }
 
     static constexpr BasicUnitRGB<T> max() { return BasicUnitRGB<T>( T{1.0}, T{1.0}, T{1.0} ); }
 
     static constexpr BasicUnitRGB<T> zero() { return BasicUnitRGB<T>(); }
+    /// @}
 
+    /** @name Element Access
+     *  @{
+     */
     constexpr value_type red() const { return _red; }
     constexpr value_type green() const { return _green; }
     constexpr value_type blue() const { return _blue; }
@@ -276,6 +279,7 @@ public:
     {
         blue( input );
     }
+    /// @}
 
     constexpr bool isNormalized() const
     {
@@ -284,9 +288,13 @@ public:
                _isInBounds( _blue );
     }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     bool isNaN() const { return std::isnan(_red) || std::isnan(_green) || std::isnan(_blue); }
 
     bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
+    /// @}
 
 protected:
     value_type _red{};
@@ -320,24 +328,15 @@ protected:
     }
     /// @}
 
-    /** @name Global Operators
-     * 
-     *  @relates BasicUnitRGB
-     * 
+    /** @name Operators
      *  @{
      */
 
-    /** @addtogroup BasicUnitRGB Color Algebra
+    /** @addtogroup BasicUnitRGBColorAlgebra Unit RGB Color Algebra
      * 
-     *  RGB Color Algebra
+     *  Unit RGB Color Algebra
      * 
      *  @{
-     */
-
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two BasicUnitRGB objects
      */
     friend constexpr BasicUnitRGB<T> operator +(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
@@ -346,13 +345,7 @@ protected:
                                 Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
                               );
     }
-    /// @}  {Addition}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two BasicHSV objects
-     */
     friend constexpr BasicUnitRGB<T> operator -(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
         return BasicUnitRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
@@ -360,13 +353,7 @@ protected:
                                 Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
                             );
     }
-    /// @}  {Subtraction}
 
-    /** @name Multiplication
-     *  @{
-     */
-    /** Defines multiplication of two BasicUnitRGB objects
-     */
     friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
         return BasicUnitRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
@@ -382,9 +369,8 @@ protected:
                                 Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
                             );
     }
-    /// @}  {Multiplication}
-    /// @}  {RGBColorAlgebra}
-    /// @}  {GlobalOperators}
+    /// @}  {BasicUnitRGBColorAlgebra}
+    /// @}  {Operators}
 };
 
 
@@ -408,8 +394,15 @@ class BasicHue
     }
 
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The type of the underlying implementation for each color
+    /// @}
 
+    /** @name Constructors
+     *  @{
+     */
     constexpr BasicHue() = default;
     constexpr BasicHue(Math::BasicDegree<T> init_value)
         :
@@ -422,6 +415,7 @@ public:
         _value( Math::BasicDegree<T>{ init_value }.modulo() )
     {
     }
+    /// @}
 
     /** @name Element Access
      *  @{
@@ -429,18 +423,29 @@ public:
     T value() const { return _value.value(); }
     /// @}
 
+    /** @name Conversion Operators
+     *  @{
+     */
     operator T() const { return _value.value(); }
 
     operator Math::BasicDegree<T>() const { return _value; }
+    /// @}
 
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicHue<T> min() { return zero(); }
 
     static constexpr BasicHue<T> max() { return BasicHue<T>( Math::BasicDegree<T>::modulus(), not_checked{} ); }
 
     static constexpr BasicHue<T> zero() { return BasicHue<T>(); }
+    /// @}
     
     constexpr BasicHue<T> modulo() const { return BasicHue<T>( _value.modulo() ); }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     constexpr bool isNaN() const
     {
         return _value.isNan();
@@ -450,6 +455,7 @@ public:
     {
         return _value.isInf();
     }
+    /// @}
 
     /** @name Operators
      *  @{
@@ -527,6 +533,9 @@ public:
     }
     /// @}  {Operators}
 
+    /** @name Comparison
+     *  @{
+     */
     /** Define the spaceship operator
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
@@ -544,10 +553,12 @@ public:
         return _value.value() <=> other;
     }
     /// @}
+    /// @}  {Comparison}
 
+    /** @name Equality
+     *  @{
+     */
     /** Defines equality of two BasicHue objects
-     *  
-     *  @note Uses approximately_equal_to under-the-hood
      *  
      *  @note Use C++20's ability to generate the operator !=() from operator ==()
      * 
@@ -556,9 +567,6 @@ public:
      *  @{
      */
     constexpr bool operator ==(const BasicHue<T> &right) const = default;
-    // {
-    //     return _value == right._value;
-    // }
     constexpr bool operator ==(const Math::BasicDegree<T> &right) const
     {
         return _value == right;
@@ -568,6 +576,7 @@ public:
         return _value.value() == right;
     }
     /// @}
+    /// @}  {Equality}
 
 protected:
     Math::BasicDegree<T> _value{};
@@ -594,10 +603,7 @@ protected:
     }
     /// @}
 
-    /** @name BasicHue Global Operators
-     * 
-     *  @relates BasicHue
-     * 
+    /** @name Operators
      *  @{
      */
     friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const BasicHue<T> &right)
@@ -684,7 +690,7 @@ protected:
     {
         return BasicHue{ -input.value() };
     }
-    /// @}  {BasicHue}
+    /// @}  {Operators}
 };
 
 
@@ -698,7 +704,11 @@ template <std::floating_point T>
 class BasicHSV
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The type of the underlying implementation for each color
+    /// @}
 
     enum Color {
         Red,
@@ -709,6 +719,9 @@ public:
         Magenta
     };
 
+    /** @name Constructors
+     *  @{
+     */
     constexpr BasicHSV() = default;
     constexpr BasicHSV(Math::BasicDegree<value_type> h, value_type s, value_type v)
         :
@@ -727,6 +740,8 @@ public:
     {
         assert( other.isNormalized() );
     }
+    /// @}
+
     constexpr BasicHSV &operator =(const BasicHSV &other)
     {
         assert( other.isNormalized() );
@@ -741,6 +756,9 @@ public:
         return *this;
     }
 
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicHSV<T> min()
     {
         return BasicHSV<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
@@ -750,10 +768,34 @@ public:
     {
         return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
     }
+    /// @}
 
+    /** @name Element Access
+     *  @{
+     */
     constexpr Math::BasicDegree<value_type> hue() const { return _hue; }
     constexpr value_type saturation() const { return _saturation; }
     constexpr value_type value() const { return _value; }
+
+    constexpr void hue(Math::BasicDegree<value_type> input)
+    {
+        _hue = input;
+    }
+
+    constexpr void saturation(value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _saturation = input;
+    }
+
+    constexpr void value(value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _value = input;
+    }
+    /// @}
 
     constexpr enum Color hueColor() const
     {
@@ -774,25 +816,6 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(Math::BasicDegree<value_type> input)
-    {
-        _hue = input;
-    }
-
-    constexpr void saturation(value_type input)
-    {
-        assert( _isInBounds( input ) );
-
-        _saturation = input;
-    }
-
-    constexpr void value(value_type input)
-    {
-        assert( _isInBounds( input ) );
-
-        _value = input;
-    }
-
     constexpr bool isNormalized() const
     {
         return _isInBoundsUpTo( _hue.value(), value_type{0.0}, Math::BasicDegree<value_type>::modulus() ) &&
@@ -800,9 +823,13 @@ public:
                _isInBounds( _value );
     }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_value); }
 
     bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_value); }
+    /// @}
 
 protected:
     Math::BasicDegree<value_type> _hue{};
@@ -897,7 +924,11 @@ template <std::floating_point T>
 class BasicHSL
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The type of the underlying implementation for each color
+    /// @}
 
     enum Color {
         Red,
@@ -908,6 +939,9 @@ public:
         Magenta
     };
 
+    /** @name Constructors
+     *  @{
+     */
     constexpr BasicHSL() = default;
     constexpr BasicHSL(Math::BasicDegree<value_type> h, value_type s, value_type l)
         :
@@ -926,6 +960,8 @@ public:
     {
         assert( other.isNormalized() );
     }
+    /// @}
+
     constexpr BasicHSL &operator =(const BasicHSL &other)
     {
         assert( other.isNormalized() );
@@ -940,6 +976,9 @@ public:
         return *this;
     }
 
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicHSL<T> min()
     {
         return BasicHSL<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
@@ -949,10 +988,34 @@ public:
     {
         return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
     }
+    /// @}
 
+    /** @name Element Access
+     *  @{
+     */
     constexpr Math::BasicDegree<value_type> hue() const { return _hue; }
     constexpr value_type saturation() const { return _saturation; }
     constexpr value_type lightness() const { return _lightness; }
+
+    constexpr void hue(Math::BasicDegree<value_type> input)
+    {
+        _hue = input;
+    }
+
+    constexpr void saturation(value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _saturation = input;
+    }
+
+    constexpr void lightness(value_type input)
+    {
+        assert( _isInBounds( input ) );
+
+        _lightness = input;
+    }
+    /// @}
 
     constexpr enum Color hueColor() const
     {
@@ -973,25 +1036,6 @@ public:
         return Magenta;
     }
 
-    constexpr void hue(Math::BasicDegree<value_type> input)
-    {
-        _hue = input;
-    }
-
-    constexpr void saturation(value_type input)
-    {
-        assert( _isInBounds( input ) );
-
-        _saturation = input;
-    }
-
-    constexpr void lightness(value_type input)
-    {
-        assert( _isInBounds( input ) );
-
-        _lightness = input;
-    }
-
     constexpr bool isNormalized() const
     {
         return _isInBoundsUpTo( _hue, 0.0, Math::BasicDegree<value_type>::modulus() ) &&
@@ -999,9 +1043,13 @@ public:
                _isInBounds( _lightness );
     }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_lightness); }
 
     bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_lightness); }
+    /// @}
 
 protected:
     Math::BasicDegree<value_type> _hue{};

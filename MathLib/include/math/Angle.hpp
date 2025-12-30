@@ -343,8 +343,8 @@ private:
 
     /** @addtogroup Equality
      * 
-     *  @relates BasicDegree
-     *  
+     *  @name Equality
+     * 
      *  @{
      * 
      *  Compares two BasicDegree inputs equal to within a tolerance
