@@ -18,18 +18,24 @@ namespace Math
 {
 
 /** Class representing the concept of a dual number
- *  
- *  @headerfile "math/Dual.hpp"
  */
 template<class T>
 class BasicDual
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The underlying implementation type
+    /// @}
 
-    BasicDual() = default;
+    /** @name Constructors
+     *  @{
+     */
+    BasicDual() = default; ///< Defaults to 0,0
     explicit constexpr BasicDual(const T &r) : real(r) { }
     explicit constexpr BasicDual(const T &r, const T &e) : real(r), dual(e) { }
+    /// @}
 
     /** @name Constants
      *  @{
@@ -66,6 +72,9 @@ public:
     }
     /// @}
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     bool isNaN() const
     {
         if constexpr ( std::is_floating_point_v<T> )
@@ -81,6 +90,7 @@ public:
         else
             return real.isInf() || dual.isInf();
     }
+    /// @}
 
     /** @name Element Access
      *  @{
@@ -89,10 +99,9 @@ public:
     T dual{};
     /// @}
 
-    /** @name Hidden Friend Functions
+    /** @name Equality
      *  @{
      */
-
     /** Defines equality of two Duals
      *  
      *  @note Uses approximately_equal_to under-the-hood
@@ -105,8 +114,9 @@ public:
     {
         return approximately_equal_to(left, right);
     }
+    /// @}
 
-    /** @addtogroup DualAlgebra BasicDual Number Algebra
+    /** @addtogroup DualAlgebra Dual Number Algebra
      *  @{
      */
 
@@ -149,7 +159,7 @@ public:
                        (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
     }
 
-    /** Defines division of a single-precision scalar and a BasicDual
+    /** Defines division of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator /(OT scalar, const BasicDual<T> &d)
@@ -157,7 +167,7 @@ public:
         return BasicDual<T>( T(scalar) ) / d;
     }
 
-    /** Defines division of a BasicDual and a single-precision scalar
+    /** Defines division of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, OT scalar)
@@ -176,7 +186,7 @@ public:
         return BasicDual<T>(left.real + right.real, left.dual + right.dual);
     }
 
-    /** Defines addition of a single-precision scalar and a BasicDual
+    /** Defines addition of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator +(OT scalar, const BasicDual<T> &d)
@@ -184,7 +194,7 @@ public:
         return BasicDual<T>( T(scalar) ) + d;
     }
 
-    /** Defines addition of a BasicDual and a single-precision scalar
+    /** Defines addition of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, OT scalar)
@@ -203,7 +213,7 @@ public:
         return BasicDual<T>(left.real - right.real, left.dual - right.dual);
     }
 
-    /** Defines subtraction of a single-precision scalar and a BasicDual
+    /** Defines subtraction of a single-precision scalar and a Dual
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator -(OT scalar, const BasicDual<T> &d)
@@ -211,7 +221,7 @@ public:
         return BasicDual<T>( T(scalar) ) - d;
     }
 
-    /** Defines subtraction of a BasicDual and a single-precision scalar
+    /** Defines subtraction of a Dual and a single-precision scalar
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, OT scalar)
@@ -387,7 +397,6 @@ public:
     {
         assert( check_if_equal(input, BasicDual<T>::zero(), tolerance));
     }
-    /// @} {Hidden Friend Functions}
 };
 
 

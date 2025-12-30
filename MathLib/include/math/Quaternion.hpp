@@ -319,14 +319,14 @@ private:
     }
     /// @}  {Equality}
 
-    /** @addtogroup QuaternionAlgebra BasicQuaternion Algebra
+    /** @addtogroup QuaternionAlgebra Quaternion Algebra
      *  @{
      */
 
     /** @name Multiplication
      *  @{
      */
-    /** Implements multiplication of a BasicQuaternion by a scalar
+    /** Implements multiplication of a Quaternion by a scalar
      */
     template <std::floating_point OT = double>
     friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
@@ -334,7 +334,7 @@ private:
         return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
     }
 
-    /** Implements multiplication of a scalar by a BasicQuaternion
+    /** Implements multiplication of a scalar by a Quaternion
      */
     template <std::floating_point OT = double>
     friend constexpr BasicQuaternion<T> operator *(OT scalar, const BasicQuaternion<T> &quaternion)
@@ -344,7 +344,7 @@ private:
 
     /** Defines multiplication of two Quaternions
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
@@ -372,9 +372,9 @@ private:
     /** @name Division
      *  @{
      */
-    /** Defines division of a BasicQuaternion by a scalar
+    /** Defines division of a Quaternion by a scalar
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     template <std::floating_point OT = double>
     friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, OT scalar)
@@ -382,9 +382,9 @@ private:
         return BasicQuaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
     }
 
-    /** Defines division of a scalar by a BasicQuaternion
+    /** Defines division of a scalar by a Quaternion
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     template <std::floating_point OT = double>
     friend constexpr BasicQuaternion<T> operator /(OT scalar, const BasicQuaternion<T> &quaternion)
@@ -394,7 +394,7 @@ private:
 
     /** Defines division of two Quaternions
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
@@ -407,7 +407,7 @@ private:
      */
     /** Defines addition of two Quaternions
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     friend constexpr BasicQuaternion<T> operator +(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
@@ -424,7 +424,7 @@ private:
      */
     /** Defines subtraction of two Quaternions
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      */
     friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
@@ -436,9 +436,9 @@ private:
     }
     /// @}
 
-    /** Defines negation of a BasicQuaternion
+    /** Defines negation of a Quaternion
      *  
-     *  @return the new BasicQuaternion
+     *  @return the new Quaternion
      * 
      *  @name Negation
      */
@@ -625,9 +625,9 @@ private:
         return rotation_2 * rotation_1;
     }
 
-    /** Creates the normalized form of a BasicQuaternion
+    /** Creates the normalized form of a Quaternion
      *  
-     *  @param input The BasicQuaternion to normalize
+     *  @param input The Quaternion to normalize
      *  
      *  @return The normalized version of @p input
      */
@@ -636,7 +636,7 @@ private:
         return input.normalized();
     }
 
-    /** Computes the phase-angle (in radians of a BasicQuaternion)
+    /** Computes the phase-angle (in radians of a Quaternion)
      *
      *  @note This is meant to mirror the behavior of std::arg( std::complex )
      */
@@ -645,7 +645,7 @@ private:
         return input.angle().value();
     }
 
-    /** Constructs a unit BasicQuaternion from the given axis and angle
+    /** Constructs a unit Quaternion from the given axis and angle
      *
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
