@@ -1040,10 +1040,10 @@ protected:
     /// @}  {GlobalOperators}
 };
 
-typedef BasicHue<float>  Huef;
-typedef BasicHue<double> Hue;
-typedef BasicHue<double> Hued;
-typedef BasicHue<long double> Huel;
+using Huef = BasicHue<float>;
+using Hued = BasicHue<double>;
+using Hue  = BasicHue<double>;
+using Huel = BasicHue<long double>;
 
 template <class T>
 using RGB = BasicRGB<T>;
