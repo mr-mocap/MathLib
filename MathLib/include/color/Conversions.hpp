@@ -14,16 +14,16 @@
 namespace Color
 {
 
-template <std::integral T, class OT = float>
-constexpr UnitRGB<OT> normalized(const RGB<T> &input)
+template <std::integral T, std::floating_point OT = float>
+constexpr BasicUnitRGB<OT> normalized(const BasicRGB<T> &input)
 {
     const OT max_value = std::numeric_limits<T>::max;
 
-    return UnitRGB<OT>{ input.red() / max_value, input.green() / max_value, input.blue() / max_value };
+    return BasicUnitRGB<OT>{ input.red() / max_value, input.green() / max_value, input.blue() / max_value };
 }
 
 template <class T>
-constexpr T min(const RGB<T> &input)
+constexpr T min(const BasicRGB<T> &input)
 {
     if constexpr ( std::is_floating_point_v<T> )
         return std::fmin( std::fmin( input.red(), input.green() ), input.blue() );
@@ -34,13 +34,13 @@ constexpr T min(const RGB<T> &input)
 }
 
 template <class T>
-constexpr T min(const UnitRGB<T> &input)
+constexpr T min(const BasicUnitRGB<T> &input)
 {
     return std::fmin( std::fmin( input.red(), input.green() ), input.blue() );
 }
 
 template <class T>
-constexpr T max(const RGB<T> &input)
+constexpr T max(const BasicRGB<T> &input)
 {
     if constexpr ( std::is_floating_point_v<T> )
         return std::fmax( std::fmax( input.red(), input.green() ), input.blue() );
@@ -51,13 +51,13 @@ constexpr T max(const RGB<T> &input)
 }
 
 template <class T>
-constexpr T max(const UnitRGB<T> &input)
+constexpr T max(const BasicUnitRGB<T> &input)
 {
     return std::fmax( std::fmax( input.red(), input.green() ), input.blue() );
 }
 
 template <std::floating_point T>
-HSV<T> ToHSV(const UnitRGB<T> &input)
+BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 {
     assert( input.isNormalized() );
 
@@ -72,7 +72,7 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
 
     // When delta is zero, avoid dividing by delta (0)
     if ( Math::approximately_equal_to( cmax, cmin ) )
-        return HSV<T>{ Math::BasicDegree<T>(), T{}, v};
+        return BasicHSV<T>{ Math::BasicDegree<T>(), T{}, v};
 
     // Saturation
     if ( Math::approximately_equal_to( v, T{} ) )
@@ -99,7 +99,7 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
     hue = std::fmod( hue / T{6.0}, T{1.0} );
 
     // But make hue be 0 - 360 upon return...
-    return HSV<T>{ Math::BasicDegree<T>(hue * Math::BasicDegree<T>::modulus()).modulo(), saturation, v };
+    return BasicHSV<T>{ Math::BasicDegree<T>(hue * Math::BasicDegree<T>::modulus()).modulo(), saturation, v };
 #else
     // https://web.archive.org/web/20200207113336/http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
     using namespace Math;
@@ -120,12 +120,12 @@ HSV<T> ToHSV(const UnitRGB<T> &input)
 }
 
 template <std::floating_point T>
-UnitRGB<T> ToRGB(const HSV<T> &input_hsv)
+BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
 {
     // https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
 #if 1
     if ( Math::approximately_equal_to( input_hsv.saturation(), T{0} ) )
-        return UnitRGB<T>{ input_hsv.value(), input_hsv.value(), input_hsv.value() };
+        return BasicUnitRGB<T>{ input_hsv.value(), input_hsv.value(), input_hsv.value() };
 
     Math::BasicDegree<T> hh = input_hsv.hue().modulo();
 
@@ -137,28 +137,28 @@ UnitRGB<T> ToRGB(const HSV<T> &input_hsv)
     T q = input_hsv.value() * (T{1.0} - (input_hsv.saturation() * ff));
     T t = input_hsv.value() * (T{1.0} - (input_hsv.saturation() * (T{1.0} - ff)));
 
-    UnitRGB<T> out;
+    BasicUnitRGB<T> out;
 
     switch ( i )
     {
         case 0:
-            out = UnitRGB<T>{ input_hsv.value(), t, p };
+            out = BasicUnitRGB<T>{ input_hsv.value(), t, p };
             break;
         case 1:
-            out = UnitRGB<T>{ q, input_hsv.value(), p };
+            out = BasicUnitRGB<T>{ q, input_hsv.value(), p };
             break;
         case 2:
-            out = UnitRGB<T>{ p, input_hsv.value(), t };
+            out = BasicUnitRGB<T>{ p, input_hsv.value(), t };
             break;
         case 3:
-            out = UnitRGB<T>{ p, q, input_hsv.value() };
+            out = BasicUnitRGB<T>{ p, q, input_hsv.value() };
             break;
         case 4:
-            out = UnitRGB<T>{ t, p, input_hsv.value() };
+            out = BasicUnitRGB<T>{ t, p, input_hsv.value() };
             break;
         case 5:
         default:
-            out = UnitRGB<T>{ input_hsv.value(), p, q };
+            out = BasicUnitRGB<T>{ input_hsv.value(), p, q };
             break;
     }
 
@@ -203,7 +203,7 @@ UnitRGB<T> ToRGB(const HSV<T> &input_hsv)
 }
 
 template <std::floating_point T>
-HSL<T> ToHSL(const HSV<T> &input_hsv)
+BasicHSL<T> ToHSL(const BasicHSV<T> &input_hsv)
 {
     // https://en.wikipedia.org/wiki/HSL_and_HSV (HSV to HSL)
     // 
@@ -216,11 +216,11 @@ HSL<T> ToHSL(const HSV<T> &input_hsv)
     else
         saturation = (input_hsv.value() - lightness) / std::min(lightness, T{1.0} - lightness);
 
-    return HSL<T>{ input_hsv.value(), saturation, lightness };
+    return BasicHSL<T>{ input_hsv.value(), saturation, lightness };
 }
 
 template <std::floating_point T>
-HSV<T> ToHSV(const HSL<T> &input_hsl)
+BasicHSV<T> ToHSV(const BasicHSL<T> &input_hsl)
 {
     // https://en.wikipedia.org/wiki/HSL_and_HSV (HSV to HSL)
     // 
@@ -233,7 +233,7 @@ HSV<T> ToHSV(const HSL<T> &input_hsl)
     else
         saturation = T{2.0} * (T{1.0} - input_hsl.lightness() / value);
 
-    return HSV<T>{ input_hsl.hue(), saturation, value };
+    return BasicHSV<T>{ input_hsl.hue(), saturation, value };
 }
 
 }
