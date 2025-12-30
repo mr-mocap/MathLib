@@ -83,9 +83,11 @@ void RadianHasAllComparisonOperators()
 
     assert( a == b   );
     assert( a == 0.0 );
+    assert( 0.0 == a );
     assert( a == b.value() );
     assert( a != c );
     assert( a != (std::numbers::pi_v<double> / 2.0) );
+    assert( (std::numbers::pi_v<double> / 2.0) != a );
 
     assert(   d < b   );
     assert(   d < 0.0 );

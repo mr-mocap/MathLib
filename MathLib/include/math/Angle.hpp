@@ -35,7 +35,7 @@ public:
      *  @{
      */
     constexpr BasicRadian() = default; ///< Defaults to 0
-    explicit constexpr BasicRadian(T value) : _value(value) { }
+    constexpr BasicRadian(T value) : _value(value) { }
     /// @}
 
     /** @name Constants
@@ -88,11 +88,7 @@ public:
      * 
      *  @{
      */
-    constexpr auto operator <=>(const BasicRadian<T> &other) const = default;
-    constexpr auto operator <=>(const T &other) const
-    {
-        return _value <=> other;
-    }
+    friend constexpr auto operator <=>(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
     /// @}
     /// @}
 
@@ -109,11 +105,7 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const BasicRadian<T> &right) const = default;
-    constexpr bool operator ==(const T &right) const
-    {
-        return value() == right;
-    }
+    friend constexpr bool operator ==(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
     /// @}
     /// @}
 
@@ -205,13 +197,31 @@ template <std::floating_point T>
 class BasicDegree
 {
 public:
-    constexpr BasicDegree() = default;
-    explicit constexpr BasicDegree(T value) : _value(value) { }
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The underlying implementation type
+    /// @}
+
+    /** @name Constructors
+     *  @{
+     */
+    constexpr BasicDegree() = default; ///< Defaults to 0
+    constexpr BasicDegree(T value) : _value(value) { }
     constexpr BasicDegree(const BasicRadian<T> &value) : _value( RadiansToDegrees(value.value()) ) { }
+    /// @}
 
+    /** @name Conversion Operators
+     *  @{
+     */
     operator BasicRadian<T>() { return BasicRadian<T>{DegreesToRadians(_value)}; }
+    /// @}
 
+    /** @name Constants
+     *  @{
+     */
     static constexpr BasicDegree<T> zero() { return BasicDegree<T>(); }
+    /// @}
 
     /** @name Element Access
      *  @{
@@ -283,14 +293,13 @@ public:
      * 
      *  @{
      */
-    constexpr auto operator <=>(const BasicDegree<T> &other) const = default;
-    constexpr auto operator <=>(T other) const
-    {
-        return _value <=> other;
-    }
+    friend constexpr auto operator <=>(const BasicDegree<T> &left, const BasicDegree<T> &right) = default;
     /// @}
     /// @}
 
+    /** @name Equality
+     *  @{
+     */
     /** Defines equality of two BasicDegrees
      *  
      *  @note Uses approximately_equal_to under-the-hood
@@ -301,11 +310,8 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const BasicDegree<T> &right) const = default;
-    constexpr bool operator ==(T right) const
-    {
-        return value() == right;
-    }
+    friend constexpr bool operator ==(const BasicDegree<T> &left, const BasicDegree<T> &right) = default;
+    /// @}
     /// @}
 
     
