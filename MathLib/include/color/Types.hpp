@@ -8,9 +8,20 @@
 #include <concepts>
 
 
+/** @file
+ *  
+ *  Defines various color types
+ *
+ *  @hideincludegraph
+ */
+
 namespace Color
 {
 
+/** The definition of an RGB color triple
+ *  
+ *  @headerfile "color/Types.hpp"
+ */
 template <std::integral T>
 class BasicRGB
 {
@@ -36,6 +47,9 @@ public:
 
     static constexpr BasicRGB<T> zero() { return BasicRGB<T>(); }
 
+    /** @name Element Access
+     *  @{
+     */
     constexpr value_type red() const { return _red; }
     constexpr value_type green() const { return _green; }
     constexpr value_type blue() const { return _blue; }
@@ -73,11 +87,16 @@ public:
     {
         blue( input );
     }
+    /// @}
 
 protected:
     value_type _red{};
     value_type _green{};
     value_type _blue{};
+
+    /** @name Hidden Friend Functions
+     *  @{
+     */
 
     /** @name Global Operators
      * 
@@ -86,7 +105,7 @@ protected:
      *  @{
      */
 
-    /** @addtogroup BasicRGB Color Algebra
+    /** @addtogroup BasicRGBColorAlgebra Color Algebra
      * 
      *  RGB Color Algebra
      * 
@@ -142,11 +161,18 @@ protected:
                           );
     }
     /// @}  {Multiplication}
-    /// @}  {RGBColorAlgebra}
-    /// @}  {GlobalOperators}
+    /// @}  {BasicRGBColorAlgebra}
+    /// @}  {Global Operators}
+    /// @}  {Hidden Friend Functions}
 };
 
 
+/** The definition of an RGB color triple with normalized members between 0.0 and 1.0
+ *  
+ *  @headerfile "color/Types.hpp"
+ * 
+ *  @see BasicRGB
+ */
 template <std::floating_point T>
 class BasicUnitRGB
 {
@@ -362,6 +388,14 @@ protected:
 };
 
 
+/** The definition of a Hue color
+ *  
+ *  @note The natural range is 0.0 - 360.0
+ * 
+ *  @headerfile "color/Types.hpp"
+ * 
+ *  @see BasicRGB
+ */
 template <std::floating_point T>
 class BasicHue
 {
@@ -654,7 +688,13 @@ protected:
 };
 
 
-template <std::floating_point T = float>
+/** The definition of an HSV color
+ *  
+ *  This represents a color as Hue, Saturation, and Value.
+ * 
+ *  @headerfile "color/Types.hpp"
+ */
+template <std::floating_point T>
 class BasicHSV
 {
 public:
@@ -847,7 +887,13 @@ protected:
     /// @}  {GlobalOperators}
 };
 
-template <std::floating_point T = float>
+/** The definition of an HSL color
+ *  
+ *  This represents a color as Hue, Saturation, and Lightness.
+ * 
+ *  @headerfile "color/Types.hpp"
+ */
+template <std::floating_point T>
 class BasicHSL
 {
 public:
@@ -1040,24 +1086,81 @@ protected:
     /// @}  {GlobalOperators}
 };
 
+/** @addtogroup Types Color Types
+ * 
+ *  Color Type-Alias Definitions 
+ * 
+ *  @{
+ */
+
+ /** @name Hue
+  * 
+  *  Various Hue class type aliases
+  * 
+  *  @see BasicHue
+  * 
+  *  @{
+  */
 using Huef = BasicHue<float>;
 using Hued = BasicHue<double>;
 using Hue  = BasicHue<double>;
 using Huel = BasicHue<long double>;
+/// @}
 
-template <class T>
-using RGB = BasicRGB<T>;
-using RGBb = RGB<uint8_t>;
+ /** @name RGB
+  * 
+  *  Various RGB class type aliases
+  * 
+  *  @see BasicRGB
+  * 
+  *  @{
+  */
 
-template <class T>
-using UnitRGB = BasicUnitRGB<T>;
-using UnitRGBf = UnitRGB<float>;
+/// @{
+using RGBb  = BasicRGB<uint8_t>;
+using RGBs  = BasicRGB<unsigned short>;
+using RGBi  = BasicRGB<unsigned int>;
+/// @}
 
-template <class T>
-using HSV = BasicHSV<T>;
-using HSVf = HSV<float>;
+/// @{
+using UnitRGBf = BasicUnitRGB<float>;
+using UnitRGBd = BasicUnitRGB<double>;
+using UnitRGB  = BasicUnitRGB<double>;
+using UnitRGBl = BasicUnitRGB<long double>;
+/// @}
 
-template <class T>
-using HSL = BasicHSL<T>;
-using HSLf = HSL<float>;
+/// @{
+using RGB8  = BasicRGB<uint8_t>;
+using RGB16 = BasicRGB<unsigned short>;
+using RGB32 = BasicRGB<unsigned int>;
+/// @}
+
+/// @}
+
+ /** @name HSV
+  * 
+  *  Various HSV class type aliases
+  * 
+  *  @{
+  */
+using HSVf  = BasicHSV<float>;
+using HSVd  = BasicHSV<double>;
+using HSV   = BasicHSV<double>;
+using HSVld = BasicHSV<long double>;
+/// @}
+
+ /** @name HSL
+  * 
+  *  Various HSL class type aliases
+  * 
+  *  @{
+  */
+using HSLf = BasicHSL<float>;
+using HSLd = BasicHSL<double>;
+using HSL  = BasicHSL<double>;
+using HSLl = BasicHSL<long double>;
+/// @}
+
+/// @}
+
 }
