@@ -16,34 +16,80 @@
 namespace Math
 {
 
-// C++ 20 has std::lerp() in <cmath>, so use that by default
+/** Linear interpolate a value from a lower bound to an upper bound
+ * 
+ *  @param input_lower_bound      The lower bound
+ *  @param input_upper_bound      The upper bound
+ *  @param percentage_zero_to_one The percentage along the interpolation
+ */
 template <class Type>
 constexpr inline Type lerp(Type input_lower_bound, Type input_upper_bound, float percentage_zero_to_one)
 {
+    // C++ 20 has std::lerp() in <cmath>, so use that by default
     if constexpr (std::is_floating_point<Type>::value)
         return std::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
     else
         return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
 }
 
+/** Linear interpolate a value from a lower bound to an upper bound
+ * 
+ *  @param input_lower_bound      The lower bound
+ *  @param input_upper_bound      The upper bound
+ *  @param percentage_zero_to_one The percentage along the interpolation
+ * 
+ *  @note This is identical to the @c lerp function.
+ * 
+ *  @see lerp
+ */
 template <class Type>
 constexpr inline Type mix(Type input_lower_bound, Type input_upper_bound, float percentage_zero_to_one)
 {
     return Math::lerp(input_lower_bound, input_upper_bound, percentage_zero_to_one);
 }
 
+/** Produces the percentage of interpolation of a value within a range
+ *   
+ *  @param input_lower_bound  The lower bound
+ *  @param input_upper_bound  The upper bound
+ *   @param value_between     A value that you want to find the percentage interpolation of
+ * 
+ *   @return The percentage of @c value_between between @c input_lower_bound and @c input_upper_bound
+ */
 template <class Type>
 constexpr inline Type inverse_lerp(Type input_lower_bound, Type input_upper_bound, Type value_between)
 {
     return (value_between - input_lower_bound) / (input_upper_bound - input_lower_bound);
 }
 
+/** Map an input value within a range to a new range
+ *   
+ *  This will give you the @c input_value adjusted to within a
+ *  new range of values, keeping the percentage of the @c input_value
+ *  within the original range in the new range.
+ *  
+ *  @param input_value    The input value
+ *  @param orig_range_min The original range's minimum value
+ *  @param orig_range_max The original range's maximum value
+ *  @param new_range_min  The new range's minimum value
+ *  @param new_range_max  The new range's minimum value
+ * 
+ *  @return The @c input value mapped to a the new range
+ */
 template <class Type>
 constexpr inline Type remap(Type input_value, Type orig_range_min, Type orig_range_max, Type new_range_min, Type new_range_max)
 {
     return lerp(new_range_min, new_range_max, inverse_lerp(orig_range_min, orig_range_max, input_value));
 }
 
+/** Saturate a value to within a range
+ * 
+ *  @param value       The value to saturate
+ *  @param lower_bound The minimum value to clamp to
+ *  @param upper_bound The maximum value to clamp to
+ * 
+ *  @return The @c value clamped to within the given bounds
+ */
 template <class Type>
 constexpr inline const Type &saturate(const Type &value, const Type &lower_bound, const Type &upper_bound)
 {
