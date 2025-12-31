@@ -6,3 +6,9 @@
  *  - @subpage Tests
  *  - @subpage Papers
  */
+
+/** @defgroup UserDefinedLiterals User-Defined Literals
+ */
+
+/** @defgroup TypeAliases Aliases For Types
+ */

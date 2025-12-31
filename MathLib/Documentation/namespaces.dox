@@ -1,0 +1,14 @@
+/** @namespace Math
+ *   
+ *  Contains Mathematical Constructs
+ */
+
+/** @namespace Math::Literals
+ *
+ *  Contains User-Defined Literal Definitions of Mathematical Constructs
+ */
+
+/** @namespace Math::Combinatorics
+ *
+ *  Contains Combinatorics-Related Items
+ */
