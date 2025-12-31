@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/Functions.hpp"
+#include <math/Functions.hpp>
 #include <cassert>
 #include <concepts>
 #include <type_traits>
@@ -18,6 +18,8 @@ namespace Math
 {
 
 /** Class representing the concept of a dual number
+ *
+ *  @headerfile <> <math/Dual.hpp>
  */
 template<class T>
 class BasicDual
@@ -400,16 +402,18 @@ public:
 };
 
 
-/** @name Type Aliases
+/** @defgroup DualAliases Dual Types
  * 
- *  @relates BasicDual
+ *  Here are the type aliases for Dual
  * 
+ *  @ingroup TypeAliases
+ *  @name Dual Aliases
  *  @{
  */
-using Dualf = BasicDual<float>;
-using Duald = BasicDual<double>;
-using Dual  = BasicDual<double>;
+using Dualf  = BasicDual<float>;
+using Duald  = BasicDual<double>;
+using Dual   = BasicDual<double>;
 using Dualld = BasicDual<long double>;
-/// @}
+/// @}  {DualAliases}
 
 }
