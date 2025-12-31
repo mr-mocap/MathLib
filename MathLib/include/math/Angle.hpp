@@ -19,6 +19,8 @@ namespace Math
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
  *
+ *  @see @ref RadianLiterals for convenient user-defined literals.
+ * 
  *  @headerfile <> <math/Angle.hpp>
  */
 template <std::floating_point T>
@@ -91,11 +93,8 @@ public:
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
      *        other relational operators (C++20).
-     * 
-     *  @{
      */
     friend constexpr auto operator <=>(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
-    /// @}
     /// @}
 
     /** @name Equality
@@ -103,16 +102,11 @@ public:
      */
     /** Defines equality of two BasicRadians
      *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
      *  @note Use C++20's ability to generate the operator !=() from operator ==()
      * 
      *  @see Equality
-     * 
-     *  @{
      */
     friend constexpr bool operator ==(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
-    /// @}
     /// @}
 
     /** @name Invalid Value Check
@@ -196,6 +190,8 @@ private:
  *  This class is mainly for displaying underlying angular units and
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
+ *
+ *  @see @ref DegreeLiterals for convenient user-defined literals.
  *
  *  @headerfile <> <math/Angle.hpp>
  */
@@ -424,65 +420,91 @@ private:
 namespace Literals
 {
 
-/** @addtogroup DegreeLiterals Degree User-Defined Literals
- * 
- *  Here are the user-defined literals for Degrees
+/** @defgroup DegreeUserDefinedLiterals Degree Literals
+
+ *  Here are the user-defined literals for Radian
  * 
  *  @ingroup UserDefinedLiterals
+ * 
  *  @{
  */
-/** User-defined literal for degrees */
+/** @name User-Defined Literals
+ * 
+ *  @relates BasicDegree
+ *  @{
+ */
+/** Documentation */
 constexpr BasicDegree<float> operator ""_deg_f(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
+/** Documentation */
 constexpr BasicDegree<float> operator ""_deg_F(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
+/** Documentation */
 constexpr BasicDegree<float> operator ""_degf(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
+/** Documentation */
 constexpr BasicDegree<float> operator ""_degF(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
+/** Documentation */
 constexpr BasicDegree<double> operator ""_deg(long double degrees)
 {
     return BasicDegree<double>{ static_cast<double>(degrees) };
 }
 
+/** Documentation */
 constexpr BasicDegree<long double> operator ""_deg_l(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
+/** Documentation */
 constexpr BasicDegree<long double> operator ""_deg_L(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
+/** Documentation */
 constexpr BasicDegree<long double> operator ""_degl(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
+/** Documentation */
 constexpr BasicDegree<long double> operator ""_degL(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 /// @}
+/// @}  {User-Defined Literals}
 
-/** @addtogroup RadianLiterals Radian User-Defined Literals
- * 
- *  Here are the user-defined literals for Radians
+}
+
+namespace Literals
+{
+
+/** @defgroup RadianUserDefinedLiterals Radian Literals
+ *  
+ *  Here are the user-defined literals for Radian
  * 
  *  @ingroup UserDefinedLiterals
+ * 
+ *  @{
+ */
+/** @name User-Defined Literals
+ * 
+ *  @relates BasicRadian
  *  @{
  */
 constexpr BasicRadian<float> operator ""_rad_f(long double radians)
@@ -530,6 +552,7 @@ constexpr BasicRadian<long double> operator ""_radL(long double radians)
     return BasicRadian<long double>{radians};
 }
 /// @}
+/// @}
 
 }
 
@@ -538,27 +561,37 @@ constexpr BasicRadian<long double> operator ""_radL(long double radians)
  *  Here are the type aliases for Degrees
  * 
  *  @ingroup TypeAliases
- *  @name Degree Aliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicDegree
  *  @{
  */
 using Degreef  = BasicDegree<float>;
 using Degreed  = BasicDegree<double>;
 using Degree   = BasicDegree<double>;
 using Degreel  = BasicDegree<long double>;
+/// @}
 /// @}  {DegreeAliases}
 
 /** @defgroup RadianAliases Radian Types
  * 
- *  Here are the type aliases for Radians
+ *  Here are the type aliases for Radian
  * 
  *  @ingroup TypeAliases
- *  @name Radian Aliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicRadian
  *  @{
  */
 using Radianf  = BasicRadian<float>;
 using Radiand  = BasicRadian<double>;
 using Radian   = BasicRadian<double>;
 using Radianl  = BasicRadian<long double>;
+/// @}
 /// @}  {RadianAliases}
 
 }
