@@ -76,7 +76,13 @@ public:
         _value /= other._value;
         return *this;
     }
-    /// @}
+
+    constexpr BasicRadian<T> &operator /=(const T &other)
+    {
+        _value /= other;
+        return *this;
+    }
+    /// @}  {Operators}
 
     /** @name Comparison
      *  @{
@@ -288,8 +294,6 @@ public:
      *   
      *  @note We define ONLY the <=> AND == operators in order to get all the
      *        other relational operators (C++20).
-     *        If we only allowed comparison of ONLY this class type to itself then
-     *        we would only need the defaulted <=> operator.
      * 
      *  @{
      */
@@ -343,8 +347,8 @@ private:
 
     /** @addtogroup Equality
      * 
-     *  @name Equality
-     * 
+     *  @relates BasicDegree
+     *  
      *  @{
      * 
      *  Compares two BasicDegree inputs equal to within a tolerance
@@ -364,6 +368,9 @@ private:
     /// @}
 
     /** @name Operators
+     * 
+     *  @relates BasicDegree
+     * 
      *  @{
      */
     friend constexpr BasicDegree<T> operator +(const BasicDegree<T> &left, const BasicDegree<T> &right)
