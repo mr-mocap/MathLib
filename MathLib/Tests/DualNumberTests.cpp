@@ -96,6 +96,32 @@ void DualScalarSquareRootTimesItselfIsTheOriginalNumber()
     CHECK_IF_EQUAL( original_number, root_squared );
 }
 
+void OperatorEquality()
+{
+    Dual d( 12.0 );
+
+    assert( d == 12.0 );
+    assert( 12.0 == d );
+    assert( d == Dual( 12.0 ) );
+}
+
+void OperatorMultiply()
+{
+    Dual d( 16.0 );
+    Dual r = d * 2.0;
+
+    assert( r == 32.0 );
+    assert( r == Dual( 32.0 ) );
+    assert( 32.0 == r );
+    assert( Dual( 32.0 ) == r );
+}
+
+void TestOperators()
+{
+    OperatorEquality();
+    OperatorMultiply();
+}
+
 /** Run all of the unit tests in this namespace
  * 
  */
@@ -108,6 +134,7 @@ void Run()
     MakePureDualSetsRealComponentToZero();
     MakePureDualSetsDualComponentToGivenValue();
     DualScalarSquareRootTimesItselfIsTheOriginalNumber();
+    TestOperators();
 
     std::cout << "PASSED!" << std::endl;
 }

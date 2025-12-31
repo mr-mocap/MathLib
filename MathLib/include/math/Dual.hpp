@@ -34,9 +34,18 @@ public:
     /** @name Constructors
      *  @{
      */
-    BasicDual() = default; ///< Defaults to 0,0
-    explicit constexpr BasicDual(const T &r) : real(r) { }
-    explicit constexpr BasicDual(const T &r, const T &e) : real(r), dual(e) { }
+    BasicDual() = default; ///< Defaults to (0,0)
+    
+    /** Sets the @c real part to @c r and leaves the dual part as 0
+     * 
+     *  @note We don't make this an explicit constructor so that we may take
+     *        advantage of operators using the hidden-friend idiom and allow
+     *        for minimal code while allowing natural conversions to promote
+     *        a scalar to a BasicDual to occur.
+     */
+    BasicDual(const T &r) : real(r) { }
+
+    explicit constexpr BasicDual(const T &r, const T &d) : real(r), dual(d) { }
     /// @}
 
     /** @name Constants
@@ -122,18 +131,26 @@ public:
      *  @{
      */
 
-    /** @name Multiplication
+    /** @name Operators
+     * 
+     *  @relates BasicDual
+     * 
      *  @{
      */
-    /** Defines multiplication of two Duals
-     */
+
+    /// Defines multiplication of two Duals
     friend constexpr BasicDual<T> operator *(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return BasicDual<T>(left.real * right.real,
-                       left.real * right.dual + right.real * left.dual);
+                            left.real * right.dual + right.real * left.dual);
     }
 
-    /** Defines multiplication of a single-precision scalar and a BasicDual
+    /** Defines multiplication of a floating-point scalar and a BasicDual
+     * 
+     *  @note Yes, we need this.  What if the type @c T is NOT a floating-point
+     *        type?  In other parts of the library, we work with a BasicDual<BasicQuaternion<T>>,
+     *        so @c T would be a BasicQuaternion<?> and thus, @c T(scalar) would be constructing
+     *        a BasicQuaternion from a scalar value.
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator *(OT scalar, const BasicDual<T> &d)
@@ -141,27 +158,33 @@ public:
         return BasicDual<T>( T(scalar) ) * d;
     }
 
-    /** Defines multiplication of a BasicDual and a single-precision scalar
+    /** Defines multiplication of a BasicDual and a floating-point scalar
+     * 
+     *  @note Yes, we need this.  What if the type @c T is NOT a floating-point
+     *        type?  In other parts of the library, we work with a BasicDual<BasicQuaternion<T>>,
+     *        so @c T would be a BasicQuaternion<?> and thus, @c T(scalar) would be constructing
+     *        a BasicQuaternion from a scalar value.
      */
     template <std::floating_point OT = double>
-    friend constexpr BasicDual<T> operator *(const BasicDual<T> &left, OT scalar)
+    friend constexpr BasicDual<T> operator *(const BasicDual<T> &d, OT scalar)
     {
-        return left * BasicDual<T>( T(scalar) );
+        return d * BasicDual<T>( T(scalar) );
     }
-    /// @}
 
-    /** @name Division
-     *  @{
-     */
-    /** Defines division of two Duals
-     */
+    /// Defines division of two Duals
     friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return BasicDual<T>(left.real * right.real / (right.real * right.real),
                        (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
     }
 
-    /** Defines division of a single-precision scalar and a Dual
+    /** Defines division of a floating-point scalar and a BasicDual
+     * 
+     *  @note Yes, we need this.
+     *        What if the type @c T is NOT a floating-point type?
+     *        In other parts of the library, we work with a BasicDual<BasicQuaternion<T>>,
+     *        so @c T would be a BasicQuaternion<?> and thus, @c T(scalar) would be constructing
+     *        a BasicQuaternion from a scalar value.
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator /(OT scalar, const BasicDual<T> &d)
@@ -169,71 +192,65 @@ public:
         return BasicDual<T>( T(scalar) ) / d;
     }
 
-    /** Defines division of a Dual and a single-precision scalar
+    /** Defines division of a Dual and a floating-point scalar
+     * 
+     *  @note Yes, we need this.
+     *        What if the type @c T is NOT a floating-point type?
+     *        In other parts of the library, we work with a BasicDual<BasicQuaternion<T>>,
+     *        so @c T would be a BasicQuaternion<?> and thus, @c T(scalar) would be constructing
+     *        a BasicQuaternion from a scalar value.
      */
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, OT scalar)
     {
         return left / BasicDual<T>( T(scalar) );
     }
-    /// @}
 
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two Duals
-     */
+    /// Defines addition of two Duals
     friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return BasicDual<T>(left.real + right.real, left.dual + right.dual);
     }
 
-    /** Defines addition of a single-precision scalar and a Dual
-     */
+    /// Defines addition of a floating-point scalar and a Dual
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator +(OT scalar, const BasicDual<T> &d)
     {
         return BasicDual<T>( T(scalar) ) + d;
     }
 
-    /** Defines addition of a Dual and a single-precision scalar
-     */
+    /// Defines addition of a Dual and a floating-point scalar
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, OT scalar)
     {
         return left + BasicDual<T>( T(scalar) );
     }
-    /// @}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two Duals
-     */
+    /// Defines subtraction of two Duals
     friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, const BasicDual<T> &right)
     {
         return BasicDual<T>(left.real - right.real, left.dual - right.dual);
     }
 
-    /** Defines subtraction of a single-precision scalar and a Dual
-     */
+    /// Defines subtraction of a floating-point scalar and a Dual
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator -(OT scalar, const BasicDual<T> &d)
     {
         return BasicDual<T>( T(scalar) ) - d;
     }
 
-    /** Defines subtraction of a Dual and a single-precision scalar
-     */
+    /// Defines subtraction of a Dual and a floating-point scalar
     template <std::floating_point OT = double>
     friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, OT scalar)
     {
         return left - BasicDual<T>( T(scalar) );
     }
-    /// @}  {Subtraction}
+    /// @}  {Operators}
     /// @}  {DualAlgebra}
 
     /** @addtogroup Equality
+     * 
+     *  @relates BasicDual
      * 
      *  @{
      *  
@@ -244,17 +261,23 @@ public:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     * 
-     *  @relates BasicDual
+     *  
+     *  @see Equality
      */
-    template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test, const BasicDual<T> &value_it_should_be, OT tolerance = OT{0.0002})
+    //template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test, const BasicDual<T> &value_it_should_be, T tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
                approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
     }
     /// @}  {Equality}
 
+    /** @name Global Functions
+     * 
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
     /** Calculates the dot-product of two Duals
      *  
      *  @return The dot-product of the two inputs
@@ -325,6 +348,7 @@ public:
     {
         return std::format("[real: {}, dual: {}]", input.real, input.dual);
     }
+    /// @} {GlobalFunctions}
 
     /** @addtogroup Checks
      * 
@@ -407,13 +431,18 @@ public:
  *  Here are the type aliases for Dual
  * 
  *  @ingroup TypeAliases
- *  @name Dual Aliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicDual
  *  @{
  */
 using Dualf  = BasicDual<float>;
 using Duald  = BasicDual<double>;
 using Dual   = BasicDual<double>;
 using Dualld = BasicDual<long double>;
+/// @}
 /// @}  {DualAliases}
 
 }

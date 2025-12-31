@@ -331,9 +331,20 @@ void UnitQuaternionHasNormOfOne()
 void DividingByAScalarDividesEachComponent()
 {
     std::cout << __func__ << std::endl;
+    {
+        Quaternionf a(1.0f, 2.0f, 3.0f, 4.0f);
+        Quaternionf a_div = a / 2.0f;
+        Quaternionf b(1.0f / 2.0f, 2.0f / 2.0f, 3.0f / 2.0f, 4.0f / 2.0f);
 
-    CHECK_IF_EQUAL( Quaternionf{1.0f, 2.0f, 3.0f, 4.0f} / 2.0f, Quaternionf{1.0f / 2.0f, 2.0f / 2.0f, 3.0f / 2.0f, 4.0f / 2.0f} );
-    CHECK_IF_EQUAL( Quaternionf{1.0f, 2.0f, 3.0f, 4.0f} / 3.0f, Quaternionf{1.0f / 3.0f, 2.0f / 3.0f, 3.0f / 3.0f, 4.0f / 3.0f} );
+        CHECK_IF_EQUAL( a_div, b );
+    }
+    {
+        Quaternionf a(1.0f, 2.0f, 3.0f, 4.0f);
+        Quaternionf a_div = a / 3.0f;
+        Quaternionf b(1.0f / 3.0f, 2.0f / 3.0f, 3.0f / 3.0f, 4.0f / 3.0f);
+
+        CHECK_IF_EQUAL( a_div, b );
+    }
 }
 
 void MultiplyingByItsOwnInverseProducesUnity()

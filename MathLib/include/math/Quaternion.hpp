@@ -31,11 +31,19 @@ template <class T>
 class BasicQuaternion
 {
 public:
-    using value_type = T;
+    /** @name Types
+     *  @{
+     */
+    using value_type = T; ///< The underlying implementation type
+    /// @}
 
+    /** @name Constructors
+     *  @{
+     */
     BasicQuaternion() = default;
-    explicit constexpr BasicQuaternion(T real_number) : _w(real_number) { } ///< Constructs a BasicQuaternion equivalent to the given real number
+    constexpr BasicQuaternion(T real_number) : _w(real_number) { } ///< Constructs a BasicQuaternion equivalent to the given real number
     explicit constexpr BasicQuaternion(T w, T i, T j, T k) : _w(w), _i(i), _j(j), _k(k) { }
+    /// @}
 
     /** @name Constants
      *  @{
@@ -67,7 +75,7 @@ public:
         T magnitude{ imaginary().magnitude() };
 
         // Are we a purely real number?
-        if ( approximately_equal_to(magnitude, T{0}) )
+        if ( approximately_equal_to(magnitude, T{0.0}) )
             return BasicQuaternion{ std::pow( w(), exponent ) }; // Yes, so only compute the real part
 
         // Calculate the angle
@@ -96,7 +104,7 @@ public:
         T e_to_the_w{ std::exp( w() ) };
         T vector_part_magnitude{ imaginary().magnitude() };
         T cos_v{ std::cos(vector_part_magnitude) };
-        T sin_v{ (vector_part_magnitude > T{0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0} };
+        T sin_v{ (vector_part_magnitude > T{0.0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0.0} };
 
         return BasicQuaternion{ cos_v,
                            sin_v * i(),
@@ -114,7 +122,7 @@ public:
         T magnitude_of_imaginary_part{ imaginary().magnitude() };
 
         // Are we purely a real number?
-        if ( approximately_equal_to(magnitude_of_imaginary_part, T{0}) )
+        if ( approximately_equal_to(magnitude_of_imaginary_part, T{0.0}) )
             return BasicQuaternion{ std::log( w() ) }; // YES, so just set the w() component (the others will be zero)
 
         T this_norm{ norm() };
@@ -144,7 +152,7 @@ public:
 
     BasicRadian<T> angle() const
     {
-        return T{2} * std::atan2( imaginary().magnitude(), w() );
+        return T{2.0} * std::atan2( imaginary().magnitude(), w() );
     }
 
     constexpr BasicVector3D<T> axis() const
@@ -175,6 +183,9 @@ public:
     // Checks if the real() part is 0
     bool isPure() const { return approximately_equal_to(real(), T{}); }
 
+    /** @name Invalid Value Check
+     *  @{
+     */
     bool isNaN() const
     {
         if constexpr ( std::is_floating_point_v<T> )
@@ -189,6 +200,7 @@ public:
         else
             return _w.isInf() || _i.isInf() || _j.isInf() || _k.isInf();
     }
+    /// @}
 
     /** @name Convenience Creation Functions
      *  @{
@@ -278,10 +290,9 @@ private:
     T _j{};
     T _k{};
 
-    /** @name Hidden Friend Functions
+    /** @name Equality
      *  @{
      */
-
     /** Defines equality of two Quaternions
      *  
      *  @note Uses approximately_equal_to under-the-hood
@@ -294,6 +305,7 @@ private:
     {
         return approximately_equal_to(left, right);
     }
+    /// @}
 
     /** @addtogroup Equality
      * 
@@ -308,6 +320,8 @@ private:
      *  @param tolerance          How close they should be to be considered equal
      *  
      *  @return @c true if they are equal
+     * 
+     *  @see Equality
      */
     template <std::floating_point OT = float>
     friend constexpr bool approximately_equal_to(const BasicQuaternion<T> &value_to_test, const BasicQuaternion<T> &value_it_should_be, OT tolerance = OT{0.0002})
@@ -323,129 +337,82 @@ private:
      *  @{
      */
 
-    /** @name Multiplication
+    /** @name Operators
+     * 
+     *  @relates BasicQuaternion
+     * 
      *  @{
      */
-    /** Implements multiplication of a Quaternion by a scalar
-     */
-    template <std::floating_point OT = double>
-    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
-    {
-        return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
-    }
+    // template <std::floating_point OT = double>
+    // friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
+    // {
+    //     return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
+    // }
 
-    /** Implements multiplication of a scalar by a Quaternion
-     */
-    template <std::floating_point OT = double>
-    friend constexpr BasicQuaternion<T> operator *(OT scalar, const BasicQuaternion<T> &quaternion)
-    {
-        return BasicQuaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
-    }
+    // template <std::floating_point OT = double>
+    // friend constexpr BasicQuaternion<T> operator *(OT scalar, const BasicQuaternion<T> &quaternion)
+    // {
+    //     return BasicQuaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
+    // }
 
-    /** Defines multiplication of two Quaternions
-     *  
-     *  @return the new Quaternion
-     */
     friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return BasicQuaternion<T>{left.w() * right.w() - (left.i() * right.i() +
                                                      left.j() * right.j() +
                                                      left.k() * right.k()),
-                             left.w() * right.i() +
-                             left.i() * right.w() +
-                             left.j() * right.k() -
-                             left.k() * right.j(),
-                            
-                             left.w() * right.j() -
-                             left.i() * right.k() +
-                             left.j() * right.w() +
-                             left.k() * right.i(),
-                            
-                             left.w() * right.k() +
-                             left.i() * right.j() -
-                             left.j() * right.i() +
-                             left.k() * right.w()
+                                  left.w() * right.i() +
+                                  left.i() * right.w() +
+                                  left.j() * right.k() -
+                                  left.k() * right.j(),
+                                
+                                  left.w() * right.j() -
+                                  left.i() * right.k() +
+                                  left.j() * right.w() +
+                                  left.k() * right.i(),
+                                
+                                  left.w() * right.k() +
+                                  left.i() * right.j() -
+                                  left.j() * right.i() +
+                                  left.k() * right.w()
         };
     }
-    /// @}
 
-    /** @name Division
-     *  @{
-     */
-    /** Defines division of a Quaternion by a scalar
-     *  
-     *  @return the new Quaternion
-     */
-    template <std::floating_point OT = double>
+    template <std::floating_point OT>
     friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, OT scalar)
     {
-        return BasicQuaternion<T>{ quaternion.w() / scalar, quaternion.i() / scalar, quaternion.j() / scalar, quaternion.k() / scalar };
+        return BasicQuaternion<T>( quaternion.w() / T(scalar),
+                                   quaternion.i() / T(scalar),
+                                   quaternion.j() / T(scalar),
+                                   quaternion.k() / T(scalar) );
     }
 
-    /** Defines division of a scalar by a Quaternion
-     *  
-     *  @return the new Quaternion
-     */
-    template <std::floating_point OT = double>
-    friend constexpr BasicQuaternion<T> operator /(OT scalar, const BasicQuaternion<T> &quaternion)
-    {
-        return BasicQuaternion<T>{ scalar / quaternion.w(), scalar / quaternion.i(), scalar / quaternion.j(), scalar / quaternion.k() };
-    }
-
-    /** Defines division of two Quaternions
-     *  
-     *  @return the new Quaternion
-     */
     friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return left * right.inverse();
     }
-    /// @}
 
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two Quaternions
-     *  
-     *  @return the new Quaternion
-     */
     friend constexpr BasicQuaternion<T> operator +(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return BasicQuaternion<T>{ left.w() + right.w(),
-                              left.i() + right.i(),
-                              left.j() + right.j(),
-                              left.k() + right.k()
-                            };
+        return BasicQuaternion<T>( left.w() + right.w(),
+                                   left.i() + right.i(),
+                                   left.j() + right.j(),
+                                   left.k() + right.k() );
     }
-    /// @}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two Quaternions
-     *  
-     *  @return the new Quaternion
-     */
     friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return BasicQuaternion<T>{ left.w() - right.w(),
-                              left.i() - right.i(),
-                              left.j() - right.j(),
-                              left.k() - right.k()
+                                   left.i() - right.i(),
+                                   left.j() - right.j(),
+                                   left.k() - right.k()
                             };
     }
-    /// @}
 
-    /** Defines negation of a Quaternion
-     *  
-     *  @return the new Quaternion
-     * 
-     *  @name Negation
-     */
     friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &q)
     {
         return BasicQuaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
     }
+    /// @}  {Operators}
     /// @}  {QuaternionAlgebra}
 
     /** @addtogroup Checks
@@ -712,14 +679,19 @@ private:
         return input.exp();
     }
     /// @} {GlobalFunctions}
-    /// @} {HiddenFriendFunctions}
 };
 
 
-/** @name Type Aliases
- *
- *  @relates BasicQuaternion
+/** @defgroup QuaternionAliases Quaternion Types
  * 
+ *  Here are the type aliases for Quaternions
+ * 
+ *  @ingroup TypeAliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicQuaternion
  *  @{
  */
 using Quaternionf  = BasicQuaternion<float>;
@@ -727,5 +699,6 @@ using Quaterniond  = BasicQuaternion<double>;
 using Quaternion   = BasicQuaternion<double>;
 using Quaternionld = BasicQuaternion<long double>;
 /// @}
+/// @}  {QuaternionAliases}
 
 }
