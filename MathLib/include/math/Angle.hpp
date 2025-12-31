@@ -423,7 +423,9 @@ private:
 
 namespace Literals
 {
-/** @name User-Defined Literals
+/** @addtogroup UserDefinedLiterals
+ * 
+ *  @name Degree Literals
  * 
  *  @relates BasicDegree
  * 
@@ -473,9 +475,11 @@ constexpr BasicDegree<long double> operator ""_degL(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
-/// @}  {User-Defined Literals}
+/// @}  {UserDefinedLiterals}
 
-/** @name User-Defined Literals
+/** @addtogroup UserDefinedLiterals
+ * 
+ *  @name Radian Literals
  * 
  *  @relates BasicRadian
  * 
@@ -525,12 +529,10 @@ constexpr BasicRadian<long double> operator ""_radL(long double radians)
 {
     return BasicRadian<long double>{radians};
 }
-/// @}  {User-Defined Literals}
+/// @}  {UserDefinedLiterals}
 }
 
-/** @name Degree Type Aliases
- * 
- *  @relates Degree
+/** @addtogroup TypeAliases
  * 
  *  @{
  */
@@ -538,11 +540,9 @@ using Degreef  = BasicDegree<float>;
 using Degreed  = BasicDegree<double>;
 using Degree   = BasicDegree<double>;
 using Degreel  = BasicDegree<long double>;
-/// @} {Degree Type Aliases}
+/// @}  {TypeAliases}
 
-/** @name Radian Type Aliases
- * 
- *  @relates Radian
+/** @addtogroup TypeAliases
  * 
  *  @{
  */
@@ -550,6 +550,6 @@ using Radianf  = BasicRadian<float>;
 using Radiand  = BasicRadian<double>;
 using Radian   = BasicRadian<double>;
 using Radianl  = BasicRadian<long double>;
-/// @}  {Radian Type Aliases}
+/// @}  {TypeAliases}
 
 }
