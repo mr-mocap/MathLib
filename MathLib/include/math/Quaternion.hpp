@@ -343,23 +343,17 @@ private:
      * 
      *  @{
      */
-    // template <std::floating_point OT = double>
-    // friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
-    // {
-    //     return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
-    // }
-
-    // template <std::floating_point OT = double>
-    // friend constexpr BasicQuaternion<T> operator *(OT scalar, const BasicQuaternion<T> &quaternion)
-    // {
-    //     return BasicQuaternion<T>{ scalar * quaternion.w(), scalar * quaternion.i(), scalar * quaternion.j(), scalar * quaternion.k()};
-    // }
+    template <std::floating_point OT>
+    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
+    {
+        return BasicQuaternion<T>{ quaternion.w() * scalar, quaternion.i() * scalar, quaternion.j() * scalar, quaternion.k() * scalar };
+    }
 
     friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
         return BasicQuaternion<T>{left.w() * right.w() - (left.i() * right.i() +
-                                                     left.j() * right.j() +
-                                                     left.k() * right.k()),
+                                                          left.j() * right.j() +
+                                                          left.k() * right.k()),
                                   left.w() * right.i() +
                                   left.i() * right.w() +
                                   left.j() * right.k() -
@@ -377,6 +371,11 @@ private:
         };
     }
 
+    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
+    {
+        return left * right.inverse();
+    }
+
     template <std::floating_point OT>
     friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, OT scalar)
     {
@@ -384,11 +383,6 @@ private:
                                    quaternion.i() / T(scalar),
                                    quaternion.j() / T(scalar),
                                    quaternion.k() / T(scalar) );
-    }
-
-    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
-    {
-        return left * right.inverse();
     }
 
     friend constexpr BasicQuaternion<T> operator +(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)

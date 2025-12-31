@@ -347,6 +347,24 @@ void DividingByAScalarDividesEachComponent()
     }
 }
 
+void MultiplyingByAScalarMultipliesEachComponent()
+{
+    {
+        Quaternionf a(1.0f, 2.0f, 3.0f, 4.0f);
+        Quaternionf a_mul = a * 2.0f;
+        Quaternionf b(1.0f * 2.0f, 2.0f * 2.0f, 3.0f * 2.0f, 4.0f * 2.0f);
+
+        CHECK_IF_EQUAL( a_mul, b );
+    }
+    {
+        Quaternionf a(1.0f, 2.0f, 3.0f, 4.0f);
+        Quaternionf a_mul = a * 3.0f;
+        Quaternionf b(1.0f * 3.0f, 2.0f * 3.0f, 3.0f * 3.0f, 4.0f * 3.0f);
+
+        CHECK_IF_EQUAL( a_mul, b );
+    }
+}
+
 void MultiplyingByItsOwnInverseProducesUnity()
 {
     std::cout << __func__ << std::endl;
@@ -706,6 +724,7 @@ void Run()
     NormIsEquivalentToDistance();
     UnitQuaternionHasNormOfOne();
     DividingByAScalarDividesEachComponent();
+    MultiplyingByAScalarMultipliesEachComponent();
     MultiplyingByItsOwnInverseProducesUnity();
     InverseOfAUnitQuaternionIsItsConjugate();
     UnitQuaternionIsNear1();
