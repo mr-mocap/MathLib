@@ -91,22 +91,10 @@ public:
      */
     /** Define the spaceship operator
      *   
-     *  @note We define ONLY the <=> AND == operators in order to get all the
-     *        other relational operators (C++20).
+     *  @note We define ONLY the <=> in order to get all six of the
+     *        relational operators (C++20).
      */
     friend constexpr auto operator <=>(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
-    /// @}
-
-    /** @name Equality
-     *  @{
-     */
-    /** Defines equality of two BasicRadians
-     *  
-     *  @note Use C++20's ability to generate the operator !=() from operator ==()
-     * 
-     *  @see Equality
-     */
-    friend constexpr bool operator ==(const BasicRadian<T> &left, const BasicRadian<T> &right) = default;
     /// @}
 
     /** @name Invalid Value Check
@@ -288,8 +276,8 @@ public:
      */
     /** Define the spaceship operator
      *   
-     *  @note We define ONLY the <=> AND == operators in order to get all the
-     *        other relational operators (C++20).
+     *  @note We define ONLY the <=> in order to get all six of the
+     *        relational operators (C++20).
      * 
      *  @{
      */
@@ -297,24 +285,6 @@ public:
     /// @}
     /// @}
 
-    /** @name Equality
-     *  @{
-     */
-    /** Defines equality of two BasicDegrees
-     *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
-     *  @note Use C++20's ability to generate the operator !=() from operator ==()
-     * 
-     *  @see Equality
-     * 
-     *  @{
-     */
-    friend constexpr bool operator ==(const BasicDegree<T> &left, const BasicDegree<T> &right) = default;
-    /// @}
-    /// @}
-
-    
     static constexpr T modulus() { return 360; }
     constexpr BasicDegree<T> modulo() const
     {
