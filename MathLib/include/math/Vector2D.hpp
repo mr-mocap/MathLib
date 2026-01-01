@@ -204,6 +204,18 @@ struct BasicVector2D
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
         }
 
+        /** Compares a BasicVector2D::Ref and BasicVector2D inputs equal, component-wise, to within a tolerance
+         * 
+         *  @addtogroup Equality
+         * 
+         *  @relates BasicVector2D
+         *  
+         *  @param value_to_test
+         *  @param value_it_should_be 
+         *  @param tolerance          How close they should be to be considered equal
+         *  
+         *  @return @c true if they are equal
+         */
         template <std::floating_point OT = float>
         friend constexpr bool approximately_equal_to(const Ref                 &value_to_test,
                                                      const BasicVector2D<Type> &value_it_should_be,
@@ -388,6 +400,7 @@ struct BasicVector2D
     {
         return BasicVector2D<Type>{ scalar / right.x, scalar / right.y };
     }
+    /// @}  {Operators}
     /// @}  {Vector2DAlgebra}
 
     constexpr value_type normSquared() const { return (x * x) + (y * y); }
@@ -407,7 +420,6 @@ struct BasicVector2D
      *  @{
      */
     bool isNaN() const { return std::isnan(x) || std::isnan(y); }
-
     bool isInf() const { return std::isinf(x) || std::isinf(y); }
     /// @}
 
