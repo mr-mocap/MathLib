@@ -16,7 +16,7 @@ namespace Math
 
 /** A simple 3D Vector class
  * 
- *  @headerfile "math/Vector3D.hpp"
+ *  @headerfile <> <math/Vector3D.hpp>
  */
 template <class Type>
 struct BasicVector3D

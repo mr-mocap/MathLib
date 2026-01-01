@@ -15,7 +15,7 @@ namespace Math
 
 /** A simple 4D Vector class
  * 
- *  @headerfile "math/Vector4D.hpp"
+ *  @headerfile <> <math/Vector4D.hpp
  */
 template <class Type>
 struct BasicVector4D

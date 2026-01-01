@@ -15,7 +15,7 @@ namespace Math
 
 /** A simple 2D vector class
  *
- *  @headerfile "math/Vector2D.hpp"
+ *  @headerfile <> <math/Vector2D.hpp>
  * 
  */
 template <class Type>
@@ -42,8 +42,6 @@ struct BasicVector2D
         /// @}
 
         /** @name Constructors
-         * 
-         *  Explicitly force the user to create these
          * 
          *  @{
          */
@@ -280,7 +278,6 @@ struct BasicVector2D
     };
 
     /** @name Constructors
-     *  Explicitly force the user to create these
      * 
      *  @{
      */
@@ -514,6 +511,7 @@ struct BasicVector2D
     {
         return (left.x * right.x) + (left.y * right.y);
     }
+    /// @}
 
     /** Creates the normalized form of a BasicVector2D
      *  
