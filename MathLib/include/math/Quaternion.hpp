@@ -395,16 +395,15 @@ private:
 
     friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return BasicQuaternion<T>{ left.w() - right.w(),
+        return BasicQuaternion<T>( left.w() - right.w(),
                                    left.i() - right.i(),
                                    left.j() - right.j(),
-                                   left.k() - right.k()
-                            };
+                                   left.k() - right.k() );
     }
 
     friend constexpr BasicQuaternion<T> operator -(const BasicQuaternion<T> &q)
     {
-        return BasicQuaternion<T>{ -q.w(), -q.i(), -q.j(), -q.k() };
+        return BasicQuaternion<T>( -q.w(), -q.i(), -q.j(), -q.k() );
     }
     /// @}  {Operators}
     /// @}  {QuaternionAlgebra}
