@@ -20,7 +20,11 @@ namespace Math
 template <class Type>
 struct BasicVector4D
 {
-    using value_type = Type;
+    /** @name Types
+     *  @{
+     */
+    using value_type = Type; ///< The underlying implementation type
+    /// @}
 
     /** Class representing a reference to elements of a BasicVector4D object
      * 
@@ -30,36 +34,193 @@ struct BasicVector4D
      */
     struct Ref
     {
-        using value_type = Type;
+        /** @name Types
+         *  @{
+         */
+        using value_type = Type; ///< The underlying implementation type
+        /// @}
 
-        /** Explicitly force the user to create these
-         * 
+        /** @name Constructors
+         *  @{}
          */
         constexpr Ref(Type &x_in, Type &y_in, Type &z_in, Type &w_in) : x{x_in}, y{y_in}, z{z_in}, w{w_in} { }
+        constexpr Ref(const Ref &) = default;
+        constexpr Ref(const BasicVector4D<Type> &other) : x{other.x}, y{other.y}, z{other.z}, w{other.w} { }
+        /// @}
 
-        constexpr Ref operator =(const Ref &input)
+        /** @name Assignment
+         *  @{
+         */
+        constexpr Ref &operator =(const Ref &input)
         {
-            return Ref{ x = input.x, y = input.y, z = input.z, w = input.w };
+            x = input.x;
+            y = input.y;
+            z = input.z;
+            w = input.w;
+            return *this;
         }
 
-        constexpr Ref operator =(const BasicVector4D<Type> &input)
+        constexpr Ref &operator =(const BasicVector4D<Type> &input)
         {
-            return Ref{ x = input.x, y = input.y, z = input.z, w = input.w };
+            x = input.x;
+            y = input.y;
+            z = input.z;
+            w = input.w;
+            return *this;
         }
+        /// @}
 
+        /** @name Conversion Operators
+         *  @{
+         */
         /** BasicVector4D conversion operator
          * 
          *  This allows Vector4DRef objects to automatically be converted to BasicVector4D objects
          *  for situations like passing to functions or constructors to BasicVector4D objects.
          */
         constexpr operator BasicVector4D<Type>() const { return { x, y, z, w }; }
+        /// @}
 
+        /** @name Element Access
+         *  @{
+         */
         Type &x;
         Type &y;
         Type &z;
         Type &w;
+        /// @}
+
+        /** @name Equality
+         *  @{
+         */
+        /** Defines equality of two BasicVector4D::Ref objects
+         *  
+         *  @note Uses approximately_equal_to under-the-hood
+         *  
+         *  @note We take advantage of the new C++20 rule where if there
+         *        is not an appropriate operator ==(const BasicVector4D<Type> &) defined
+         *        for this class, then the compiler tries a swapped instantiation
+         *        in its place.  This allows us to only define the typical operator ==() here
+         *        and then define comparison of different types to the other class.
+         * 
+         *  @see Equality
+         */
+        friend constexpr bool operator ==(const Ref &left, const Ref &right)
+        {
+            return approximately_equal_to( left, right );
+        }
+
+        friend constexpr bool operator ==(const Ref &left, const BasicVector4D<Type> &right)
+        {
+            return approximately_equal_to( left, right );
+        }
+        /// @} {Equality}
+
+        /** @name Operators
+         * 
+         *  @relates BasicVector4D
+         * 
+         *  @{
+         */
+        friend constexpr BasicVector4D<Type> operator +(const Ref &left, const Ref &right)
+        {
+            return { left.x + right.x,
+                     left.y + right.y,
+                     left.z + right.z,
+                     left.w + right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator +(const Ref &left, const BasicVector4D<Type> &right)
+        {
+            return { left.x + right.x,
+                     left.y + right.y,
+                     left.z + right.z,
+                     left.w + right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator -(const Ref &left, const Ref &right)
+        {
+            return { left.x - right.x,
+                     left.y - right.y,
+                     left.z - right.z,
+                     left.w - right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator -(const Ref &left, const BasicVector4D<Type> &right)
+        {
+            return { left.x - right.x,
+                     left.y - right.y,
+                     left.z - right.z,
+                     left.w - right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator *(const Ref &left, const Ref &right)
+        {
+            return { left.x * right.x,
+                     left.y * right.y,
+                     left.z * right.z,
+                     left.w * right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator *(const Ref &left, const BasicVector4D<Type> &right)
+        {
+            return { left.x * right.x,
+                     left.y * right.y,
+                     left.z * right.z,
+                     left.w * right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator /(const Ref &left, const Ref &right)
+        {
+            return { left.x / right.x,
+                     left.y / right.y,
+                     left.z / right.z,
+                     left.w / right.w };
+        }
+        friend constexpr BasicVector4D<Type> operator /(const Ref &left, const BasicVector4D<Type> &right)
+        {
+            return { left.x / right.x,
+                     left.y / right.y,
+                     left.z / right.z,
+                     left.w / right.w };
+        }
+        /// @} {Operators}
+
+        /** Compares two BasicVector4D::Ref inputs equal, component-wise, to within a tolerance
+         * 
+         *  @addtogroup Equality
+         * 
+         *  @relates BasicVector4D
+         *  
+         *  @param value_to_test
+         *  @param value_it_should_be 
+         *  @param tolerance          How close they should be to be considered equal
+         *  
+         *  @return @c true if they are equal
+         * 
+         *  @{
+         */
+        template <std::floating_point OT = float>
+        friend constexpr bool approximately_equal_to(const Ref &value_to_test,
+                                                     const Ref &value_it_should_be,
+                                                           OT   tolerance = OT{0.0002})
+        {
+            return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+                   approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+                   approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
+                   approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
+        }
+
+        template <std::floating_point OT = float>
+        friend constexpr bool approximately_equal_to(const Ref                 &value_to_test,
+                                                     const BasicVector3D<Type> &value_it_should_be,
+                                                           OT                   tolerance = OT{0.0002})
+        {
+            return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+                   approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+                   approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
+                   approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
+        }
+        /// @}
     };
 
+    /** @name Constructors
+     *  @{
+     */
     constexpr BasicVector4D() = default;
     constexpr BasicVector4D(const Type &x_in, const Type &y_in = 0, const Type &z_in = 0, const Type &w_in = 0)
         :
@@ -93,17 +254,18 @@ struct BasicVector4D
         w{last3.z}
     {
     }
+    /// @}
 
 
     /** @name Constants
      *  @{
      */
-    constexpr static BasicVector4D<Type> unit_x() { return BasicVector4D{ Type{1}, Type{0}, Type{0}, Type{0} }; }
-    constexpr static BasicVector4D<Type> unit_y() { return BasicVector4D{ Type{0}, Type{1}, Type{0}, Type{0} }; }
-    constexpr static BasicVector4D<Type> unit_z() { return BasicVector4D{ Type{0}, Type{0}, Type{1}, Type{0} }; }
-    constexpr static BasicVector4D<Type> unit_w() { return BasicVector4D{ Type{0}, Type{0}, Type{0}, Type{1} }; }
+    constexpr static BasicVector4D<Type> unit_x() { return { Type{1}, Type{0}, Type{0}, Type{0} }; }
+    constexpr static BasicVector4D<Type> unit_y() { return { Type{0}, Type{1}, Type{0}, Type{0} }; }
+    constexpr static BasicVector4D<Type> unit_z() { return { Type{0}, Type{0}, Type{1}, Type{0} }; }
+    constexpr static BasicVector4D<Type> unit_w() { return { Type{0}, Type{0}, Type{0}, Type{1} }; }
 
-    constexpr static BasicVector4D<Type> zero() { return BasicVector4D{}; }
+    constexpr static BasicVector4D<Type> zero() { return { }; }
     /// @}
 
     constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z) + (w * w); }
@@ -191,7 +353,7 @@ struct BasicVector4D
 
     friend constexpr bool operator ==(const BasicVector4D<Type> &left, const Ref &right)
     {
-        return approximately_equal_to(left, BasicVector4D<Type>{right});
+        return approximately_equal_to(left, right);
     }
 
     /** @name Element Access
@@ -210,72 +372,57 @@ struct BasicVector4D
      *  @{
      */
 
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two BasicVector4D objects
-     */
     friend constexpr BasicVector4D<Type> operator +(const BasicVector4D<Type> &left, const BasicVector4D<Type> &right)
     {
-        return BasicVector4D<Type>{ left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
+        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
     }
-    /// @}  {Addition}
+    friend constexpr BasicVector4D<Type> operator +(const BasicVector4D<Type> &left, const Ref &right)
+    {
+        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
+    }
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two BasicVector4D objects
-     */
     friend constexpr BasicVector4D<Type> operator -(const BasicVector4D<Type> &left, const BasicVector4D<Type> &right)
     {
-        return BasicVector4D<Type>{ left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
+        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
     }
-    /// @}  {Subtraction}
+    friend constexpr BasicVector4D<Type> operator -(const BasicVector4D<Type> &left, const Ref &right)
+    {
+        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
+    }
 
-    /** @name Multiplication
-     *  @{
-     */
-    /** Defines multiplication of two BasicVector4D objects
-     */
     friend constexpr BasicVector4D<Type> operator *(const BasicVector4D<Type> &left, const BasicVector4D<Type> &right)
     {
-        return BasicVector4D<Type>{ left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
+        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
+    }
+    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D<Type> &left, const Ref &right)
+    {
+        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
     }
 
     friend constexpr BasicVector4D<Type> operator *(const BasicVector4D<Type> &left, Type right)
     {
-        return BasicVector4D<Type>{ left.x * right, left.y * right, left.z * right, left.w * right };
+        return { left.x * right, left.y * right, left.z * right, left.w * right };
     }
 
     friend constexpr BasicVector4D<Type> operator *(Type left, const BasicVector4D<Type> right)
     {
-        return BasicVector4D<Type>{ left * right.x, left * right.y, left * right.z, left * right.w };
+        return { left * right.x, left * right.y, left * right.z, left * right.w };
     }
-    /// @}  {Multiplication}
 
-    /** @name Division
-     *  @{
-     */
-    /** Defines division of two BasicVector4D objects
-     */
     friend constexpr BasicVector4D<Type> operator /(const BasicVector4D<Type> &left, const BasicVector4D<Type> &right)
     {
-        return BasicVector4D<Type>{ left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
+        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
+    }
+    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D<Type> &left, const Ref &right)
+    {
+        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
     }
 
     friend constexpr BasicVector4D<Type> operator /(const BasicVector4D<Type> &left, Type right)
     {
-        return BasicVector4D<Type>{ left.x / right, left.y / right, left.z / right, left.w / right };
+        return { left.x / right, left.y / right, left.z / right, left.w / right };
     }
-    /// @}  {Division}
     /// @}  {Vector4DAlgebra}
-
-    /** @name Global Functions
-     * 
-     *  @relates BasicVector4D
-     * 
-     *  @{
-     */
 
     /** @addtogroup Equality
      * 
@@ -292,7 +439,19 @@ struct BasicVector4D
      *  @return @c true if they are equal
      */
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const BasicVector4D<Type> &value_to_test, const BasicVector4D<Type> &value_it_should_be, OT tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicVector4D<Type> &value_to_test,
+                                                 const BasicVector4D<Type> &value_it_should_be,
+                                                       OT                   tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
+               approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
+    }
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const BasicVector4D<Type> &value_to_test,
+                                                 const Ref                 &value_it_should_be,
+                                                       OT                   tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
@@ -363,7 +522,10 @@ struct BasicVector4D
      */
     friend constexpr BasicVector4D<Type> abs(const BasicVector4D<Type> &input)
     {
-        return BasicVector4D<Type>( std::abs(input.x), std::abs(input.y), std::abs(input.z), std::abs(input.w) );
+        return { std::abs(input.x),
+                 std::abs(input.y),
+                 std::abs(input.z),
+                 std::abs(input.w) };
     }
 
     /** Calculate the fractional part of all components of a BasicVector4D
@@ -374,15 +536,20 @@ struct BasicVector4D
      */
     friend constexpr BasicVector4D<Type> fract(const BasicVector4D<Type> &input)
     {
-        return BasicVector4D<Type>( std::modf(input.x), std::modf(input.y), std::modf(input.z), std::modf(input.w) );
+        return { std::modf(input.x),
+                 std::modf(input.y),
+                 std::modf(input.z),
+                 std::modf(input.w) };
     }
 
-    friend constexpr BasicVector4D<Type> saturate(const BasicVector4D<Type> &input, Type lower_bound, Type upper_bound)
+    friend constexpr BasicVector4D<Type> saturate(const BasicVector4D<Type> &input,
+                                                        Type                 lower_bound,
+                                                        Type                 upper_bound)
     {
-        return BasicVector4D<Type>( saturate(input.x, lower_bound, upper_bound),
-                            saturate(input.y, lower_bound, upper_bound),
-                            saturate(input.z, lower_bound, upper_bound),
-                            saturate(input.w, lower_bound, upper_bound) );
+        return { saturate(input.x, lower_bound, upper_bound),
+                 saturate(input.y, lower_bound, upper_bound),
+                 saturate(input.z, lower_bound, upper_bound),
+                 saturate(input.w, lower_bound, upper_bound) };
     }
 
     friend std::string format(const BasicVector4D<Type> &input)
@@ -401,7 +568,9 @@ struct BasicVector4D
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const BasicVector4D<Type> &input, const BasicVector4D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicVector4D<Type> &input,
+                               const BasicVector4D<Type> &near_to,
+                                     OT                   tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -429,7 +598,9 @@ struct BasicVector4D
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const BasicVector4D<Type> &input, const BasicVector4D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicVector4D<Type> &input,
+                                   const BasicVector4D<Type> &near_to,
+                                         OT                   tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -446,31 +617,69 @@ struct BasicVector4D
         return true;
     }
 
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const BasicVector4D<Type> &input, const BasicVector4D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicVector4D<Type> &input,
+                               const BasicVector4D<Type> &near_to,
+                                     OT                   tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
+    /** @addtogroup Checks
+     * 
+     *  Compare two values for inequality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const BasicVector4D<Type> &input, const BasicVector4D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector4D<Type> &input,
+                                   const BasicVector4D<Type> &near_to,
+                                         OT                   tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
+    /** @addtogroup Checks
+     * 
+     *  Compare a value to near zero
+     *  
+     *  @param input     The first value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if @c input is inside @c tolerance , @c false otherwise
+     */
     template <std::floating_point OT = float>
     friend void CHECK_IF_ZERO(const BasicVector4D<Type> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, BasicVector4D<Type>::zero(), tolerance));
     }
-    /// @}  {GlobalFunctions}
 };
 
 
-/** @name BasicVector4D::Ref Type Aliases
- *  
- *  @relates BasicVector4D
+/** @defgroup BasicVector4DRefAliases Vector4DRef Types
  * 
+ *  Here are the type aliases for BasicVector4D::Ref
+ * 
+ *  @ingroup TypeAliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicVector4D::Ref
  *  @{
  */
 using Vector4DfRef = BasicVector4D<float>::Ref;
@@ -479,10 +688,17 @@ using Vector4DRef  = BasicVector4D<double>::Ref;
 using Vector4DlRef = BasicVector4D<long double>::Ref;
 ///@}  {BasicVector4D::Ref Type Aliases}
 
-/** @name BasicVector4D Type Aliases
- *  
- *  @relates BasicVector4D
+
+/** @defgroup BasicVector4DAliases Vector4D Types
  * 
+ *  Here are the type aliases for BasicVector4D
+ * 
+ *  @ingroup TypeAliases
+ *  @{
+ */
+/** @name Type Aliases
+ * 
+ *  @relates BasicVector4D
  *  @{
  */
 using Vector4Df = BasicVector4D<float>;

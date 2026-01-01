@@ -16,7 +16,6 @@ namespace Math
 /** A simple 2D vector class
  *
  *  @headerfile <> <math/Vector2D.hpp>
- * 
  */
 template <class Type>
 struct BasicVector2D
@@ -111,6 +110,10 @@ struct BasicVector2D
         {
             return { left.x + right.x, left.y + right.y };
         }
+        friend constexpr BasicVector2D<Type> operator +(const Ref &left, const BasicVector2D<Type> &right)
+        {
+            return { left.x + right.x, left.y + right.y };
+        }
 
         friend constexpr BasicVector2D<Type> operator -(const Ref &left, const Ref &right)
         {
@@ -121,44 +124,40 @@ struct BasicVector2D
             return { left.x - right.x, left.y - right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const BasicVector2D<Type> &right)
-        {
-            return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
-        }
-
         friend constexpr BasicVector2D<Type> operator *(const Ref &left, const Ref &right)
         {
-            return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
+            return { left.x * right.x, left.y * right.y };
+        }
+        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const BasicVector2D<Type> &right)
+        {
+            return { left.x * right.x, left.y * right.y };
         }
 
         friend constexpr BasicVector2D<Type> operator *(const Ref &left, Type scalar)
         {
-            return BasicVector2D<Type>{ left.x * scalar, left.y * scalar };
+            return { left.x * scalar, left.y * scalar };
         }
-
         friend constexpr BasicVector2D<Type> operator *(Type scalar, const Ref &right)
         {
-            return BasicVector2D<Type>{ scalar * right.x, scalar * right.y };
+            return { scalar * right.x, scalar * right.y };
         }
 
         friend constexpr BasicVector2D<Type> operator /(const Ref &left, const Ref &right)
         {
-            return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
+            return { left.x / right.x, left.y / right.y };
         }
-
         friend constexpr BasicVector2D<Type> operator /(const Ref &left, const BasicVector2D<Type> &right)
         {
-            return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
+            return { left.x / right.x, left.y / right.y };
         }
 
         friend constexpr BasicVector2D<Type> operator /(const Ref &left, Type scalar)
         {
-            return BasicVector2D<Type>{ left.x / scalar, left.y / scalar };
+            return { left.x / scalar, left.y / scalar };
         }
-
         friend constexpr BasicVector2D<Type> operator /(Type scalar, const Ref &right)
         {
-            return BasicVector2D<Type>{ scalar / right.x, scalar / right.y };
+            return { scalar / right.x, scalar / right.y };
         }
         /// @} {Operators}
         /// @} {Vector2DAlgebra}
@@ -257,18 +256,18 @@ struct BasicVector2D
 
         friend constexpr BasicVector2D<Type> abs(const Ref &input)
         {
-            return BasicVector2D<Type>( std::abs(input.x), std::abs(input.y) );
+            return { std::abs(input.x), std::abs(input.y) };
         }
 
         friend constexpr BasicVector2D<Type> fract(const Ref &input)
         {
-            return BasicVector2D<Type>( std::modf(input.x), std::modf(input.y) );
+            return { std::modf(input.x), std::modf(input.y) };
         }
 
         constexpr BasicVector2D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
         {
-            return BasicVector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
-                                   Math::saturate(input.y, lower_bound, upper_bound) );
+            return { Math::saturate(input.x, lower_bound, upper_bound),
+                     Math::saturate(input.y, lower_bound, upper_bound) };
         }
 
         friend std::string format(const Ref &input)
@@ -322,10 +321,10 @@ struct BasicVector2D
     /** @name Constants
      *  @{
      */
-    constexpr static BasicVector2D<Type> unit_x() { return BasicVector2D{ Type{1}, Type{0} }; }
-    constexpr static BasicVector2D<Type> unit_y() { return BasicVector2D{ Type{0}, Type{1} }; }
+    constexpr static BasicVector2D<Type> unit_x() { return { Type{1}, Type{0} }; }
+    constexpr static BasicVector2D<Type> unit_y() { return { Type{0}, Type{1} }; }
 
-    constexpr static BasicVector2D<Type> zero() { return BasicVector2D{}; }
+    constexpr static BasicVector2D<Type> zero() { return {}; }
     /// @}
  
     /** @addtogroup Vector2DAlgebra 2D Vector Algebra
@@ -342,11 +341,11 @@ struct BasicVector2D
      */
     friend constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
-        return BasicVector2D<Type>{ left.x + right.x, left.y + right.y };
+        return { left.x + right.x, left.y + right.y };
     }
     friend constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &left, const Ref &right)
     {
-        return BasicVector2D<Type>{ left.x + right.x, left.y + right.y };
+        return { left.x + right.x, left.y + right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator -(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
@@ -360,42 +359,42 @@ struct BasicVector2D
 
     friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
-        return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
+        return { left.x * right.x, left.y * right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, const Ref &right)
     {
-        return BasicVector2D<Type>{ left.x * right.x, left.y * right.y };
+        return { left.x * right.x, left.y * right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, const Type &scalar)
     {
-        return BasicVector2D<Type>{ left.x * scalar, left.y * scalar };
+        return { left.x * scalar, left.y * scalar };
     }
 
     friend constexpr BasicVector2D<Type> operator *(const Type &scalar, const BasicVector2D<Type> &right)
     {
-        return BasicVector2D<Type>{ scalar * right.x, scalar * right.y };
+        return { scalar * right.x, scalar * right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
     {
-        return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
+        return { left.x / right.x, left.y / right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, const Ref &right)
     {
-        return BasicVector2D<Type>{ left.x / right.x, left.y / right.y };
+        return { left.x / right.x, left.y / right.y };
     }
 
     friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, const Type &scalar)
     {
-        return BasicVector2D<Type>{ left.x / scalar, left.y / scalar };
+        return { left.x / scalar, left.y / scalar };
     }
 
     friend constexpr BasicVector2D<Type> operator /(const Type &scalar, const BasicVector2D<Type> &right)
     {
-        return BasicVector2D<Type>{ scalar / right.x, scalar / right.y };
+        return { scalar / right.x, scalar / right.y };
     }
     /// @}  {Operators}
     /// @}  {Vector2DAlgebra}
@@ -429,13 +428,13 @@ struct BasicVector2D
     constexpr BasicVector2D<Type> yy() const { return { y, y }; }
     constexpr BasicVector2D<Type> yy()       { return { y, y }; }
 
-    constexpr const Ref      xy() const &  { return { x, y }; }
-    constexpr       Ref      xy()       &  { return { x, y }; }
-    constexpr BasicVector2D<Type> xy()  && { return { x, y }; }
+    constexpr const Ref                 xy() const &  { return { x, y }; }
+    constexpr       Ref                 xy()       &  { return { x, y }; }
+    constexpr       BasicVector2D<Type> xy()       && { return { x, y }; }
 
-    constexpr const Ref      yx() const &  { return { y, x }; }
-    constexpr       Ref      yx()       &  { return { y, x }; }
-    constexpr BasicVector2D<Type> yx()  && { return { y, x }; }
+    constexpr const Ref                 yx() const &  { return { y, x }; }
+    constexpr       Ref                 yx()       &  { return { y, x }; }
+    constexpr       BasicVector2D<Type> yx()       && { return { y, x }; }
     /// @} {Swizzle operations}
 
 
@@ -579,7 +578,7 @@ struct BasicVector2D
      */
     friend constexpr BasicVector2D<Type> abs(const BasicVector2D<Type> &input)
     {
-        return BasicVector2D<Type>( std::abs(input.x), std::abs(input.y) );
+        return { std::abs(input.x), std::abs(input.y) };
     }
 
     /** Calculate the fractional part of all components of a BasicVector2D
@@ -590,13 +589,13 @@ struct BasicVector2D
      */
     friend constexpr BasicVector2D<Type> fract(const BasicVector2D<Type> &input)
     {
-        return BasicVector2D<Type>( std::modf(input.x), std::modf(input.y) );
+        return { std::modf(input.x), std::modf(input.y) };
     }
 
     friend constexpr BasicVector2D<Type> saturate(const BasicVector2D<Type> &input, const Type lower_bound, Type upper_bound)
     {
-        return BasicVector2D<Type>( Math::saturate(input.x, lower_bound, upper_bound),
-                               Math::saturate(input.y, lower_bound, upper_bound) );
+        return { Math::saturate(input.x, lower_bound, upper_bound),
+                 Math::saturate(input.y, lower_bound, upper_bound) };
     }
 
     friend std::string format(const BasicVector2D<Type> &input)
