@@ -34,7 +34,7 @@ public:
     /** @name Constructors
      *  @{
      */
-    BasicDual() = default; ///< Defaults to (0,0)
+    constexpr BasicDual() = default; ///< Defaults to (0,0)
     
     /** Sets the @c real part to @c r and leaves the dual part as 0
      * 
@@ -43,9 +43,9 @@ public:
      *        for minimal code while allowing natural conversions to promote
      *        a scalar to a BasicDual to occur.
      */
-    BasicDual(const T &r) : real(r) { }
+    constexpr BasicDual(const T &r) : real(r) { }
 
-    explicit constexpr BasicDual(const T &r, const T &d) : real(r), dual(d) { }
+    constexpr BasicDual(const T &r, const T &d) : real(r), dual(d) { }
     /// @}
 
     /** @name Constants
