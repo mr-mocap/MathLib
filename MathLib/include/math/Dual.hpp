@@ -51,19 +51,19 @@ public:
     /** @name Constants
      *  @{
      */
-    constexpr static BasicDual<T> identity() { return BasicDual{ T{1}, T{0} }; }
-    constexpr static BasicDual<T> zero() { return BasicDual{}; }
+    constexpr static BasicDual<T> identity() { return { T{1}, T{0} }; }
+    constexpr static BasicDual<T> zero() { return { }; }
     /// @}
 
     constexpr BasicDual<T> conjugate() const
     {
         if constexpr (std::is_floating_point_v<T>)
-            return BasicDual{ real, -dual };
+            return { real, -dual };
         else
-            return BasicDual{ real, conjugate(dual) };
+            return { real, conjugate(dual) };
     }
 
-    constexpr T       magnitude() const { return real; }
+    constexpr T magnitude() const { return real; }
 
     /** @name Convenience Creation Functions
      *  @{
@@ -79,7 +79,7 @@ public:
      */
     constexpr static BasicDual<T> make_pure(const T &input)
     {
-        return BasicDual<T>{ T{}, input };
+        return { T{}, input };
     }
     /// @}
 
@@ -141,8 +141,8 @@ public:
     /// Defines multiplication of two Duals
     friend constexpr BasicDual<T> operator *(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return BasicDual<T>(left.real * right.real,
-                            left.real * right.dual + right.real * left.dual);
+        return { left.real * right.real,
+                 left.real * right.dual + right.real * left.dual };
     }
 
     /** Defines multiplication of a floating-point scalar and a BasicDual
@@ -174,8 +174,8 @@ public:
     /// Defines division of two Duals
     friend constexpr BasicDual<T> operator /(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return BasicDual<T>(left.real * right.real / (right.real * right.real),
-                       (left.dual * right.real - left.real * right.dual) / (right.real * right.real));
+        return { left.real * right.real / (right.real * right.real),
+                (left.dual * right.real - left.real * right.dual) / (right.real * right.real) };
     }
 
     /** Defines division of a floating-point scalar and a BasicDual
@@ -209,7 +209,7 @@ public:
     /// Defines addition of two Duals
     friend constexpr BasicDual<T> operator +(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return BasicDual<T>(left.real + right.real, left.dual + right.dual);
+        return { left.real + right.real, left.dual + right.dual };
     }
 
     /// Defines addition of a floating-point scalar and a Dual
@@ -229,7 +229,7 @@ public:
     /// Defines subtraction of two Duals
     friend constexpr BasicDual<T> operator -(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return BasicDual<T>(left.real - right.real, left.dual - right.dual);
+        return { left.real - right.real, left.dual - right.dual };
     }
 
     /// Defines subtraction of a floating-point scalar and a Dual
@@ -264,20 +264,17 @@ public:
      *  
      *  @see Equality
      */
-    //template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test, const BasicDual<T> &value_it_should_be, T tolerance = T{0.0002})
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test,
+                                                 const BasicDual<T> &value_it_should_be,
+                                                       OT            tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
                approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
     }
     /// @}  {Equality}
 
-    /** @name Global Functions
-     * 
-     *  @relates BasicDual
-     * 
-     *  @{
-     */
     /** Calculates the dot-product of two Duals
      *  
      *  @return The dot-product of the two inputs
@@ -308,7 +305,7 @@ public:
         // Expect that T is a scalar type (float, double, int, etc.)
         T root = std::sqrt(input.real);
 
-        return BasicDual<T>{ root, input.dual / (T{2} * root)};
+        return { root, input.dual / (T{2} * root) };
     }
 
     /** Calculates the square of the norm
@@ -360,8 +357,11 @@ public:
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
-    template <std::floating_point OT = float>
-    friend bool check_if_equal(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend bool check_if_equal(const BasicDual<T> &input,
+                               const BasicDual<T> &near_to,
+                                     OT            tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -388,8 +388,11 @@ public:
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
-    template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend bool check_if_not_equal(const BasicDual<T> &input,
+                                   const BasicDual<T> &near_to,
+                                         OT            tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -406,19 +409,26 @@ public:
         return true;
     }
 
-    template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend void CHECK_IF_EQUAL(const BasicDual<T> &input,
+                               const BasicDual<T> &near_to,
+                                     OT            tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const BasicDual<T> &input, const BasicDual<T> &near_to, OT tolerance = OT{0.0002})
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend void CHECK_IF_NOT_EQUAL(const BasicDual<T> &input,
+                                   const BasicDual<T> &near_to,
+                                         OT            tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    template <std::floating_point OT = float>
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
     friend void CHECK_IF_ZERO(const BasicDual<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, BasicDual<T>::zero(), tolerance));
