@@ -24,7 +24,7 @@ struct BasicVector2D
     /** @name Types
      *  @{
      */
-    using value_type = T; ///< The underlying implementation type
+    using value_type = Type; ///< The underlying implementation type
     /// @}
 
     /** Class representing a reference to elements of a BasicVector2D object
@@ -35,6 +35,12 @@ struct BasicVector2D
      */
     struct Ref
     {
+        /** @name Types
+         *  @{
+         */
+        using value_type = Type; ///< The underlying implementation type
+        /// @}
+
         /** @name Constructors
          * 
          *  Explicitly force the user to create these
@@ -262,6 +268,8 @@ struct BasicVector2D
     };
 
     /** @name Constructors
+     *  Explicitly force the user to create these
+     * 
      *  @{
      */
     constexpr BasicVector2D() = default;
@@ -310,7 +318,7 @@ struct BasicVector2D
 
     constexpr static BasicVector2D<Type> zero() { return BasicVector2D{}; }
     /// @}
-
+ 
     /** @addtogroup Vector2DAlgebra 2D Vector Algebra
      * 
      *  Two Dimensional Vector Algebra
@@ -414,11 +422,11 @@ struct BasicVector2D
 
     constexpr const Ref      xy() const &  { return { x, y }; }
     constexpr       Ref      xy()       &  { return { x, y }; }
-    constexpr BasicVector2D<Type> xy()       && { return { x, y }; }
+    constexpr BasicVector2D<Type> xy()  && { return { x, y }; }
 
     constexpr const Ref      yx() const &  { return { y, x }; }
     constexpr       Ref      yx()       &  { return { y, x }; }
-    constexpr BasicVector2D<Type> yx()       && { return { y, x }; }
+    constexpr BasicVector2D<Type> yx()  && { return { y, x }; }
     /// @} {Swizzle operations}
 
 
