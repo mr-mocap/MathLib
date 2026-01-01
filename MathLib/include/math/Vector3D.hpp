@@ -43,8 +43,6 @@ struct BasicVector3D
 
         /** @name Constructors
          * 
-         *  Explicitly force the user to create these
-         * 
          *  @{
          */
         constexpr Ref(Type &x_in, Type &y_in, Type &z_in) : x{x_in}, y{y_in}, z{z_in} { }
