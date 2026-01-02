@@ -50,8 +50,8 @@ public:
      *  @note The user takes full responsibility for the input.  This could possibly be used
      *        to construct a non-unit DualQuaternion!
      */
-    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
-                                           const BasicQuaternion<T> &translation)
+    constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
+                                  const BasicQuaternion<T> &translation)
         :
         _frame_of_reference{rotation, translation}
     {
@@ -61,18 +61,18 @@ public:
      *  
      *  @note This is the proper way to construct a unit DualQuaternion.
      */
-    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
-                                                                 T   translation_x,
-                                                                 T   translation_y,
-                                                                 T   translation_z)
+    constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
+                                                        T   translation_x,
+                                                        T   translation_y,
+                                                        T   translation_z)
         :
         _frame_of_reference{ rotation,
                              T{0.5} * BasicQuaternion<T>::encode_point(translation_x, translation_y, translation_z) * rotation }
     {
         assert( real().isUnit() );
     }
-    explicit constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
-                                           const BasicVector3D<T>   &translation)
+    constexpr BasicDualQuaternion(const BasicQuaternion<T> &rotation,
+                                  const BasicVector3D<T>   &translation)
         :
         _frame_of_reference{ rotation,
                              T{0.5} * BasicQuaternion<T>::encode_point(translation) * rotation }
