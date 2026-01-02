@@ -18,6 +18,9 @@
 namespace Color
 {
 
+template <std::floating_point T>
+class BasicUnitRGB;
+
 /** The definition of an RGB color triple
  *  
  *  @headerfile "color/Types.hpp"
@@ -36,7 +39,7 @@ public:
      *  @{
      */
     constexpr BasicRGB() = default; ///< Defaults to (0, 0, 0)
-    explicit constexpr BasicRGB(value_type r, value_type g, value_type b) : _red{ r }, _green{ g }, _blue{ b } { }
+    constexpr BasicRGB(value_type r, value_type g, value_type b) : _red{ r }, _green{ g }, _blue{ b } { }
     /// @}
 
     /** @name Constants
@@ -46,17 +49,17 @@ public:
     {
         const T mn = std::numeric_limits<T>::min();
 
-        return BasicRGB<T>( mn, mn, mn );
+        return { mn, mn, mn };
     }
 
     static constexpr BasicRGB<T> max()
     {
         const T mx = std::numeric_limits<T>::max();
 
-        return BasicRGB<T>( mx, mx, mx );
+        return { mx, mx, mx };
     }
 
-    static constexpr BasicRGB<T> zero() { return BasicRGB<T>(); }
+    static constexpr BasicRGB<T> zero() { return { }; }
     /// @}
 
     /** @name Element Access
@@ -109,6 +112,8 @@ protected:
     /** @name Operators
      *  @{
      */
+    friend constexpr bool operator ==(const BasicRGB<T> &left, const BasicRGB<T> &right) = default;
+
     /** @addtogroup BasicRGBColorAlgebra RGB Color Algebra
      * 
      *  RGB Color Algebra
@@ -148,6 +153,28 @@ protected:
     }
     /// @} {BasicRGBColorAlgebra}
     /// @} {Operators}
+
+    friend constexpr T min(const BasicRGB<T> &input)
+    {
+        // We know T is an integral type
+        return std::min( std::min( input.red(), input.green() ), input.blue() );
+    }
+
+    friend constexpr T max(const BasicRGB<T> &input)
+    {
+        // We know T is an integral type
+        return std::max( std::max( input.red(), input.green() ), input.blue() );
+    }
+
+    template <std::floating_point OT>
+    friend BasicUnitRGB<OT> normalized(const BasicRGB<T> &input)
+    {
+        const OT max_value = std::numeric_limits<T>::max;
+
+        return { input.red()   / max_value,
+                 input.green() / max_value,
+                 input.blue()  / max_value };
+    }
 };
 
 
@@ -172,7 +199,7 @@ public:
      */
     constexpr BasicUnitRGB() = default;
 
-    explicit constexpr BasicUnitRGB(value_type r, value_type g, value_type b)
+    constexpr BasicUnitRGB(value_type r, value_type g, value_type b)
         :
         _red{ r },
         _green{ g },
@@ -209,6 +236,9 @@ public:
     }
     /// @}
 
+    /** @name Assignment
+     *  @{
+     */
     constexpr BasicUnitRGB<T> &operator =(const BasicUnitRGB<T> &other)
     {
         assert( other.isNormalized() );
@@ -222,6 +252,7 @@ public:
 
         return *this;
     }
+    /// @}
 
     /** @name Constants
      *  @{
@@ -291,9 +322,9 @@ public:
     /** @name Invalid Value Check
      *  @{
      */
-    bool isNaN() const { return std::isnan(_red) || std::isnan(_green) || std::isnan(_blue); }
+    constexpr bool isNaN() const { return std::isnan(_red) || std::isnan(_green) || std::isnan(_blue); }
 
-    bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
+    constexpr bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
     /// @}
 
 protected:
@@ -320,7 +351,9 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test, const BasicUnitRGB<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicUnitRGB<T> &value_to_test,
+                                                 const BasicUnitRGB<T> &value_it_should_be,
+                                                       T                tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.red(),   value_it_should_be.red(),   tolerance) &&
                approximately_equal_to(value_to_test.green(), value_it_should_be.green(), tolerance) &&
@@ -371,6 +404,16 @@ protected:
     }
     /// @}  {BasicUnitRGBColorAlgebra}
     /// @}  {Operators}
+
+    friend constexpr T min(const BasicUnitRGB<T> &input)
+    {
+        return std::fmin( std::fmin( input.red(), input.green() ), input.blue() );
+    }
+
+    friend constexpr T max(const BasicUnitRGB<T> &input)
+    {
+        return std::fmax( std::fmax( input.red(), input.green() ), input.blue() );
+    }
 };
 
 
@@ -410,7 +453,7 @@ public:
     {
     }
 
-    explicit constexpr BasicHue(T init_value)
+    constexpr BasicHue(T init_value)
         :
         _value( Math::BasicDegree<T>{ init_value }.modulo() )
     {
@@ -543,14 +586,14 @@ public:
      * 
      *  @{
      */
-    constexpr auto operator <=>(const BasicHue<T> &other) const = default;
-    constexpr auto operator <=>(const Math::BasicDegree<T> &other) const
+    friend constexpr auto operator <=>(const BasicHue<T> &left, const BasicHue<T> &right) = default;
+    friend constexpr auto operator <=>(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return _value.value() <=> other.value();
+        return left.value() <=> right.value();
     }
-    constexpr auto operator <=>(const T &other) const
+    friend constexpr auto operator <=>(const BasicHue<T> &left, const T &right)
     {
-        return _value.value() <=> other;
+        return left.value() <=> right;
     }
     /// @}
     /// @}  {Comparison}
@@ -566,14 +609,14 @@ public:
      * 
      *  @{
      */
-    constexpr bool operator ==(const BasicHue<T> &right) const = default;
-    constexpr bool operator ==(const Math::BasicDegree<T> &right) const
+    friend constexpr bool operator ==(const BasicHue<T> &left, const BasicHue<T> &right) = default;
+    friend constexpr bool operator ==(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return _value == right;
+        return left.value() == right.value();;
     }
-    constexpr bool operator ==(const T &right) const
+    friend constexpr bool operator ==(const BasicHue<T> &left, const T &right)
     {
-        return _value.value() == right;
+        return left.value() == right;
     }
     /// @}
     /// @}  {Equality}
@@ -597,7 +640,9 @@ protected:
      *  
      *  @see Equality
      */
-    friend constexpr bool approximately_equal_to(const BasicHue<T> &value_to_test, const BasicHue<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicHue<T> &value_to_test,
+                                                 const BasicHue<T> &value_it_should_be,
+                                                       T            tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.value(), value_it_should_be.value(), tolerance);
     }
@@ -608,87 +653,87 @@ protected:
      */
     friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() + right.value() };
+        return { left.value() + right.value() };
     }
 
     friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return BasicHue<T>{ left.value() + right.value() };
+        return { left.value() + right.value() };
     }
 
     friend constexpr BasicHue<T> operator +(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() + right.value() };
+        return { left.value() + right.value() };
     }
 
     friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() - right.value() };
+        return { left.value() - right.value() };
     }
 
     friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return BasicHue<T>{ left.value() - right.value() };
+        return { left.value() - right.value() };
     }
 
     friend constexpr BasicHue<T> operator -(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() - right.value() };
+        return { left.value() - right.value() };
     }
 
     friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() * right.value() };
+        return { left.value() * right.value() };
     }
 
     friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return BasicHue<T>{ left.value() * right.value() };
+        return { left.value() * right.value() };
     }
 
     friend constexpr BasicHue<T> operator *(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() * right.value() };
+        return { left.value() * right.value() };
     }
 
     friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() / right.value() };
+        return { left.value() / right.value() };
     }
 
     friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const Math::BasicDegree<T> &right)
     {
-        return BasicHue<T>{ left.value() / right.value() };
+        return { left.value() / right.value() };
     }
 
     friend constexpr BasicHue<T> operator /(const Math::BasicDegree<T> &left, const BasicHue<T> &right)
     {
-        return BasicHue<T>{ left.value() / right.value() };
+        return { left.value() / right.value() };
     }
 
     friend constexpr BasicHue<T> operator +(const BasicHue<T> &left, const T &right)
     {
-        return BasicHue<T>{ left.value() + right };
+        return { left.value() + right };
     }
 
     friend constexpr BasicHue<T> operator -(const BasicHue<T> &left, const T &right)
     {
-        return BasicHue<T>{ left.value() - right };
+        return { left.value() - right };
     }
 
     friend constexpr BasicHue<T> operator *(const BasicHue<T> &left, const T &right)
     {
-        return BasicHue<T>{ left.value() * right };
+        return { left.value() * right };
     }
 
     friend constexpr BasicHue<T> operator /(const BasicHue<T> &left, const T &right)
     {
-        return BasicHue<T>{ left.value() / right };
+        return { left.value() / right };
     }
 
     friend constexpr BasicHue<T> operator -(const BasicHue<T> &input)
     {
-        return BasicHue{ -input.value() };
+        return { -input.value() };
     }
     /// @}  {Operators}
 };
@@ -761,12 +806,14 @@ public:
      */
     static constexpr BasicHSV<T> min()
     {
-        return BasicHSV<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
+        return { Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} };
     }
 
     static constexpr BasicHSV<T> max()
     {
-        return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
+        return { Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() },
+                 value_type{1.0},
+                 value_type{1.0} };
     }
     /// @}
 
@@ -826,9 +873,9 @@ public:
     /** @name Invalid Value Check
      *  @{
      */
-    bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_value); }
+    constexpr bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_value); }
 
-    bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_value); }
+    constexpr bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_value); }
     /// @}
 
 protected:
@@ -860,7 +907,9 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test, const BasicHSV<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicHSV<T> &value_to_test,
+                                                 const BasicHSV<T> &value_it_should_be,
+                                                       T            tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().value(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),  tolerance) &&
@@ -874,18 +923,11 @@ protected:
      * 
      *  @{
      */
-
     /** @addtogroup BasicHSVAlgebra HSV Color Algebra
      * 
      *  HSV Color Algebra
      * 
      *  @{
-     */
-
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two BasicHSV objects
      */
     friend constexpr BasicHSV<T> operator +(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
@@ -894,13 +936,7 @@ protected:
                             Math::saturate( left.value()      + right.value(),      min().value(),      max().value()      )
                             );
     }
-    /// @}  {Addition}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two BasicHSV objects
-     */
     friend constexpr BasicHSV<T> operator -(const BasicHSV<T> &left, const BasicHSV<T> &right)
     {
         return BasicHSV<T>( Math::BasicDegree<T>(left.hue() - right.hue()).modulo(),
@@ -908,8 +944,6 @@ protected:
                             Math::saturate( left.value()      - right.value(),      min().value(),      max().value()      )
                             );
     }
-    /// @}  {Subtraction}
-
     /// @}  {BasicHSVAlgebra}
     /// @}  {GlobalOperators}
 };
@@ -981,12 +1015,14 @@ public:
      */
     static constexpr BasicHSL<T> min()
     {
-        return BasicHSL<T>( Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} );
+        return { Math::BasicDegree<value_type>(), value_type{0.0}, value_type{0.0} };
     }
 
     static constexpr BasicHSV<T> max()
     {
-        return BasicHSV<T>( Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() }, value_type{1.0}, value_type{1.0} );
+        return { Math::BasicDegree<value_type>{ Math::BasicDegree<value_type>::modulus() },
+                 value_type{1.0},
+                 value_type{1.0} };
     }
     /// @}
 
@@ -1046,9 +1082,9 @@ public:
     /** @name Invalid Value Check
      *  @{
      */
-    bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_lightness); }
+    constexpr bool isNaN() const { return std::isnan(_hue) || std::isnan(_saturation) || std::isnan(_lightness); }
 
-    bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_lightness); }
+    constexpr bool isInf() const { return std::isinf(_hue) || std::isinf(_saturation) || std::isinf(_lightness); }
     /// @}
 
 protected:
@@ -1080,7 +1116,9 @@ protected:
      *  
      *  @return @c true if they are equal
      */
-    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test, const BasicHSL<T> &value_it_should_be, T tolerance = T{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicHSL<T> &value_to_test,
+                                                 const BasicHSL<T> &value_it_should_be,
+                                                       T            tolerance = T{0.0002})
     {
         return approximately_equal_to(value_to_test.hue().value(), value_it_should_be.hue().valuee(), tolerance) &&
                approximately_equal_to(value_to_test.saturation(),  value_it_should_be.saturation(),   tolerance) &&
@@ -1101,38 +1139,25 @@ protected:
      * 
      *  @{
      */
-
-    /** @name Addition
-     *  @{
-     */
-    /** Defines addition of two BasicHSL objects
-     */
     friend constexpr BasicHSL<T> operator +(const BasicHSL<T> &left, const BasicHSL<T> &right)
     {
-        return BasicHSL<T>( Math::BasicDegree<T>(left.hue() + right.hue()).modulo(),
-                            Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
-                            Math::saturate( left.lightness()  + right.lightness(),  min().lightness(),  max().lightness()  )
-                          );
+        return { Math::BasicDegree<T>(left.hue() + right.hue()).modulo(),
+                 Math::saturate( left.saturation() + right.saturation(), min().saturation(), max().saturation() ),
+                 Math::saturate( left.lightness()  + right.lightness(),  min().lightness(),  max().lightness()  )
+               };
     }
-    /// @}  {Addition}
 
-    /** @name Subtraction
-     *  @{
-     */
-    /** Defines subtraction of two BasicHSL objects
-     */
     friend constexpr BasicHSL<T> operator -(const BasicHSL<T> &left, const BasicHSL<T> &right)
     {
-        return BasicHSL<T>( Math::BasicDegree<T>(left.hue() - right.hue()).modulo(),
-                            Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
-                            Math::saturate( left.lightness()  - right.lightness(),  min().lightness(),  max().lightness()  )
-                          );
+        return { Math::BasicDegree<T>(left.hue() - right.hue()).modulo(),
+                 Math::saturate( left.saturation() - right.saturation(), min().saturation(), max().saturation() ),
+                 Math::saturate( left.lightness()  - right.lightness(),  min().lightness(),  max().lightness()  )
+               };
     }
-    /// @}  {Subtraction}
-
     /// @}  {BasicHSLAlgebra}
     /// @}  {GlobalOperators}
 };
+
 
 /** @addtogroup Types Color Types
  * 

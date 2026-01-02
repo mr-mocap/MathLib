@@ -14,48 +14,6 @@
 namespace Color
 {
 
-template <std::integral T, std::floating_point OT = float>
-constexpr BasicUnitRGB<OT> normalized(const BasicRGB<T> &input)
-{
-    const OT max_value = std::numeric_limits<T>::max;
-
-    return BasicUnitRGB<OT>{ input.red() / max_value, input.green() / max_value, input.blue() / max_value };
-}
-
-template <class T>
-constexpr T min(const BasicRGB<T> &input)
-{
-    if constexpr ( std::is_floating_point_v<T> )
-        return std::fmin( std::fmin( input.red(), input.green() ), input.blue() );
-    else if constexpr ( std::is_integral_v<T> )
-        return std::min( std::min( input.red(), input.green() ), input.blue() );
-    else
-        static_assert( false, "Must be either integer or floating-point type");
-}
-
-template <class T>
-constexpr T min(const BasicUnitRGB<T> &input)
-{
-    return std::fmin( std::fmin( input.red(), input.green() ), input.blue() );
-}
-
-template <class T>
-constexpr T max(const BasicRGB<T> &input)
-{
-    if constexpr ( std::is_floating_point_v<T> )
-        return std::fmax( std::fmax( input.red(), input.green() ), input.blue() );
-    else if constexpr ( std::is_integral_v<T> )
-        return std::max( std::max( input.red(), input.green() ), input.blue() );
-    else
-        static_assert( false, "Must be either integer or floating-point type");
-}
-
-template <class T>
-constexpr T max(const BasicUnitRGB<T> &input)
-{
-    return std::fmax( std::fmax( input.red(), input.green() ), input.blue() );
-}
-
 template <std::floating_point T>
 BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 {
