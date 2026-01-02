@@ -101,15 +101,15 @@ public:
      */
     constexpr static BasicDualQuaternion<T> identity()
     {
-        return BasicDualQuaternion<T>( BasicQuaternion<T>(1.0),
-                                       BasicQuaternion<T>::zero() );
+        return { BasicQuaternion<T>(1.0),
+                 BasicQuaternion<T>::zero() };
     }
 
     /** Create a DualQuaternion that is all zeros
      */
     constexpr static BasicDualQuaternion<T> zero()
     {
-        return BasicDualQuaternion( BasicQuaternion<T>::zero(), BasicQuaternion<T>::zero() );
+        return { BasicQuaternion<T>::zero(), BasicQuaternion<T>::zero() };
     }
     /// @}
 
@@ -129,7 +129,7 @@ public:
     constexpr static BasicDualQuaternion<T> make_rotation(const BasicQuaternion<T> &rotation)
     {
         // A pure rotation has the dual part set to zero.
-        return BasicDualQuaternion<T>{ rotation, BasicQuaternion<T>::zero() };
+        return { rotation, BasicQuaternion<T>::zero() };
     }
 
     /** Create a DualQuaternion containing a translation only
@@ -147,9 +147,9 @@ public:
     {
         // No need to make the translation "0.5 * t * r" because "r" is an identity Quaterion,
         // so we just use "0.5 * t".
-        return BasicDualQuaternion<T>( BasicQuaternion<T>::identity(),
-                                       T{0.5} * BasicQuaternion<T>::encode_point(translation_x, translation_y, translation_z)
-                                     );
+        return { BasicQuaternion<T>::identity(),
+                 T{0.5} * BasicQuaternion<T>::encode_point(translation_x, translation_y, translation_z)
+               };
     }
 
     /** Create a DualQuaternion containing a translation only
@@ -338,7 +338,8 @@ private:
      * 
      *  @see Equality
      */
-    friend constexpr bool operator ==(const BasicDualQuaternion<T> &left,  const BasicDualQuaternion<T> &right)
+    friend constexpr bool operator ==(const BasicDualQuaternion<T> &left,
+                                      const BasicDualQuaternion<T> &right)
     {
         return approximately_equal_to(left, right);
     }
@@ -354,7 +355,8 @@ private:
      * 
      *  @{
      */
-    friend constexpr BasicDualQuaternion<T> operator +(const BasicDualQuaternion<T> &left_side, const BasicDualQuaternion<T> &right_side)
+    friend constexpr BasicDualQuaternion<T> operator +(const BasicDualQuaternion<T> &left_side,
+                                                       const BasicDualQuaternion<T> &right_side)
     {
         return BasicDualQuaternion<T>{ left_side._frame_of_reference + right_side._frame_of_reference };
     }
@@ -470,6 +472,7 @@ private:
     {
         return input.normalized();
     }
+
     /** Generates a linear blend between two BasicDualQuaternion objects
      *  
      *  @param beginning  The start state
@@ -477,7 +480,9 @@ private:
      *  @param percentage The percentage blend between the two (typically [0..1])
      */
     template <std::floating_point OT = float>
-    friend constexpr BasicDualQuaternion<T> blend(const BasicDualQuaternion<T> &beginning, const BasicDualQuaternion<T> &end, OT percentage)
+    friend constexpr BasicDualQuaternion<T> blend(const BasicDualQuaternion<T> &beginning,
+                                                  const BasicDualQuaternion<T> &end,
+                                                        OT                      percentage)
     {
         auto blended = beginning + (end - beginning) * percentage;
 
@@ -509,7 +514,9 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicDualQuaternion<T> &input,
+                               const BasicDualQuaternion<T> &near_to,
+                                     OT                      tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -537,7 +544,9 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicDualQuaternion<T> &input,
+                                   const BasicDualQuaternion<T> &near_to,
+                                         OT                      tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -565,7 +574,9 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicDualQuaternion<T> &input,
+                               const BasicDualQuaternion<T> &near_to,
+                                     OT                      tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
@@ -581,7 +592,9 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const BasicDualQuaternion<T> &input, const BasicDualQuaternion<T> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicDualQuaternion<T> &input,
+                                   const BasicDualQuaternion<T> &near_to,
+                                         OT                      tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
