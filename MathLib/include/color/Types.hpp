@@ -40,6 +40,14 @@ public:
      */
     constexpr BasicRGB() = default; ///< Defaults to (0, 0, 0)
     constexpr BasicRGB(value_type r, value_type g, value_type b) : _red{ r }, _green{ g }, _blue{ b } { }
+    constexpr BasicRGB(const std::tuple<T, T, T> &init_value)
+        :
+        _red{   std::get<0>(init_value) },
+        _green{ std::get<1>(init_value) },
+        _blue{  std::get<2>(init_value) }
+    {
+    }
+
     /// @}
 
     /** @name Constants
@@ -104,6 +112,12 @@ public:
     }
     /// @}
 
+    /** @name Conversion Operators
+     *  @{
+     */
+    constexpr operator std::tuple<T, T, T>() const { return std::make_tuple( _red, _green, _blue ); }
+    /// @}
+
 protected:
     value_type _red{};
     value_type _green{};
@@ -122,34 +136,34 @@ protected:
      */
     friend constexpr BasicRGB<T> operator +(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
-        return BasicRGB<T>( Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
-                            Math::saturate( left.green() + right.green(), min().green(), max().green() ),
-                            Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
-                          );
+        return { Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() + right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicRGB<T> operator -(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
-        return BasicRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
-                            Math::saturate( left.green() - right.green(), min().green(), max().green() ),
-                            Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
-                          );
+        return { Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() - right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, const BasicRGB<T> &right)
     {
-        return BasicRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
-                            Math::saturate( left.green() * right.green(), min().green(), max().green() ),
-                            Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
-                          );
+        return { Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() * right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicRGB<T> operator *(const BasicRGB<T> &left, T right)
     {
-        return BasicRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
-                            Math::saturate( left.green() * right, min().green(), max().green() ),
-                            Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
-                          );
+        return { Math::saturate( left.red()   * right, min().red(),   max().red()   ),
+                 Math::saturate( left.green() * right, min().green(), max().green() ),
+                 Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
+               };
     }
     /// @} {BasicRGBColorAlgebra}
     /// @} {Operators}
@@ -205,9 +219,15 @@ public:
         _green{ g },
         _blue{ b }
     {
-        assert( _isInBounds( _red ) );
-        assert( _isInBounds( _green ) );
-        assert( _isInBounds( _blue ) );
+        assert( isNormalized() );
+    }
+    constexpr BasicUnitRGB(const std::tuple<value_type, value_type, value_type> &init_value)
+        :
+        _red{   std::get<0>(init_value) },
+        _green{ std::get<1>(init_value) },
+        _blue{  std::get<2>(init_value) }
+    {
+        assert( isNormalized() );
     }
 
     constexpr BasicUnitRGB(const BasicUnitRGB<T> &other)
@@ -327,6 +347,11 @@ public:
     constexpr bool isInf() const { return std::isinf(_red) || std::isinf(_green) || std::isinf(_blue); }
     /// @}
 
+    /** @name Conversion Operators
+     *  @{
+     */
+    constexpr operator std::tuple<value_type, value_type, value_type>() const { return std::make_tuple( _red, _green, _blue ); }
+    /// @}
 protected:
     value_type _red{};
     value_type _green{};
@@ -373,34 +398,34 @@ protected:
      */
     friend constexpr BasicUnitRGB<T> operator +(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
-                                Math::saturate( left.green() + right.green(), min().green(), max().green() ),
-                                Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
-                              );
+        return { Math::saturate( left.red()   + right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() + right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  + right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicUnitRGB<T> operator -(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
-                                Math::saturate( left.green() - right.green(), min().green(), max().green() ),
-                                Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
-                            );
+        return { Math::saturate( left.red()   - right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() - right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  - right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, const BasicUnitRGB<T> &right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
-                                Math::saturate( left.green() * right.green(), min().green(), max().green() ),
-                                Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
-                            );
+        return { Math::saturate( left.red()   * right.red(),   min().red(),   max().red()   ),
+                 Math::saturate( left.green() * right.green(), min().green(), max().green() ),
+                 Math::saturate( left.blue()  * right.blue(),  min().blue(),  max().blue()  )
+               };
     }
 
     friend constexpr BasicUnitRGB<T> operator *(const BasicUnitRGB<T> &left, T right)
     {
-        return BasicUnitRGB<T>( Math::saturate( left.red()   * right, min().red(),   max().red()   ),
-                                Math::saturate( left.green() * right, min().green(), max().green() ),
-                                Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
-                            );
+        return { Math::saturate( left.red()   * right, min().red(),   max().red()   ),
+                 Math::saturate( left.green() * right, min().green(), max().green() ),
+                 Math::saturate( left.blue()  * right, min().blue(),  max().blue()  )
+               };
     }
     /// @}  {BasicUnitRGBColorAlgebra}
     /// @}  {Operators}

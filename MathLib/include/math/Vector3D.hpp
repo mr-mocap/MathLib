@@ -3,6 +3,8 @@
 #include "math/Functions.hpp"
 #include "math/Vector2D.hpp"
 #include <concepts>
+#include <tuple>
+#include <cmath>
 
 /** @file
  *  
@@ -79,6 +81,8 @@ struct BasicVector3D
          *  for situations like passing to functions or constructors to BasicVector3D objects.
          */
         constexpr operator BasicVector3D<Type>() const { return { x, y, z }; }
+
+        constexpr operator std::tuple<Type, Type, Type>() const { return std::make_tuple( x, y, z ); }
         /// @}
 
         /** @name Element Access
@@ -287,16 +291,48 @@ struct BasicVector3D
          *
          *   @return The BasicVector3D with only fractional values
          */
-        constexpr BasicVector3D<Type> fract(const Ref &input)
+        friend BasicVector3D<Type> fract(const Ref &input)
         {
-            return { std::modf(input.x), std::modf(input.y), std::modf(input.z) };
+            Type dummy;
+
+            return { std::modf(input.x, &dummy),
+                     std::modf(input.y, &dummy),
+                     std::modf(input.z, &dummy) };
         }
 
-        constexpr BasicVector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        friend constexpr BasicVector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound),
                      Math::saturate(input.z, lower_bound, upper_bound) };
+        }
+
+        friend constexpr BasicVector3D<Type> lerp(const Ref   &input_lower_bound,
+                                                  const Ref   &input_upper_bound,
+                                                        float  percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector3D<Type> lerp(const Ref                 &input_lower_bound,
+                                                  const BasicVector3D<Type> &input_upper_bound,
+                                                        float                percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector3D<Type> mix(const Ref   &input_lower_bound,
+                                                 const Ref   &input_upper_bound,
+                                                       float  percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+        }
+
+        friend constexpr BasicVector3D<Type> mix(const Ref                 &input_lower_bound,
+                                                 const BasicVector3D<Type> &input_upper_bound,
+                                                       float                percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
 
         friend std::string format(const Ref &input)
@@ -328,6 +364,13 @@ struct BasicVector3D
         x{x_in},
         y{other.x},
         z{other.y}
+    {
+    }
+    constexpr BasicVector3D(const std::tuple<Type, Type, Type> &init_value)
+        :
+        x{ std::get<0>(init_value) },
+        y{ std::get<1>(init_value) },
+        z{ std::get<2>(init_value) }
     {
     }
     /// @}
@@ -419,6 +462,12 @@ struct BasicVector3D
     {
         return approximately_equal_to(left, right);
     }
+    /// @}
+
+    /** @name Conversion Operators
+     *  @{
+     */
+    constexpr operator std::tuple<Type, Type, Type>() const { return std::make_tuple( x, y, z ); }
     /// @}
 
     /** @name Element Access
@@ -605,7 +654,9 @@ struct BasicVector3D
      */
     friend constexpr BasicVector3D<Type> fract(const BasicVector3D<Type> &input)
     {
-        return { std::modf(input.x), std::modf(input.y), std::modf(input.z) };
+        Type dummy;
+
+        return { std::modf(input.x, &dummy), std::modf(input.y, &dummy), std::modf(input.z, &dummy) };
     }
 
     friend constexpr BasicVector3D<Type> saturate(const BasicVector3D<Type> &input,
@@ -615,6 +666,34 @@ struct BasicVector3D
         return { Math::saturate(input.x, lower_bound, upper_bound),
                  Math::saturate(input.y, lower_bound, upper_bound),
                  Math::saturate(input.z, lower_bound, upper_bound) };
+    }
+
+    friend constexpr BasicVector3D<Type> lerp(const BasicVector3D<Type> &input_lower_bound,
+                                              const BasicVector3D<Type> &input_upper_bound,
+                                              float percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector3D<Type> lerp(const BasicVector3D<Type> &input_lower_bound,
+                                              const Ref                 &input_upper_bound,
+                                              float percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector3D<Type> mix(const BasicVector3D<Type> &input_lower_bound,
+                                             const BasicVector3D<Type> &input_upper_bound,
+                                             float percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+    }
+
+    friend constexpr BasicVector3D<Type> mix(const BasicVector3D<Type> &input_lower_bound,
+                                             const Ref                 &input_upper_bound,
+                                             float percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
     }
 
     friend std::string format(const BasicVector3D<Type> &input)
