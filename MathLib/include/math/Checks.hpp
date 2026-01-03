@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/ApproximatelyEqualTo.hpp"
+#include <math/ApproximatelyEqualTo.hpp>
 #include <format>
 #include <iostream>
 

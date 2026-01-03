@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/DualQuaternion.hpp"
+#include <math/DualQuaternion.hpp>
 #include <memory>
 #include <vector>
 #include <algorithm>

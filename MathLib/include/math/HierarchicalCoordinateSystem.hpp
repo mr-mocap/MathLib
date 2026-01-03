@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/SceneNode.hpp"
+#include <math/SceneNode.hpp>
 #include <memory>
 
 

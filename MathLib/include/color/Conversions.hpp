@@ -1,10 +1,10 @@
 #pragma once
 
-#include "color/Types.hpp"
-#include "math/ApproximatelyEqualTo.hpp"
-#include "math/Vector3D.hpp"
-#include "math/Vector4D.hpp"
-#include "math/Functions.hpp"
+#include <color/Types.hpp>
+#include <math/ApproximatelyEqualTo.hpp>
+#include <math/Vector3D.hpp>
+#include <math/Vector4D.hpp>
+#include <math/Functions.hpp>
 #include <concepts>
 #include <limits>
 #include <type_traits>

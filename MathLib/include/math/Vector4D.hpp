@@ -1,6 +1,8 @@
 #pragma once
 
-#include "math/Functions.hpp"
+#include <math/Functions.hpp>
+#include <math/Vector2D.hpp>
+#include <math/Vector3D.hpp>
 #include <concepts>
 
 /** @file
@@ -46,13 +48,13 @@ struct BasicVector4D
          */
         constexpr BasicRef(RType &x_in, RType &y_in, RType &z_in, RType &w_in) : x{x_in}, y{y_in}, z{z_in}, w{w_in} { }
         constexpr BasicRef(const BasicRef &) = default;
-        constexpr BasicRef(const BasicVector4D<Type> &other) : x{other.x}, y{other.y}, z{other.z}, w{other.w} { }
+        constexpr BasicRef(const BasicVector4D<RType> &other) : x{other.x}, y{other.y}, z{other.z}, w{other.w} { }
         /// @}
 
         /** @name Assignment
          *  @{
          */
-        constexpr BasicRef &operator =(const BasicRef &input)
+        constexpr BasicRef &operator =(BasicRef input)
         {
             x = input.x;
             y = input.y;
@@ -61,7 +63,7 @@ struct BasicVector4D
             return *this;
         }
 
-        constexpr BasicRef &operator =(const BasicVector4D<Type> &input)
+        constexpr BasicRef &operator =(const BasicVector4D<RType> &input)
         {
             x = input.x;
             y = input.y;
@@ -79,7 +81,7 @@ struct BasicVector4D
          *  This allows Vector4DRef objects to automatically be converted to BasicVector4D objects
          *  for situations like passing to functions or constructors to BasicVector4D objects.
          */
-        constexpr operator BasicVector4D<Type>() const { return { x, y, z, w }; }
+        constexpr operator BasicVector4D<RType>() const { return { x, y, z, w }; }
         /// @}
 
         /** @name Element Access
@@ -111,7 +113,7 @@ struct BasicVector4D
             return approximately_equal_to( left, right );
         }
 
-        friend constexpr bool operator ==(BasicRef left, const BasicVector4D<Type> &right)
+        friend constexpr bool operator ==(BasicRef left, const BasicVector4D<RType> &right)
         {
             return approximately_equal_to( left, right );
         }
@@ -123,56 +125,56 @@ struct BasicVector4D
          * 
          *  @{
          */
-        friend constexpr BasicVector4D<Type> operator +(BasicRef left, BasicRef right)
+        friend constexpr BasicVector4D<RType> operator +(BasicRef left, BasicRef right)
         {
             return { left.x + right.x,
                      left.y + right.y,
                      left.z + right.z,
                      left.w + right.w };
         }
-        friend constexpr BasicVector4D<Type> operator +(BasicRef left, const BasicVector4D<Type> &right)
+        friend constexpr BasicVector4D<RType> operator +(BasicRef left, const BasicVector4D<RType> &right)
         {
             return { left.x + right.x,
                      left.y + right.y,
                      left.z + right.z,
                      left.w + right.w };
         }
-        friend constexpr BasicVector4D<Type> operator -(BasicRef left, BasicRef right)
+        friend constexpr BasicVector4D<RType> operator -(BasicRef left, BasicRef right)
         {
             return { left.x - right.x,
                      left.y - right.y,
                      left.z - right.z,
                      left.w - right.w };
         }
-        friend constexpr BasicVector4D<Type> operator -(BasicRef left, const BasicVector4D<Type> &right)
+        friend constexpr BasicVector4D<RType> operator -(BasicRef left, const BasicVector4D<RType> &right)
         {
             return { left.x - right.x,
                      left.y - right.y,
                      left.z - right.z,
                      left.w - right.w };
         }
-        friend constexpr BasicVector4D<Type> operator *(BasicRef left, BasicRef right)
+        friend constexpr BasicVector4D<RType> operator *(BasicRef left, BasicRef right)
         {
             return { left.x * right.x,
                      left.y * right.y,
                      left.z * right.z,
                      left.w * right.w };
         }
-        friend constexpr BasicVector4D<Type> operator *(BasicRef left, const BasicVector4D<Type> &right)
+        friend constexpr BasicVector4D<RType> operator *(BasicRef left, const BasicVector4D<RType> &right)
         {
             return { left.x * right.x,
                      left.y * right.y,
                      left.z * right.z,
                      left.w * right.w };
         }
-        friend constexpr BasicVector4D<Type> operator /(BasicRef left, BasicRef right)
+        friend constexpr BasicVector4D<RType> operator /(BasicRef left, BasicRef right)
         {
             return { left.x / right.x,
                      left.y / right.y,
                      left.z / right.z,
                      left.w / right.w };
         }
-        friend constexpr BasicVector4D<Type> operator /(BasicRef left, const BasicVector4D<Type> &right)
+        friend constexpr BasicVector4D<RType> operator /(BasicRef left, const BasicVector4D<RType> &right)
         {
             return { left.x / right.x,
                      left.y / right.y,
@@ -181,9 +183,9 @@ struct BasicVector4D
         }
         /// @} {Operators}
 
-        friend BasicVector3D<Type> fract(const Ref &input)
+        friend BasicVector4D<RType> fract(BasicRef input)
         {
-            Type dummy;
+            RType dummy;
 
             return { std::modf(input.x, &dummy),
                      std::modf(input.y, &dummy),
@@ -191,7 +193,7 @@ struct BasicVector4D
                      std::modf(input.w, &dummy) };
         }
 
-        friend constexpr BasicVector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        friend constexpr BasicVector4D<RType> saturate(BasicRef input, RType lower_bound, RType upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound),
@@ -199,30 +201,30 @@ struct BasicVector4D
                      Math::saturate(input.w, lower_bound, upper_bound) };
         }
 
-        friend constexpr BasicVector4D<Type> lerp(const Ref   &input_lower_bound,
-                                                  const Ref   &input_upper_bound,
-                                                        float  percentage_zero_to_one)
+        friend constexpr BasicVector4D<RType> lerp(BasicRef input_lower_bound,
+                                                   BasicRef input_upper_bound,
+                                                   float    percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector4D<Type> lerp(const Ref                 &input_lower_bound,
-                                                  const BasicVector4D<Type> &input_upper_bound,
-                                                        float                percentage_zero_to_one)
+        friend constexpr BasicVector4D<RType> lerp(BasicRef              input_lower_bound,
+                                                   BasicVector4D<RType> &input_upper_bound,
+                                                   float                 percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector4D<Type> mix(const Ref   &input_lower_bound,
-                                                 const Ref   &input_upper_bound,
-                                                       float  percentage_zero_to_one)
+        friend constexpr BasicVector4D<RType> mix(BasicRef input_lower_bound,
+                                                  BasicRef input_upper_bound,
+                                                  float    percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
 
-        friend constexpr BasicVector4D<Type> mix(const Ref                 &input_lower_bound,
-                                                 const BasicVector4D<Type> &input_upper_bound,
-                                                       float                percentage_zero_to_one)
+        friend constexpr BasicVector4D<RType> mix(BasicRef             input_lower_bound,
+                                                  BasicVector4D<Type> &input_upper_bound,
+                                                  float                percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
@@ -253,9 +255,9 @@ struct BasicVector4D
         }
 
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(      BasicRef             value_to_test,
-                                                     const BasicVector3D<Type> &value_it_should_be,
-                                                           OT                   tolerance = OT{0.0002})
+        friend constexpr bool approximately_equal_to(      BasicRef              value_to_test,
+                                                     const BasicVector4D<RType> &value_it_should_be,
+                                                           OT                    tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
@@ -278,8 +280,8 @@ struct BasicVector4D
         y{y_in},
         z{z_in},
         w{w_in}
-        {
-        }
+    {
+    }
     constexpr BasicVector4D(const BasicVector3D<Type> &first3, const Type &w_in = 0)
         :
         x{first3.x},
@@ -337,57 +339,57 @@ struct BasicVector4D
     /** @name Swizzle operations
      *  @{
      */
-    constexpr ConstRef            xy() const &  { return { x, y }; }
-    constexpr Ref                 xy()       &  { return { x, y }; }
-    constexpr BasicVector2D<Type> xy()       && { return { x, y }; }
+    constexpr BasicVector2D<Type>::ConstRef xy() const &  { return { x, y }; }
+    constexpr BasicVector2D<Type>::Ref      xy()       &  { return { x, y }; }
+    constexpr BasicVector2D<Type>           xy()       && { return { x, y }; }
 
-    constexpr ConstRef            xz() const &  { return { x, z }; }
-    constexpr Ref                 xz()       &  { return { x, z }; }
-    constexpr BasicVector2D<Type> xz()       && { return { x, z }; }
+    constexpr BasicVector2D<Type>::ConstRef xz() const &  { return { x, z }; }
+    constexpr BasicVector2D<Type>::Ref      xz()       &  { return { x, z }; }
+    constexpr BasicVector2D<Type>           xz()       && { return { x, z }; }
 
-    constexpr ConstRef            yx() const &  { return { y, x }; }
-    constexpr Ref                 yx()       &  { return { y, x }; }
-    constexpr BasicVector2D<Type> yx()       && { return { y, x }; }
+    constexpr BasicVector2D<Type>::ConstRef yx() const &  { return { y, x }; }
+    constexpr BasicVector2D<Type>::Ref      yx()       &  { return { y, x }; }
+    constexpr BasicVector2D<Type>           yx()       && { return { y, x }; }
 
-    constexpr ConstRef            yz() const &  { return { y, z }; }
-    constexpr Ref                 yz()       &  { return { y, z }; }
-    constexpr BasicVector2D<Type> yz()       && { return { y, z }; }
+    constexpr BasicVector2D<Type>::ConstRef yz() const &  { return { y, z }; }
+    constexpr BasicVector2D<Type>::Ref      yz()       &  { return { y, z }; }
+    constexpr BasicVector2D<Type>           yz()       && { return { y, z }; }
 
-    constexpr ConstRef            zx() const &  { return { z, x }; }
-    constexpr Ref                 zx()       &  { return { z, x }; }
-    constexpr BasicVector2D<Type> zx()       && { return { z, x }; }
+    constexpr BasicVector2D<Type>::ConstRef zx() const &  { return { z, x }; }
+    constexpr BasicVector2D<Type>::Ref      zx()       &  { return { z, x }; }
+    constexpr BasicVector2D<Type>           zx()       && { return { z, x }; }
 
-    constexpr ConstRef            xyz() const &  { return { x, y, z }; }
-    constexpr Ref                 xyz()       &  { return { x, y, z }; }
-    constexpr BasicVector3D<Type> xyz()       && { return { x, y, z }; }
+    constexpr BasicVector3D<Type>::ConstRef xyz() const &  { return { x, y, z }; }
+    constexpr BasicVector3D<Type>::Ref      xyz()       &  { return { x, y, z }; }
+    constexpr BasicVector3D<Type>           xyz()       && { return { x, y, z }; }
 
-    constexpr ConstRef            xzy() const &  { return { x, z, y }; }
-    constexpr Ref                 xzy()       &  { return { x, z, y }; }
-    constexpr BasicVector3D<Type> xzy()       && { return { x, z, y }; }
+    constexpr BasicVector3D<Type>::ConstRef xzy() const &  { return { x, z, y }; }
+    constexpr BasicVector3D<Type>::Ref      xzy()       &  { return { x, z, y }; }
+    constexpr BasicVector3D<Type>           xzy()       && { return { x, z, y }; }
 
-    constexpr ConstRef            zxy() const &  { return { z, x, y }; }
-    constexpr Ref                 zxy()       &  { return { z, x, y }; }
-    constexpr BasicVector3D<Type> zxy()       && { return { z, x, y }; }
+    constexpr BasicVector3D<Type>::ConstRef zxy() const &  { return { z, x, y }; }
+    constexpr BasicVector3D<Type>::Ref      zxy()       &  { return { z, x, y }; }
+    constexpr BasicVector3D<Type>           zxy()       && { return { z, x, y }; }
 
-    constexpr ConstRef            zyx() const &  { return { z, y, x }; }
-    constexpr Ref                 zyx()       &  { return { z, y, x }; }
-    constexpr BasicVector3D<Type> zyx()       && { return { z, y, x }; }
+    constexpr BasicVector3D<Type>::ConstRef zyx() const &  { return { z, y, x }; }
+    constexpr BasicVector3D<Type>::Ref      zyx()       &  { return { z, y, x }; }
+    constexpr BasicVector3D<Type>           zyx()       && { return { z, y, x }; }
 
-    constexpr ConstRef            xxx() const &  { return { x, x, x }; }
-    constexpr Ref                 xxx()       &  { return { x, x, x }; }
-    constexpr BasicVector3D<Type> xxx()       && { return { x, x, x }; }
+    constexpr BasicVector3D<Type>::ConstRef xxx() const &  { return { x, x, x }; }
+    constexpr BasicVector3D<Type>::Ref      xxx()       &  { return { x, x, x }; }
+    constexpr BasicVector3D<Type>           xxx()       && { return { x, x, x }; }
 
-    constexpr ConstRef            yyy() const &  { return { y, y, y }; }
-    constexpr Ref                 yyy()       &  { return { y, y, y }; }
-    constexpr BasicVector3D<Type> yyy()       && { return { y, y, y }; }
+    constexpr BasicVector3D<Type>::ConstRef yyy() const &  { return { y, y, y }; }
+    constexpr BasicVector3D<Type>::Ref      yyy()       &  { return { y, y, y }; }
+    constexpr BasicVector3D<Type>           yyy()       && { return { y, y, y }; }
 
-    constexpr ConstRef            zzz() const &  { return { z, z, z }; }
-    constexpr Ref                 zzz()       &  { return { z, z, z }; }
-    constexpr BasicVector3D<Type> zzz()       && { return { z, z, z }; }
+    constexpr BasicVector3D<Type>::ConstRef zzz() const &  { return { z, z, z }; }
+    constexpr BasicVector3D<Type>::Ref      zzz()       &  { return { z, z, z }; }
+    constexpr BasicVector3D<Type>           zzz()       && { return { z, z, z }; }
 
-    constexpr ConstRef            www() const &  { return { w, w, w }; }
-    constexpr Ref                 www()       &  { return { w, w, w }; }
-    constexpr BasicVector3D<Type> www()       && { return { w, w, w }; }
+    constexpr BasicVector3D<Type>::ConstRef www() const &  { return { w, w, w }; }
+    constexpr BasicVector3D<Type>::Ref      www()       &  { return { w, w, w }; }
+    constexpr BasicVector3D<Type>           www()       && { return { w, w, w }; }
     /// @}
 
     /** Defines equality of two BasicVector4D objects
@@ -654,7 +656,14 @@ struct BasicVector4D
     }
 
     friend constexpr BasicVector4D<Type> lerp(const BasicVector4D<Type> &input_lower_bound,
-                                              const Ref                 &input_upper_bound,
+                                                    Ref                  input_upper_bound,
+                                                    float                percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector4D<Type> lerp(const BasicVector4D<Type> &input_lower_bound,
+                                                    ConstRef             input_upper_bound,
                                                     float                percentage_zero_to_one)
     {
         return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
@@ -668,12 +677,18 @@ struct BasicVector4D
     }
 
     friend constexpr BasicVector4D<Type> mix(const BasicVector4D<Type> &input_lower_bound,
-                                             const Ref                 &input_upper_bound,
+                                                   Ref                  input_upper_bound,
                                                    float                percentage_zero_to_one)
     {
         return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
     }
 
+    friend constexpr BasicVector4D<Type> mix(const BasicVector4D<Type> &input_lower_bound,
+                                                   ConstRef             input_upper_bound,
+                                                   float                percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+    }
     friend std::string format(const BasicVector4D<Type> &input)
     {
         return std::format("[x: {:.6}, y: {:.6}, z: {:.6}, w: {:.6}]", input.x, input.y, input.z, input.w);

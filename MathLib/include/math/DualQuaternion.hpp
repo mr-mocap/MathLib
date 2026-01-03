@@ -1,9 +1,9 @@
 #pragma once
 
-#include "math/Dual.hpp"
-#include "math/Quaternion.hpp"
-#include "math/Vector3D.hpp"
-#include "math/Functions.hpp"
+#include <math/Dual.hpp>
+#include <math/Quaternion.hpp>
+#include <math/Vector3D.hpp>
+#include <math/Functions.hpp>
 #include <cassert>
 #include <concepts>
 

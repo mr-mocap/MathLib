@@ -1,8 +1,8 @@
 #pragma once
 
-#include "math/Functions.hpp"
-#include "math/Vector3D.hpp"
-#include "math/Angle.hpp"
+#include <math/Functions.hpp>
+#include <math/Vector3D.hpp>
+#include <math/Angle.hpp>
 #include <cassert>
 #include <cmath>
 #include <concepts>

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "math/ApproximatelyEqualTo.hpp"
-#include "math/Conversions.hpp"
-#include "math/Trigonometric.hpp"
-#include "math/Checks.hpp"
-#include "math/Combinatorics.hpp"
+#include <math/ApproximatelyEqualTo.hpp>
+#include <math/Conversions.hpp>
+#include <math/Trigonometric.hpp>
+#include <math/Checks.hpp>
+#include <math/Combinatorics.hpp>
 #include <algorithm>
 
 /** @file
