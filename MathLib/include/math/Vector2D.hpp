@@ -171,7 +171,9 @@ struct BasicVector2D
          *  This allows Ref objects to automatically be converted to BasicVector2D objects
          *  for situations like passing to functions or constructors to BasicVector2D objects.
          */
-        constexpr operator BasicVector2D<Type>() const { return BasicVector2D<Type>{ x, y }; }
+        constexpr operator BasicVector2D<Type>() const { return { x, y }; }
+
+        constexpr operator std::tuple<Type, Type>() const { return std::make_tuple( x, y ); }
         /// @}
 
         /** @name Element Access
@@ -264,13 +266,43 @@ struct BasicVector2D
 
         friend constexpr BasicVector2D<Type> fract(BasicRef input)
         {
-            return { std::modf(input.x), std::modf(input.y) };
+            Type dummy;
+
+            return { std::modf(input.x, &dummy), std::modf(input.y, &dummy) };
         }
 
         friend constexpr BasicVector2D<Type> saturate(BasicRef input, Type lower_bound, Type upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound) };
+        }
+
+        friend constexpr BasicVector2D<Type> lerp(Ref   input_lower_bound,
+                                                  Ref   input_upper_bound,
+                                                  float percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector2D<Type> lerp(const Ref                 &input_lower_bound,
+                                                  const BasicVector2D<Type> &input_upper_bound,
+                                                        float                percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector2D<Type> mix(const Ref   &input_lower_bound,
+                                                 const Ref   &input_upper_bound,
+                                                       float  percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+        }
+
+        friend constexpr BasicVector2D<Type> mix(const Ref                 &input_lower_bound,
+                                                 const BasicVector2D<Type> &input_upper_bound,
+                                                       float                percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
 
         friend std::string format(BasicRef input)
@@ -293,6 +325,12 @@ struct BasicVector2D
         y{y_in}
     {
     }
+    constexpr BasicVector2D(const std::tuple<Type, Type> &t)
+        :
+        x{ std::get<0>( t ) },
+        y{ std::get<1>( t ) }
+    {
+    }
     /// @}
 
     /** @name Assignment
@@ -305,6 +343,12 @@ struct BasicVector2D
         y = other.y;
         return *this;
     }
+    /// @}
+
+    /** @name Conversion Operators
+     *  @{
+     */
+    constexpr operator std::tuple<Type, Type>() const { return std::make_tuple( x, y ); }
     /// @}
 
     /** @name Equality
@@ -647,6 +691,34 @@ struct BasicVector2D
     {
         return { Math::saturate(input.x, lower_bound, upper_bound),
                  Math::saturate(input.y, lower_bound, upper_bound) };
+    }
+
+    friend constexpr BasicVector2D<Type> lerp(const BasicVector2D<Type> &input_lower_bound,
+                                              const BasicVector2D<Type> &input_upper_bound,
+                                              float percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector2D<Type> lerp(const BasicVector2D<Type> &input_lower_bound,
+                                              const Ref                 &input_upper_bound,
+                                              float percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector2D<Type> mix(const BasicVector2D<Type> &input_lower_bound,
+                                             const BasicVector2D<Type> &input_upper_bound,
+                                             float percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+    }
+
+    friend constexpr BasicVector2D<Type> mix(const BasicVector2D<Type> &input_lower_bound,
+                                             const Ref                 &input_upper_bound,
+                                             float percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
     }
 
     friend std::string format(const BasicVector2D<Type> &input)

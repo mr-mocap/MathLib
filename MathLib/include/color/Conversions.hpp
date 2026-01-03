@@ -81,7 +81,7 @@ template <std::floating_point T>
 BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
 {
     // https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
-#if 1
+#if 0
     if ( Math::approximately_equal_to( input_hsv.saturation(), T{0} ) )
         return BasicUnitRGB<T>{ input_hsv.value(), input_hsv.value(), input_hsv.value() };
 
@@ -147,15 +147,15 @@ BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
                        is_not_first_slice
                      );
 #else
-    Math::Vector4D<T> K{ T{1.0}, T{2.0} / T{3.0}, T{1.0} / T{3.0}, T{3.0} };
+    Math::BasicVector4D<T> K( T{1.0}, T{2.0} / T{3.0}, T{1.0} / T{3.0}, T{3.0} );
 
-    Math::Vector3D<T> input_xxx{ input_hsv.hue().value(), input_hsv.hue().value(), input_hsv.hue().value() };
+    Math::BasicVector3D<T> input_xxx( input_hsv.hue().value(), input_hsv.hue().value(), input_hsv.hue().value() );
 
-    Math::Vector3D<T> p{ Math::abs( Math::fract(input_xxx + K.xyz()) * T{6.0} - K.www() ) };
+    Math::BasicVector3D<T> p( abs( fract(input_xxx + K.xyz()) * T{6.0} - K.www() ) );
 
-    Math::Vector3D<T> out{ Math::mix( K.xxx(), Math::saturate( p - K.xxx(), T{0.0}, T{1.0} ), input_hsv.saturation() ) };
+    Math::BasicVector3D<T> out( mix( K.xxx(), saturate( p - K.xxx(), T{0.0}, T{1.0} ), input_hsv.saturation() ) );
 
-    return input_hsv.value() * out;
+    return { input_hsv.value() * out };
 #endif
 #endif
 }

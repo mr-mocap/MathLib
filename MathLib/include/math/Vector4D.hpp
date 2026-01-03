@@ -181,6 +181,52 @@ struct BasicVector4D
         }
         /// @} {Operators}
 
+        friend BasicVector3D<Type> fract(const Ref &input)
+        {
+            Type dummy;
+
+            return { std::modf(input.x, &dummy),
+                     std::modf(input.y, &dummy),
+                     std::modf(input.z, &dummy),
+                     std::modf(input.w, &dummy) };
+        }
+
+        friend constexpr BasicVector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        {
+            return { Math::saturate(input.x, lower_bound, upper_bound),
+                     Math::saturate(input.y, lower_bound, upper_bound),
+                     Math::saturate(input.z, lower_bound, upper_bound),
+                     Math::saturate(input.w, lower_bound, upper_bound) };
+        }
+
+        friend constexpr BasicVector4D<Type> lerp(const Ref   &input_lower_bound,
+                                                  const Ref   &input_upper_bound,
+                                                        float  percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector4D<Type> lerp(const Ref                 &input_lower_bound,
+                                                  const BasicVector4D<Type> &input_upper_bound,
+                                                        float                percentage_zero_to_one)
+        {
+            return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+        }
+
+        friend constexpr BasicVector4D<Type> mix(const Ref   &input_lower_bound,
+                                                 const Ref   &input_upper_bound,
+                                                       float  percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+        }
+
+        friend constexpr BasicVector4D<Type> mix(const Ref                 &input_lower_bound,
+                                                 const BasicVector4D<Type> &input_upper_bound,
+                                                       float                percentage_zero_to_one)
+        {
+            return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+        }
+
         /** Compares two BasicVector4D::Ref inputs equal, component-wise, to within a tolerance
          * 
          *  @addtogroup Equality
@@ -580,22 +626,52 @@ struct BasicVector4D
      *
      *   @return The BasicVector4D with only fractional values
      */
-    friend constexpr BasicVector4D<Type> fract(const BasicVector4D<Type> &input)
+    friend BasicVector4D<Type> fract(const BasicVector4D<Type> &input)
     {
-        return { std::modf(input.x),
-                 std::modf(input.y),
-                 std::modf(input.z),
-                 std::modf(input.w) };
+        Type dummy;
+
+        return { std::modf(input.x, &dummy),
+                 std::modf(input.y, &dummy),
+                 std::modf(input.z, &dummy),
+                 std::modf(input.w, &dummy) };
     }
 
     friend constexpr BasicVector4D<Type> saturate(const BasicVector4D<Type> &input,
                                                         Type                 lower_bound,
                                                         Type                 upper_bound)
     {
-        return { saturate(input.x, lower_bound, upper_bound),
-                 saturate(input.y, lower_bound, upper_bound),
-                 saturate(input.z, lower_bound, upper_bound),
-                 saturate(input.w, lower_bound, upper_bound) };
+        return { Math::saturate(input.x, lower_bound, upper_bound),
+                 Math::saturate(input.y, lower_bound, upper_bound),
+                 Math::saturate(input.z, lower_bound, upper_bound),
+                 Math::saturate(input.w, lower_bound, upper_bound) };
+    }
+
+    friend constexpr BasicVector4D<Type> lerp(const BasicVector4D<Type> &input_lower_bound,
+                                              const BasicVector4D<Type> &input_upper_bound,
+                                                    float                percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector4D<Type> lerp(const BasicVector4D<Type> &input_lower_bound,
+                                              const Ref                 &input_upper_bound,
+                                                    float                percentage_zero_to_one)
+    {
+        return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
+    }
+
+    friend constexpr BasicVector4D<Type> mix(const BasicVector4D<Type> &input_lower_bound,
+                                             const BasicVector4D<Type> &input_upper_bound,
+                                                   float                percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
+    }
+
+    friend constexpr BasicVector4D<Type> mix(const BasicVector4D<Type> &input_lower_bound,
+                                             const Ref                 &input_upper_bound,
+                                                   float                percentage_zero_to_one)
+    {
+        return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
     }
 
     friend std::string format(const BasicVector4D<Type> &input)
