@@ -477,10 +477,10 @@ public:
  *  @relates BasicDual
  *  @{
  */
-using Dualf  = BasicDual<float>;
-using Duald  = BasicDual<double>;
-using Dual   = BasicDual<double>;
-using Dualld = BasicDual<long double>;
+using Dualf = BasicDual<float>;
+using Duald = BasicDual<double>;
+using Dual  = BasicDual<double>;
+using Duall = BasicDual<long double>;
 /// @}
 /// @}  {DualAliases}
 

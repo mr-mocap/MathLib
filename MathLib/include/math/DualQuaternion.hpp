@@ -628,10 +628,10 @@ private:
  *  @relates BasicDualQuaternion
  *  @{
  */
-using DualQuaternionf  = BasicDualQuaternion<float>;
-using DualQuaterniond  = BasicDualQuaternion<double>;
-using DualQuaternion   = BasicDualQuaternion<double>;
-using DualQuaternionld = BasicDualQuaternion<long double>;
+using DualQuaternionf = BasicDualQuaternion<float>;
+using DualQuaterniond = BasicDualQuaternion<double>;
+using DualQuaternion  = BasicDualQuaternion<double>;
+using DualQuaternionl = BasicDualQuaternion<long double>;
 /// @}
 /// @}  {DualQuaternionAliases}
 

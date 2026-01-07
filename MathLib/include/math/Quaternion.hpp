@@ -743,10 +743,10 @@ private:
  *  @relates BasicQuaternion
  *  @{
  */
-using Quaternionf  = BasicQuaternion<float>;
-using Quaterniond  = BasicQuaternion<double>;
-using Quaternion   = BasicQuaternion<double>;
-using Quaternionld = BasicQuaternion<long double>;
+using Quaternionf = BasicQuaternion<float>;
+using Quaterniond = BasicQuaternion<double>;
+using Quaternion  = BasicQuaternion<double>;
+using Quaternionl = BasicQuaternion<long double>;
 /// @}
 /// @}  {QuaternionAliases}
 
