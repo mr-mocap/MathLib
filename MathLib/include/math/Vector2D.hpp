@@ -45,22 +45,22 @@ struct BasicVector2D
          * 
          *  @{
          */
-        constexpr BasicRef(value_type &x_in, value_type &y_in) : x{x_in}, y{y_in} { }
+        constexpr BasicRef(RType &x_in, RType &y_in) : x{x_in}, y{y_in} { }
         constexpr BasicRef(const BasicRef &) = default;
-        constexpr BasicRef(const BasicVector2D<Type> &other) : x{other.x}, y{other.y} { }
+        constexpr BasicRef(const BasicVector2D<RType> &other) : x{other.x}, y{other.y} { }
         /// @}
 
         /** @name Assignment
          *  @{
          */
-        constexpr BasicRef &operator =(const BasicRef &input)
+        constexpr BasicRef &operator =(BasicRef input)
         {
             x = input.x;
             y = input.y;
             return *this;
         }
 
-        constexpr BasicRef &operator =(const BasicVector2D<Type> &input)
+        constexpr BasicRef &operator =(const BasicVector2D<RType> &input)
         {
             x = input.x;
             y = input.y;
@@ -83,12 +83,12 @@ struct BasicVector2D
          * 
          *  @see Equality
          */
-        friend constexpr bool operator ==(const BasicRef &left, const BasicRef &right)
+        friend constexpr bool operator ==(BasicRef left, BasicRef right)
         {
             return approximately_equal_to( left, right );
         }
 
-        friend constexpr bool operator ==(const BasicRef &left, const BasicVector2D<Type> &right)
+        friend constexpr bool operator ==(BasicRef left, const BasicVector2D<RType> &right)
         {
             return approximately_equal_to( left, right );
         }
@@ -107,38 +107,38 @@ struct BasicVector2D
          * 
          *  @{
          */
-        friend constexpr BasicVector2D<Type> operator +(BasicRef left, BasicRef right)
+        friend constexpr BasicVector2D<RType> operator +(BasicRef left, BasicRef right)
         {
             return { left.x + right.x, left.y + right.y };
         }
-        friend constexpr BasicVector2D<Type> operator +(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<RType> operator +(BasicRef left, const BasicVector2D<RType> &right)
         {
             return { left.x + right.x, left.y + right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator -(BasicRef left, BasicRef right)
+        friend constexpr BasicVector2D<RType> operator -(BasicRef left, BasicRef right)
         {
             return { left.x - right.x, left.y - right.y };
         }
-        friend constexpr BasicVector2D<Type> operator -(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<RType> operator -(BasicRef left, const BasicVector2D<RType> &right)
         {
             return { left.x - right.x, left.y - right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator *(BasicRef left, BasicRef right)
+        friend constexpr BasicVector2D<RType> operator *(BasicRef left, BasicRef right)
         {
             return { left.x * right.x, left.y * right.y };
         }
-        friend constexpr BasicVector2D<Type> operator *(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<RType> operator *(BasicRef left, const BasicVector2D<RType> &right)
         {
             return { left.x * right.x, left.y * right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator *(BasicRef left, Type scalar)
+        friend constexpr BasicVector2D<RType> operator *(BasicRef left, RType scalar)
         {
             return { left.x * scalar, left.y * scalar };
         }
-        friend constexpr BasicVector2D<Type> operator *(Type scalar, BasicRef right)
+        friend constexpr BasicVector2D<RType> operator *(RType scalar, BasicRef right)
         {
             return { scalar * right.x, scalar * right.y };
         }
@@ -147,7 +147,7 @@ struct BasicVector2D
         {
             return { left.x / right.x, left.y / right.y };
         }
-        friend constexpr BasicVector2D<Type> operator /(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<RType> operator /(BasicRef left, const BasicVector2D<RType> &right)
         {
             return { left.x / right.x, left.y / right.y };
         }
@@ -156,7 +156,7 @@ struct BasicVector2D
         {
             return { left.x / scalar, left.y / scalar };
         }
-        friend constexpr BasicVector2D<Type> operator /(Type scalar, BasicRef right)
+        friend constexpr BasicVector2D<RType> operator /(RType scalar, BasicRef right)
         {
             return { scalar / right.x, scalar / right.y };
         }
@@ -171,9 +171,9 @@ struct BasicVector2D
          *  This allows Ref objects to automatically be converted to BasicVector2D objects
          *  for situations like passing to functions or constructors to BasicVector2D objects.
          */
-        constexpr operator BasicVector2D<Type>() const { return { x, y }; }
+        constexpr operator BasicVector2D<RType>() const { return { x, y }; }
 
-        constexpr operator std::tuple<Type, Type>() const { return std::make_tuple( x, y ); }
+        constexpr operator std::tuple<RType, RType>() const { return std::make_tuple( x, y ); }
         /// @}
 
         /** @name Element Access
@@ -219,47 +219,47 @@ struct BasicVector2D
          *  @return @c true if they are equal
          */
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(      BasicRef             value_to_test,
-                                                     const BasicVector2D<Type> &value_it_should_be,
-                                                           OT                   tolerance = OT{0.0002})
+        friend constexpr bool approximately_equal_to(      BasicRef              value_to_test,
+                                                     const BasicVector2D<RType> &value_it_should_be,
+                                                           OT                    tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
         }
 
-        friend constexpr Type accumulate(BasicRef input)
+        friend constexpr RType accumulate(BasicRef input)
         {
             return input.x + input.y;
         }
 
-        friend constexpr Type dot(BasicRef left, BasicRef right)
+        friend constexpr RType dot(BasicRef left, BasicRef right)
         {
             return (left.x * right.x) + (left.y * right.y);
         }
-        friend constexpr Type dot(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr RType dot(BasicRef left, const BasicVector2D<RType> &right)
         {
             return (left.x * right.x) + (left.y * right.y);
         }
 
-        friend constexpr Type dot_normalized(BasicRef left, BasicRef right)
+        friend constexpr RType dot_normalized(BasicRef left, BasicRef right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        friend constexpr Type dot_normalized(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr RType dot_normalized(BasicRef left, const BasicVector2D<RType> &right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
 
-        friend constexpr Type cross(BasicRef left, BasicRef right)
+        friend constexpr RType cross(BasicRef left, BasicRef right)
         {
             return (left.x * right.y) - (left.y * right.x);
         }
-        friend constexpr Type cross(BasicRef left, const BasicVector2D<Type> &right)
+        friend constexpr RType cross(BasicRef left, const BasicVector2D<RType> &right)
         {
             return (left.x * right.y) - (left.y * right.x);
         }
 
-        friend constexpr BasicVector2D<Type> abs(BasicRef input)
+        friend constexpr BasicVector2D<RType> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y) };
         }
@@ -271,36 +271,36 @@ struct BasicVector2D
             return { std::modf(input.x, &dummy), std::modf(input.y, &dummy) };
         }
 
-        friend constexpr BasicVector2D<Type> saturate(BasicRef input, Type lower_bound, Type upper_bound)
+        friend constexpr BasicVector2D<RType> saturate(BasicRef input, RType lower_bound, RType upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound) };
         }
 
-        friend constexpr BasicVector2D<Type> lerp(Ref   input_lower_bound,
-                                                  Ref   input_upper_bound,
-                                                  float percentage_zero_to_one)
+        friend constexpr BasicVector2D<RType> lerp(BasicRef input_lower_bound,
+                                                   BasicRef input_upper_bound,
+                                                   float    percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector2D<Type> lerp(const Ref                 &input_lower_bound,
-                                                  const BasicVector2D<Type> &input_upper_bound,
-                                                        float                percentage_zero_to_one)
+        friend constexpr BasicVector2D<RType> lerp(      BasicRef             input_lower_bound,
+                                                   const BasicVector2D<Type> &input_upper_bound,
+                                                         float                percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector2D<Type> mix(const Ref   &input_lower_bound,
-                                                 const Ref   &input_upper_bound,
-                                                       float  percentage_zero_to_one)
+        friend constexpr BasicVector2D<RType> mix(BasicRef input_lower_bound,
+                                                  BasicRef input_upper_bound,
+                                                  float    percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
 
-        friend constexpr BasicVector2D<Type> mix(const Ref                 &input_lower_bound,
-                                                 const BasicVector2D<Type> &input_upper_bound,
-                                                       float                percentage_zero_to_one)
+        friend constexpr BasicVector2D<RType> mix(      BasicRef             input_lower_bound,
+                                                  const BasicVector2D<RType> &input_upper_bound,
+                                                        float                percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }

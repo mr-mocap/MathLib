@@ -83,7 +83,7 @@ struct BasicVector3D
          */
         constexpr operator BasicVector3D<RType>() const { return { x, y, z }; }
 
-        constexpr operator std::tuple<Type, Type, Type>() const { return std::make_tuple( x, y, z ); }
+        constexpr operator std::tuple<RType, RType, RType>() const { return std::make_tuple( x, y, z ); }
         /// @}
 
         /** @name Element Access
@@ -114,7 +114,7 @@ struct BasicVector3D
             return approximately_equal_to( left, right );
         }
 
-        friend constexpr bool operator ==(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr bool operator ==(BasicRef left, const BasicVector3D<RType> &right)
         {
             return approximately_equal_to( left, right );
         }
@@ -126,35 +126,35 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr BasicVector3D<Type> operator +(BasicRef left, BasicRef right)
+        friend constexpr BasicVector3D<RType> operator +(BasicRef left, BasicRef right)
         {
             return { left.x + right.x, left.y + right.y, left.z + right.z };
         }
-        friend constexpr BasicVector3D<Type> operator +(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<RType> operator +(BasicRef left, const BasicVector3D<RType> &right)
         {
             return { left.x + right.x, left.y + right.y, left.z + right.z };
         }
-        friend constexpr BasicVector3D<Type> operator -(BasicRef left, BasicRef right)
+        friend constexpr BasicVector3D<RType> operator -(BasicRef left, BasicRef right)
         {
             return { left.x - right.x, left.y - right.y, left.z - right.z };
         }
-        friend constexpr BasicVector3D<Type> operator -(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<RType> operator -(BasicRef left, const BasicVector3D<RType> &right)
         {
             return { left.x - right.x, left.y - right.y, left.z - right.z };
         }
-        friend constexpr BasicVector3D<Type> operator *(BasicRef left, BasicRef right)
+        friend constexpr BasicVector3D<RType> operator *(BasicRef left, BasicRef right)
         {
             return { left.x * right.x, left.y * right.y, left.z * right.z };
         }
-        friend constexpr BasicVector3D<Type> operator *(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<RType> operator *(BasicRef left, const BasicVector3D<RType> &right)
         {
             return { left.x * right.x, left.y * right.y, left.z * right.z };
         }
-        friend constexpr BasicVector3D<Type> operator /(BasicRef left, BasicRef right)
+        friend constexpr BasicVector3D<RType> operator /(BasicRef left, BasicRef right)
         {
             return { left.x / right.x, left.y / right.y, left.z / right.z };
         }
-        friend constexpr BasicVector3D<Type> operator /(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<RType> operator /(BasicRef left, const BasicVector3D<RType> &right)
         {
             return { left.x / right.x, left.y / right.y, left.z / right.z };
         }
@@ -186,7 +186,7 @@ struct BasicVector3D
 
         template <std::floating_point OT = float>
         friend constexpr bool approximately_equal_to(      BasicRef             value_to_test,
-                                                     const BasicVector3D<Type> &value_it_should_be,
+                                                     const BasicVector3D<RType> &value_it_should_be,
                                                            OT                   tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
@@ -201,7 +201,7 @@ struct BasicVector3D
          * 
          *  @return The sum of all the components
          */
-        friend constexpr Type accumulate(BasicRef input)
+        friend constexpr RType accumulate(BasicRef input)
         {
             return input.x + input.y + input.z;
         }
@@ -219,11 +219,11 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr Type dot(BasicRef left, BasicRef right)
+        friend constexpr RType dot(BasicRef left, BasicRef right)
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
         }
-        friend constexpr Type dot(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr RType dot(BasicRef left, const BasicVector3D<RType> &right)
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
         }
@@ -242,11 +242,11 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr Type dot_normalized(BasicRef left, BasicRef right)
+        friend constexpr RType dot_normalized(BasicRef left, BasicRef right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        friend constexpr Type dot_normalized(BasicRef left, const BasicVector3D<Type> &right)
+        friend constexpr RType dot_normalized(BasicRef left, const BasicVector3D<RType> &right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
@@ -259,9 +259,9 @@ struct BasicVector3D
          * 
          *  @return The cross product of the input vectors
          */
-        friend constexpr BasicVector3D<Type> cross(BasicRef left, BasicRef right)
+        friend constexpr BasicVector3D<RType> cross(BasicRef left, BasicRef right)
         {
-            return cross( BasicVector3D<Type>(left), BasicVector3D<Type>(right) );
+            return cross( BasicVector3D<RType>(left), BasicVector3D<RType>(right) );
         }
 
         /** Creates the normalized form of a BasicVector3D::Ref
@@ -270,9 +270,9 @@ struct BasicVector3D
          *  
          *  @return The normalized version of @p input
          */
-        friend constexpr BasicVector3D<Type> normalized(BasicRef input)
+        friend constexpr BasicVector3D<RType> normalized(BasicRef input)
         {
-            return BasicVector3D<Type>( input ).normalized();
+            return BasicVector3D<RType>( input ).normalized();
         }
 
         /** Calculate the absolute value of all components of a BasicVector3D
@@ -281,7 +281,7 @@ struct BasicVector3D
          *
          *   @return The BasicVector3D with only positive values
          */
-        friend constexpr BasicVector3D<Type> abs(BasicRef input)
+        friend constexpr BasicVector3D<RType> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y), std::abs(input.z) };
         }
@@ -292,46 +292,46 @@ struct BasicVector3D
          *
          *   @return The BasicVector3D with only fractional values
          */
-        friend constexpr BasicVector3D<Type> fract(BasicRef input)
+        friend constexpr BasicVector3D<RType> fract(BasicRef input)
         {
-            Type dummy;
+            RType dummy;
 
             return { std::modf(input.x, &dummy),
                      std::modf(input.y, &dummy),
                      std::modf(input.z, &dummy) };
         }
 
-        friend constexpr BasicVector3D<Type> saturate(BasicRef input, Type lower_bound, Type upper_bound)
+        friend constexpr BasicVector3D<RType> saturate(BasicRef input, RType lower_bound, RType upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound),
                      Math::saturate(input.z, lower_bound, upper_bound) };
         }
 
-        friend constexpr BasicVector3D<Type> lerp(const Ref   &input_lower_bound,
-                                                  const Ref   &input_upper_bound,
-                                                        float  percentage_zero_to_one)
+        friend constexpr BasicVector3D<RType> lerp(BasicRef input_lower_bound,
+                                                   BasicRef input_upper_bound,
+                                                   float    percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector3D<Type> lerp(const Ref                 &input_lower_bound,
-                                                  const BasicVector3D<Type> &input_upper_bound,
-                                                        float                percentage_zero_to_one)
+        friend constexpr BasicVector3D<RType> lerp(      BasicRef              input_lower_bound,
+                                                   const BasicVector3D<RType> &input_upper_bound,
+                                                         float                 percentage_zero_to_one)
         {
             return (input_upper_bound - input_lower_bound) * percentage_zero_to_one + input_lower_bound;
         }
 
-        friend constexpr BasicVector3D<Type> mix(const Ref   &input_lower_bound,
-                                                 const Ref   &input_upper_bound,
-                                                       float  percentage_zero_to_one)
+        friend constexpr BasicVector3D<RType> mix(BasicRef input_lower_bound,
+                                                  BasicRef input_upper_bound,
+                                                  float    percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
 
-        friend constexpr BasicVector3D<Type> mix(const Ref                 &input_lower_bound,
-                                                 const BasicVector3D<Type> &input_upper_bound,
-                                                       float                percentage_zero_to_one)
+        friend constexpr BasicVector3D<RType> mix(      BasicRef              input_lower_bound,
+                                                  const BasicVector3D<RType> &input_upper_bound,
+                                                        float                 percentage_zero_to_one)
         {
             return lerp( input_lower_bound, input_upper_bound, percentage_zero_to_one );
         }
