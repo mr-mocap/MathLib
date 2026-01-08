@@ -159,9 +159,12 @@ void Swizzle()
 void SwizzleWithRValueRefQualifier()
 {
     Vector2Df one{1.0f, 2.0f};
+    const Vector2Df two{ 3.0f, 4.0f };
 
     CHECK_IF_EQUAL( one.yx(), Vector2Df{ 2.0f, 1.0f } ); // L-Value Ref Qualifier
     CHECK_IF_EQUAL( Vector2Df{ 1.0f, 2.0f }.yx(), Vector2Df{ 2.0f, 1.0f } ); // R-Value Ref Qualifier
+
+    CHECK_IF_EQUAL( two.yx(), Vector2Df{ 4.0f, 3.0f } ); // L-Value Ref Qualifier on const
 }
 
 void OperatorEqualsEquals()

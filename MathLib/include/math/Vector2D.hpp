@@ -32,34 +32,35 @@ struct BasicVector2D
      * 
      *  @relates BasicVector2D
      */
-    struct Ref
+    template <class RType>
+    struct BasicRef
     {
         /** @name Types
          *  @{
          */
-        using value_type = Type; ///< The underlying implementation type
+        using value_type = RType; ///< The underlying implementation type
         /// @}
 
         /** @name Constructors
          * 
          *  @{
          */
-        constexpr Ref(Type &x_in, Type &y_in) : x{x_in}, y{y_in} { }
-        constexpr Ref(const Ref &) = default;
-        constexpr Ref(const BasicVector2D<Type> &other) : x{other.x}, y{other.y} { }
+        constexpr BasicRef(value_type &x_in, value_type &y_in) : x{x_in}, y{y_in} { }
+        constexpr BasicRef(const BasicRef &) = default;
+        constexpr BasicRef(const BasicVector2D<Type> &other) : x{other.x}, y{other.y} { }
         /// @}
 
         /** @name Assignment
          *  @{
          */
-        constexpr Ref &operator =(const Ref &input)
+        constexpr BasicRef &operator =(const BasicRef &input)
         {
             x = input.x;
             y = input.y;
             return *this;
         }
 
-        constexpr Ref &operator =(const BasicVector2D<Type> &input)
+        constexpr BasicRef &operator =(const BasicVector2D<Type> &input)
         {
             x = input.x;
             y = input.y;
@@ -82,12 +83,12 @@ struct BasicVector2D
          * 
          *  @see Equality
          */
-        friend constexpr bool operator ==(const Ref &left, const Ref &right)
+        friend constexpr bool operator ==(const BasicRef &left, const BasicRef &right)
         {
             return approximately_equal_to( left, right );
         }
 
-        friend constexpr bool operator ==(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr bool operator ==(const BasicRef &left, const BasicVector2D<Type> &right)
         {
             return approximately_equal_to( left, right );
         }
@@ -106,56 +107,56 @@ struct BasicVector2D
          * 
          *  @{
          */
-        friend constexpr BasicVector2D<Type> operator +(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator +(BasicRef left, BasicRef right)
         {
             return { left.x + right.x, left.y + right.y };
         }
-        friend constexpr BasicVector2D<Type> operator +(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator +(BasicRef left, const BasicVector2D<Type> &right)
         {
             return { left.x + right.x, left.y + right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator -(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator -(BasicRef left, BasicRef right)
         {
             return { left.x - right.x, left.y - right.y };
         }
-        friend constexpr BasicVector2D<Type> operator -(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator -(BasicRef left, const BasicVector2D<Type> &right)
         {
             return { left.x - right.x, left.y - right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator *(BasicRef left, BasicRef right)
         {
             return { left.x * right.x, left.y * right.y };
         }
-        friend constexpr BasicVector2D<Type> operator *(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator *(BasicRef left, const BasicVector2D<Type> &right)
         {
             return { left.x * right.x, left.y * right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator *(const Ref &left, Type scalar)
+        friend constexpr BasicVector2D<Type> operator *(BasicRef left, Type scalar)
         {
             return { left.x * scalar, left.y * scalar };
         }
-        friend constexpr BasicVector2D<Type> operator *(Type scalar, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator *(Type scalar, BasicRef right)
         {
             return { scalar * right.x, scalar * right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator /(const Ref &left, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator /(BasicRef left, BasicRef right)
         {
             return { left.x / right.x, left.y / right.y };
         }
-        friend constexpr BasicVector2D<Type> operator /(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr BasicVector2D<Type> operator /(BasicRef left, const BasicVector2D<Type> &right)
         {
             return { left.x / right.x, left.y / right.y };
         }
 
-        friend constexpr BasicVector2D<Type> operator /(const Ref &left, Type scalar)
+        friend constexpr BasicVector2D<Type> operator /(BasicRef left, Type scalar)
         {
             return { left.x / scalar, left.y / scalar };
         }
-        friend constexpr BasicVector2D<Type> operator /(Type scalar, const Ref &right)
+        friend constexpr BasicVector2D<Type> operator /(Type scalar, BasicRef right)
         {
             return { scalar / right.x, scalar / right.y };
         }
@@ -177,8 +178,8 @@ struct BasicVector2D
          *  
          *  @{
          */
-        Type &x;
-        Type &y;
+        value_type &x;
+        value_type &y;
         /// @}
 
 
@@ -195,7 +196,9 @@ struct BasicVector2D
          *  @return @c true if they are equal
          */
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(const Ref &value_to_test, const Ref &value_it_should_be, OT tolerance = OT{0.0002})
+        friend constexpr bool approximately_equal_to(BasicRef value_to_test,
+                                                     BasicRef value_it_should_be,
+                                                           OT tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
@@ -214,7 +217,7 @@ struct BasicVector2D
          *  @return @c true if they are equal
          */
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(const Ref                 &value_to_test,
+        friend constexpr bool approximately_equal_to(      BasicRef             value_to_test,
                                                      const BasicVector2D<Type> &value_it_should_be,
                                                            OT                   tolerance = OT{0.0002})
         {
@@ -222,59 +225,62 @@ struct BasicVector2D
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
         }
 
-        friend constexpr Type accumulate(const Ref &input)
+        friend constexpr Type accumulate(BasicRef input)
         {
             return input.x + input.y;
         }
 
-        friend constexpr Type dot(const Ref &left, const Ref &right)
+        friend constexpr Type dot(BasicRef left, BasicRef right)
         {
             return (left.x * right.x) + (left.y * right.y);
         }
-        friend constexpr Type dot(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr Type dot(BasicRef left, const BasicVector2D<Type> &right)
         {
             return (left.x * right.x) + (left.y * right.y);
         }
 
-        friend constexpr Type dot_normalized(const Ref &left, const Ref &right)
+        friend constexpr Type dot_normalized(BasicRef left, BasicRef right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        friend constexpr Type dot_normalized(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr Type dot_normalized(BasicRef left, const BasicVector2D<Type> &right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
 
-        friend constexpr Type cross(const Ref &left, const Ref &right)
+        friend constexpr Type cross(BasicRef left, BasicRef right)
         {
             return (left.x * right.y) - (left.y * right.x);
         }
-        friend constexpr Type cross(const Ref &left, const BasicVector2D<Type> &right)
+        friend constexpr Type cross(BasicRef left, const BasicVector2D<Type> &right)
         {
             return (left.x * right.y) - (left.y * right.x);
         }
 
-        friend constexpr BasicVector2D<Type> abs(const Ref &input)
+        friend constexpr BasicVector2D<Type> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y) };
         }
 
-        friend constexpr BasicVector2D<Type> fract(const Ref &input)
+        friend constexpr BasicVector2D<Type> fract(BasicRef input)
         {
             return { std::modf(input.x), std::modf(input.y) };
         }
 
-        constexpr BasicVector2D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        friend constexpr BasicVector2D<Type> saturate(BasicRef input, Type lower_bound, Type upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound) };
         }
 
-        friend std::string format(const Ref &input)
+        friend std::string format(BasicRef input)
         {
             return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
         }
     };
+
+    using Ref      = BasicRef<Type>;
+    using ConstRef = BasicRef<const Type>;
 
     /** @name Constructors
      * 
@@ -293,7 +299,7 @@ struct BasicVector2D
      *  @{
      */
     constexpr BasicVector2D<Type> &operator =(const BasicVector2D<Type> &other) = default;
-    constexpr BasicVector2D<Type> &operator =(const BasicVector2D<Type>::Ref &other)
+    constexpr BasicVector2D<Type> &operator =(Ref other)
     {
         x = other.x;
         y = other.y;
@@ -314,6 +320,14 @@ struct BasicVector2D
      *  @see Equality
      */
     friend constexpr bool operator ==(const BasicVector2D<Type> &left, const BasicVector2D<Type> &right)
+    {
+        return approximately_equal_to(left, right);
+    }
+    friend constexpr bool operator ==(const BasicVector2D<Type> &left, Ref right)
+    {
+        return approximately_equal_to(left, right);
+    }
+    friend constexpr bool operator ==(const BasicVector2D<Type> &left, ConstRef right)
     {
         return approximately_equal_to(left, right);
     }
@@ -343,7 +357,11 @@ struct BasicVector2D
     {
         return { left.x + right.x, left.y + right.y };
     }
-    friend constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &left, Ref right)
+    {
+        return { left.x + right.x, left.y + right.y };
+    }
+    friend constexpr BasicVector2D<Type> operator +(const BasicVector2D<Type> &left, ConstRef right)
     {
         return { left.x + right.x, left.y + right.y };
     }
@@ -352,7 +370,11 @@ struct BasicVector2D
     {
         return { left.x - right.x, left.y - right.y };
     }
-    friend constexpr BasicVector2D<Type> operator -(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr BasicVector2D<Type> operator -(const BasicVector2D<Type> &left, Ref right)
+    {
+        return { left.x - right.x, left.y - right.y };
+    }
+    friend constexpr BasicVector2D<Type> operator -(const BasicVector2D<Type> &left, ConstRef right)
     {
         return { left.x - right.x, left.y - right.y };
     }
@@ -361,8 +383,11 @@ struct BasicVector2D
     {
         return { left.x * right.x, left.y * right.y };
     }
-
-    friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, Ref right)
+    {
+        return { left.x * right.x, left.y * right.y };
+    }
+    friend constexpr BasicVector2D<Type> operator *(const BasicVector2D<Type> &left, ConstRef right)
     {
         return { left.x * right.x, left.y * right.y };
     }
@@ -382,7 +407,12 @@ struct BasicVector2D
         return { left.x / right.x, left.y / right.y };
     }
 
-    friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, Ref right)
+    {
+        return { left.x / right.x, left.y / right.y };
+    }
+
+    friend constexpr BasicVector2D<Type> operator /(const BasicVector2D<Type> &left, ConstRef right)
     {
         return { left.x / right.x, left.y / right.y };
     }
@@ -428,13 +458,13 @@ struct BasicVector2D
     constexpr BasicVector2D<Type> yy() const { return { y, y }; }
     constexpr BasicVector2D<Type> yy()       { return { y, y }; }
 
-    constexpr const Ref                 xy() const &  { return { x, y }; }
-    constexpr       Ref                 xy()       &  { return { x, y }; }
-    constexpr       BasicVector2D<Type> xy()       && { return { x, y }; }
+    constexpr ConstRef            xy() const &  { return { x, y }; }
+    constexpr Ref                 xy()       &  { return { x, y }; }
+    constexpr BasicVector2D<Type> xy()       && { return { x, y }; }
 
-    constexpr const Ref                 yx() const &  { return { y, x }; }
-    constexpr       Ref                 yx()       &  { return { y, x }; }
-    constexpr       BasicVector2D<Type> yx()       && { return { y, x }; }
+    constexpr ConstRef            yx() const &  { return { y, x }; }
+    constexpr Ref                 yx()       &  { return { y, x }; }
+    constexpr BasicVector2D<Type> yx()       && { return { y, x }; }
     /// @} {Swizzle operations}
 
 
@@ -471,9 +501,18 @@ struct BasicVector2D
     }
 
     template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const BasicVector2D<Type>      &value_to_test,
-                                                 const BasicVector2D<Type>::Ref &value_it_should_be,
-                                                       OT                        tolerance = OT{0.0002})
+    friend constexpr bool approximately_equal_to(const BasicVector2D<Type> &value_to_test,
+                                                       Ref                  value_it_should_be,
+                                                       OT                   tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+    }
+
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const BasicVector2D<Type> &value_to_test,
+                                                       ConstRef             value_it_should_be,
+                                                       OT                   tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
@@ -506,7 +545,11 @@ struct BasicVector2D
     {
         return (left.x * right.x) + (left.y * right.y);
     }
-    friend constexpr Type dot(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr Type dot(const BasicVector2D<Type> &left, Ref right)
+    {
+        return (left.x * right.x) + (left.y * right.y);
+    }
+    friend constexpr Type dot(const BasicVector2D<Type> &left, ConstRef right)
     {
         return (left.x * right.x) + (left.y * right.y);
     }
@@ -540,7 +583,11 @@ struct BasicVector2D
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
-    friend constexpr Type dot_normalized(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr Type dot_normalized(const BasicVector2D<Type> &left, Ref right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+    friend constexpr Type dot_normalized(const BasicVector2D<Type> &left, ConstRef right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
@@ -564,7 +611,11 @@ struct BasicVector2D
     {
         return (left.x * right.y) - (left.y * right.x);
     }
-    friend constexpr Type cross(const BasicVector2D<Type> &left, const Ref &right)
+    friend constexpr Type cross(const BasicVector2D<Type> &left, Ref right)
+    {
+        return (left.x * right.y) - (left.y * right.x);
+    }
+    friend constexpr Type cross(const BasicVector2D<Type> &left, ConstRef right)
     {
         return (left.x * right.y) - (left.y * right.x);
     }
@@ -612,9 +663,13 @@ struct BasicVector2D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
-    friend bool check_if_equal(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_equal(const BasicVector2D<Type> &input,
+                               const BasicVector2D<Type> &near_to,
+                                     OT                   tolerance = OT{0.0002})
     {
         if (!approximately_equal_to(input, near_to, tolerance))
         {
@@ -631,6 +686,47 @@ struct BasicVector2D
         return true;
     }
 
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const BasicVector2D<Type> &input,
+                                     Ref                  near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const BasicVector2D<Type> &input,
+                                     ConstRef             near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+    /// @}
+
     /** @addtogroup Checks
      * 
      *  Compare two values for inequality with a tolerance and prints debug information when false
@@ -640,9 +736,13 @@ struct BasicVector2D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
-    friend bool check_if_not_equal(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend bool check_if_not_equal(const BasicVector2D<Type> &input,
+                                   const BasicVector2D<Type> &near_to,
+                                         OT                   tolerance = OT{0.0002})
     {
         if (approximately_equal_to(input, near_to, tolerance))
         {
@@ -659,6 +759,47 @@ struct BasicVector2D
         return true;
     }
 
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const BasicVector2D<Type> &input,
+                                         Ref                  near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const BasicVector2D<Type> &input,
+                                         ConstRef             near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+    /// @}
+
     /** @addtogroup Checks
      * 
      *  Compare two values for equality with a tolerance and causes an assertion when false
@@ -668,12 +809,33 @@ struct BasicVector2D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_EQUAL(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_EQUAL(const BasicVector2D<Type> &input,
+                               const BasicVector2D<Type> &near_to,
+                                     OT                   tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const BasicVector2D<Type> &input,
+                                     Ref                  near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const BasicVector2D<Type> &input,
+                                     ConstRef             near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+    /// @}
 
     /** @addtogroup Checks
      * 
@@ -684,12 +846,33 @@ struct BasicVector2D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
-    friend void CHECK_IF_NOT_EQUAL(const BasicVector2D<Type> &input, const BasicVector2D<Type> &near_to, OT tolerance = OT{0.0002})
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector2D<Type> &input,
+                                   const BasicVector2D<Type> &near_to,
+                                         OT                   tolerance = OT{0.0002})
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector2D<Type> &input,
+                                         Ref                  near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector2D<Type> &input,
+                                         ConstRef             near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+    /// @}
 
     /** @addtogroup Checks
      * 
@@ -723,6 +906,11 @@ using Vector2DfRef = BasicVector2D<float>::Ref;
 using Vector2DdRef = BasicVector2D<double>::Ref;
 using Vector2DRef  = BasicVector2D<double>::Ref;
 using Vector2DlRef = BasicVector2D<long double>::Ref;
+
+using Vector2DfConstRef = BasicVector2D<float>::ConstRef;
+using Vector2DdConstRef = BasicVector2D<double>::ConstRef;
+using Vector2DConstRef  = BasicVector2D<double>::ConstRef;
+using Vector2DlConstRef = BasicVector2D<long double>::ConstRef;
 ///@}  {BasicVector2D::Ref Type Aliases}
 
 

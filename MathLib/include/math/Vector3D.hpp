@@ -33,27 +33,28 @@ struct BasicVector3D
      * 
      *  @relates BasicVector3D
      */
-    struct Ref
+    template <class RType>
+    struct BasicRef
     {
         /** @name Types
          *  @{
          */
-        using value_type = Type; ///< The underlying implementation type
+        using value_type = RType; ///< The underlying implementation type
         /// @}
 
         /** @name Constructors
          * 
          *  @{
          */
-        constexpr Ref(Type &x_in, Type &y_in, Type &z_in) : x{x_in}, y{y_in}, z{z_in} { }
-        constexpr Ref(const Ref &) = default;
-        constexpr Ref(const BasicVector3D<Type> &other) : x{other.x}, y{other.y}, z{other.z} { }
+        constexpr BasicRef(RType &x_in, RType &y_in, RType &z_in) : x{x_in}, y{y_in}, z{z_in} { }
+        constexpr BasicRef(const BasicRef &) = default;
+        constexpr BasicRef(const BasicVector3D<Type> &other) : x{other.x}, y{other.y}, z{other.z} { }
         /// @}
 
         /** @name Assignment
          *  @{
          */
-        constexpr Ref &operator =(const Ref &input)
+        constexpr BasicRef &operator =(const BasicRef &input)
         {
             x = input.x;
             y = input.y;
@@ -61,7 +62,7 @@ struct BasicVector3D
             return *this;
         }
 
-        constexpr Ref &operator =(const BasicVector3D<Type> &input)
+        constexpr BasicRef &operator =(const BasicVector3D<Type> &input)
         {
             x = input.x;
             y = input.y;
@@ -78,15 +79,15 @@ struct BasicVector3D
          *  This allows Vector3DRef objects to automatically be converted to BasicVector3D objects
          *  for situations like passing to functions or constructors to BasicVector3D objects.
          */
-        constexpr operator BasicVector3D<Type>() const { return { x, y, z }; }
+        constexpr operator BasicVector3D<RType>() const { return { x, y, z }; }
         /// @}
 
         /** @name Element Access
          *  @{
          */
-        Type &x;
-        Type &y;
-        Type &z;
+        RType &x;
+        RType &y;
+        RType &z;
         /// @}
 
         /** @name Equality
@@ -104,12 +105,12 @@ struct BasicVector3D
          * 
          *  @see Equality
          */
-        friend constexpr bool operator ==(const Ref &left, const Ref &right)
+        friend constexpr bool operator ==(BasicRef left, BasicRef right)
         {
             return approximately_equal_to( left, right );
         }
 
-        friend constexpr bool operator ==(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr bool operator ==(BasicRef left, const BasicVector3D<Type> &right)
         {
             return approximately_equal_to( left, right );
         }
@@ -121,35 +122,35 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr BasicVector3D<Type> operator +(const Ref &left, const Ref &right)
+        friend constexpr BasicVector3D<Type> operator +(BasicRef left, BasicRef right)
         {
             return { left.x + right.x, left.y + right.y, left.z + right.z };
         }
-        friend constexpr BasicVector3D<Type> operator +(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<Type> operator +(BasicRef left, const BasicVector3D<Type> &right)
         {
             return { left.x + right.x, left.y + right.y, left.z + right.z };
         }
-        friend constexpr BasicVector3D<Type> operator -(const Ref &left, const Ref &right)
+        friend constexpr BasicVector3D<Type> operator -(BasicRef left, BasicRef right)
         {
             return { left.x - right.x, left.y - right.y, left.z - right.z };
         }
-        friend constexpr BasicVector3D<Type> operator -(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<Type> operator -(BasicRef left, const BasicVector3D<Type> &right)
         {
             return { left.x - right.x, left.y - right.y, left.z - right.z };
         }
-        friend constexpr BasicVector3D<Type> operator *(const Ref &left, const Ref &right)
+        friend constexpr BasicVector3D<Type> operator *(BasicRef left, BasicRef right)
         {
             return { left.x * right.x, left.y * right.y, left.z * right.z };
         }
-        friend constexpr BasicVector3D<Type> operator *(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<Type> operator *(BasicRef left, const BasicVector3D<Type> &right)
         {
             return { left.x * right.x, left.y * right.y, left.z * right.z };
         }
-        friend constexpr BasicVector3D<Type> operator /(const Ref &left, const Ref &right)
+        friend constexpr BasicVector3D<Type> operator /(BasicRef left, BasicRef right)
         {
             return { left.x / right.x, left.y / right.y, left.z / right.z };
         }
-        friend constexpr BasicVector3D<Type> operator /(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr BasicVector3D<Type> operator /(BasicRef left, const BasicVector3D<Type> &right)
         {
             return { left.x / right.x, left.y / right.y, left.z / right.z };
         }
@@ -170,9 +171,9 @@ struct BasicVector3D
          *  @{
          */
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(const Ref &value_to_test,
-                                                     const Ref &value_it_should_be,
-                                                           OT   tolerance = OT{0.0002})
+        friend constexpr bool approximately_equal_to(BasicRef value_to_test,
+                                                     BasicRef value_it_should_be,
+                                                           OT tolerance = OT{0.0002})
         {
             return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
@@ -180,7 +181,7 @@ struct BasicVector3D
         }
 
         template <std::floating_point OT = float>
-        friend constexpr bool approximately_equal_to(const Ref                 &value_to_test,
+        friend constexpr bool approximately_equal_to(      BasicRef             value_to_test,
                                                      const BasicVector3D<Type> &value_it_should_be,
                                                            OT                   tolerance = OT{0.0002})
         {
@@ -196,7 +197,7 @@ struct BasicVector3D
          * 
          *  @return The sum of all the components
          */
-        friend constexpr Type accumulate(const Ref &input)
+        friend constexpr Type accumulate(BasicRef input)
         {
             return input.x + input.y + input.z;
         }
@@ -214,11 +215,11 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr Type dot(const Ref &left, const Ref &right)
+        friend constexpr Type dot(BasicRef left, BasicRef right)
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
         }
-        friend constexpr Type dot(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr Type dot(BasicRef left, const BasicVector3D<Type> &right)
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
         }
@@ -237,11 +238,11 @@ struct BasicVector3D
          * 
          *  @{
          */
-        friend constexpr Type dot_normalized(const Ref &left, const Ref &right)
+        friend constexpr Type dot_normalized(BasicRef left, BasicRef right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        friend constexpr Type dot_normalized(const Ref &left, const BasicVector3D<Type> &right)
+        friend constexpr Type dot_normalized(BasicRef left, const BasicVector3D<Type> &right)
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
@@ -254,7 +255,7 @@ struct BasicVector3D
          * 
          *  @return The cross product of the input vectors
          */
-        friend constexpr BasicVector3D<Type> cross(const Ref &left, const Ref &right)
+        friend constexpr BasicVector3D<Type> cross(BasicRef left, BasicRef right)
         {
             return cross( BasicVector3D<Type>(left), BasicVector3D<Type>(right) );
         }
@@ -265,7 +266,7 @@ struct BasicVector3D
          *  
          *  @return The normalized version of @p input
          */
-        friend constexpr BasicVector3D<Type> normalized(const Ref &input)
+        friend constexpr BasicVector3D<Type> normalized(BasicRef input)
         {
             return BasicVector3D<Type>( input ).normalized();
         }
@@ -276,7 +277,7 @@ struct BasicVector3D
          *
          *   @return The BasicVector3D with only positive values
          */
-        friend constexpr BasicVector3D<Type> abs(const Ref &input)
+        friend constexpr BasicVector3D<Type> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y), std::abs(input.z) };
         }
@@ -287,23 +288,26 @@ struct BasicVector3D
          *
          *   @return The BasicVector3D with only fractional values
          */
-        constexpr BasicVector3D<Type> fract(const Ref &input)
+        constexpr BasicVector3D<Type> fract(BasicRef input)
         {
             return { std::modf(input.x), std::modf(input.y), std::modf(input.z) };
         }
 
-        constexpr BasicVector3D<Type> saturate(const Ref &input, Type lower_bound, Type upper_bound)
+        constexpr BasicVector3D<Type> saturate(BasicRef input, Type lower_bound, Type upper_bound)
         {
             return { Math::saturate(input.x, lower_bound, upper_bound),
                      Math::saturate(input.y, lower_bound, upper_bound),
                      Math::saturate(input.z, lower_bound, upper_bound) };
         }
 
-        friend std::string format(const Ref &input)
+        friend std::string format(BasicRef input)
         {
             return std::format("[x: {:.6}, y: {:.6}, z: {:.6}]", input.x, input.y, input.z);
         }
     };
+
+    using Ref = BasicRef<Type>;
+    using ConstRef = BasicRef<const Type>;
 
     /** @name Constructors
      *  @{
@@ -365,41 +369,41 @@ struct BasicVector3D
     /** @name Swizzle operations
      *  @{
      */
-    constexpr const BasicVector2D<Type>::Ref xy() const &  { return { x, y }; }
-    constexpr       BasicVector2D<Type>::Ref xy()       &  { return { x, y }; }
-    constexpr       BasicVector2D<Type>      xy()       && { return { x, y }; }
+    constexpr ConstRef            xy() const &  { return { x, y }; }
+    constexpr Ref                 xy()       &  { return { x, y }; }
+    constexpr BasicVector2D<Type> xy()       && { return { x, y }; }
 
-    constexpr const BasicVector2D<Type>::Ref xz() const &  { return { x, z }; }
-    constexpr       BasicVector2D<Type>::Ref xz()       &  { return { x, z }; }
-    constexpr       BasicVector2D<Type>      xz()       && { return { x, z }; }
+    constexpr ConstRef            xz() const &  { return { x, z }; }
+    constexpr Ref                 xz()       &  { return { x, z }; }
+    constexpr BasicVector2D<Type> xz()       && { return { x, z }; }
 
-    constexpr const BasicVector2D<Type>::Ref yx() const &  { return { y, x }; }
-    constexpr       BasicVector2D<Type>::Ref yx()       &  { return { y, x }; }
-    constexpr       BasicVector2D<Type>      yx()       && { return { y, x }; }
+    constexpr ConstRef            yx() const &  { return { y, x }; }
+    constexpr Ref                 yx()       &  { return { y, x }; }
+    constexpr BasicVector2D<Type> yx()       && { return { y, x }; }
 
-    constexpr const BasicVector2D<Type>::Ref yz() const &  { return { y, z }; }
-    constexpr       BasicVector2D<Type>::Ref yz()       &  { return { y, z }; }
-    constexpr       BasicVector2D<Type>      yz()       && { return { y, z }; }
+    constexpr ConstRef            yz() const &  { return { y, z }; }
+    constexpr Ref                 yz()       &  { return { y, z }; }
+    constexpr BasicVector2D<Type> yz()       && { return { y, z }; }
 
-    constexpr const BasicVector2D<Type>::Ref zx() const &  { return { z, x }; }
-    constexpr       BasicVector2D<Type>::Ref zx()       &  { return { z, x }; }
-    constexpr       BasicVector2D<Type>      zx()       && { return { z, x }; }
+    constexpr ConstRef            zx() const &  { return { z, x }; }
+    constexpr Ref                 zx()       &  { return { z, x }; }
+    constexpr BasicVector2D<Type> zx()       && { return { z, x }; }
 
-    constexpr const Ref                 xyz() const &  { return { x, y, z }; }
-    constexpr       Ref                 xyz()       &  { return { x, y, z }; }
-    constexpr       BasicVector3D<Type> xyz()       && { return { x, y, z }; }
+    constexpr ConstRef            xyz() const &  { return { x, y, z }; }
+    constexpr Ref                 xyz()       &  { return { x, y, z }; }
+    constexpr BasicVector3D<Type> xyz()       && { return { x, y, z }; }
 
-    constexpr const Ref                 xzy() const &  { return { x, z, y }; }
-    constexpr       Ref                 xzy()       &  { return { x, z, y }; }
-    constexpr       BasicVector3D<Type> xzy()       && { return { x, z, y }; }
+    constexpr ConstRef            xzy() const &  { return { x, z, y }; }
+    constexpr Ref                 xzy()       &  { return { x, z, y }; }
+    constexpr BasicVector3D<Type> xzy()       && { return { x, z, y }; }
 
-    constexpr const Ref                 zxy() const &  { return { z, x, y }; }
-    constexpr       Ref                 zxy()       &  { return { z, x, y }; }
-    constexpr       BasicVector3D<Type> zxy()       && { return { z, x, y }; }
+    constexpr ConstRef            zxy() const &  { return { z, x, y }; }
+    constexpr Ref                 zxy()       &  { return { z, x, y }; }
+    constexpr BasicVector3D<Type> zxy()       && { return { z, x, y }; }
 
-    constexpr const Ref                 zyx() const &  { return { z, y, x }; }
-    constexpr       Ref                 zyx()       &  { return { z, y, x }; }
-    constexpr       BasicVector3D<Type> zyx()       && { return { z, y, x }; }
+    constexpr ConstRef            zyx() const &  { return { z, y, x }; }
+    constexpr Ref                 zyx()       &  { return { z, y, x }; }
+    constexpr BasicVector3D<Type> zyx()       && { return { z, y, x }; }
     /// @}
 
     /** Defines equality of two BasicVector3D objects
@@ -415,7 +419,12 @@ struct BasicVector3D
         return approximately_equal_to(left, right);
     }
 
-    friend constexpr bool operator ==(const BasicVector3D<Type> &left, const Ref &right)
+    friend constexpr bool operator ==(const BasicVector3D<Type> &left, Ref right)
+    {
+        return approximately_equal_to(left, right);
+    }
+
+    friend constexpr bool operator ==(const BasicVector3D<Type> &left, ConstRef right)
     {
         return approximately_equal_to(left, right);
     }
@@ -455,7 +464,17 @@ struct BasicVector3D
 
     template <std::floating_point OT = float>
     friend constexpr bool approximately_equal_to(const BasicVector3D<Type> &value_to_test,
-                                                 const Ref                 &value_it_should_be,
+                                                       Ref                  value_it_should_be,
+                                                       OT                   tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
+    }
+
+    template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const BasicVector3D<Type> &value_to_test,
+                                                       ConstRef             value_it_should_be,
                                                        OT                   tolerance = OT{0.0002})
     {
         return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
@@ -481,7 +500,12 @@ struct BasicVector3D
         return { left.x + right.x, left.y + right.y, left.z + right.z };
     }
 
-    friend constexpr BasicVector3D<Type> operator +(const BasicVector3D<Type> &left, const Ref &right)
+    friend constexpr BasicVector3D<Type> operator +(const BasicVector3D<Type> &left, Ref right)
+    {
+        return { left.x + right.x, left.y + right.y, left.z + right.z };
+    }
+
+    friend constexpr BasicVector3D<Type> operator +(const BasicVector3D<Type> &left, ConstRef right)
     {
         return { left.x + right.x, left.y + right.y, left.z + right.z };
     }
@@ -491,7 +515,12 @@ struct BasicVector3D
         return { left.x - right.x, left.y - right.y, left.z - right.z };
     }
 
-    friend constexpr BasicVector3D<Type> operator -(const BasicVector3D<Type> &left, const Ref &right)
+    friend constexpr BasicVector3D<Type> operator -(const BasicVector3D<Type> &left, Ref right)
+    {
+        return { left.x - right.x, left.y - right.y, left.z - right.z };
+    }
+
+    friend constexpr BasicVector3D<Type> operator -(const BasicVector3D<Type> &left, ConstRef right)
     {
         return { left.x - right.x, left.y - right.y, left.z - right.z };
     }
@@ -539,11 +568,22 @@ struct BasicVector3D
      *  @note This is only a strict dot product and thus a normalized
      *        result will depend on if the input vectors are both
      *        normalized!
+     * 
+     *  @{
      */
     friend constexpr Type dot(const BasicVector3D<Type> &left, const BasicVector3D<Type> &right)
     {
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
     }
+    friend constexpr Type dot(const BasicVector3D<Type> &left, Ref right)
+    {
+        return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
+    }
+    friend constexpr Type dot(const BasicVector3D<Type> &left, ConstRef right)
+    {
+        return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
+    }
+    /// @}
 
     /** Calculate the normalized dot product of two BasicVector3D objects
      *
@@ -555,11 +595,22 @@ struct BasicVector3D
      *  @param right The second vector
      * 
      *  @return The dot product of the two input vectors
+     * 
+     *  @{
      */
     friend constexpr Type dot_normalized(const BasicVector3D<Type> &left, const BasicVector3D<Type> &right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
+    friend constexpr Type dot_normalized(const BasicVector3D<Type> &left, Ref right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+    friend constexpr Type dot_normalized(const BasicVector3D<Type> &left, ConstRef right)
+    {
+        return dot(left, right) / (left.magnitude() * right.magnitude());
+    }
+    /// @}
 
     /** Calculates the cross product of two BasicVector3D objects
      * 
@@ -567,6 +618,8 @@ struct BasicVector3D
      *  @param right The second vector
      * 
      *  @return The cross product of the input vectors
+     * 
+     *  @{
      */
     friend constexpr BasicVector3D<Type> cross(const BasicVector3D<Type> &left, const BasicVector3D<Type> &right)
     {
@@ -574,6 +627,19 @@ struct BasicVector3D
                  cross( left.zx(), right.zx() ),
                  cross( left.xy(), right.xy() ) };
     }
+    friend constexpr BasicVector3D<Type> cross(const BasicVector3D<Type> &left, Ref right)
+    {
+        return { cross( left.yz(), right.yz() ),
+                 cross( left.zx(), right.zx() ),
+                 cross( left.xy(), right.xy() ) };
+    }
+    friend constexpr BasicVector3D<Type> cross(const BasicVector3D<Type> &left, ConstRef right)
+    {
+        return { cross( left.yz(), right.yz() ),
+                 cross( left.zx(), right.zx() ),
+                 cross( left.xy(), right.xy() ) };
+    }
+    /// @}
 
     /** Creates the normalized form of a BasicVector3D
      *  
@@ -631,6 +697,8 @@ struct BasicVector3D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
     friend bool check_if_equal(const BasicVector3D<Type> &input,
@@ -652,6 +720,47 @@ struct BasicVector3D
         return true;
     }
 
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const BasicVector3D<Type> &input,
+                                     Ref                  near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    template <std::floating_point OT = float>
+    friend bool check_if_equal(const BasicVector3D<Type> &input,
+                                     ConstRef             near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        if (!approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is not equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+    /// @}
+
     /** @addtogroup Checks
      * 
      *  Compare two values for inequality with a tolerance and prints debug information when false
@@ -661,6 +770,8 @@ struct BasicVector3D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
     friend bool check_if_not_equal(const BasicVector3D<Type> &input,
@@ -682,6 +793,47 @@ struct BasicVector3D
         return true;
     }
 
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const BasicVector3D<Type> &input,
+                                         Ref                  near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+
+    template <std::floating_point OT = float>
+    friend bool check_if_not_equal(const BasicVector3D<Type> &input,
+                                         ConstRef             near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        if (approximately_equal_to(input, near_to, tolerance))
+        {
+            auto diff{ near_to - input };
+
+            std::cout << std::format("input: {} is equal to near_to: {} within tolerance: {}.  Difference is {} .",
+                                     format(input),
+                                     format(near_to),
+                                     tolerance,
+                                     format(near_to - input))
+            << std::endl;
+            return  false;
+        }
+        return true;
+    }
+    /// @}
+
     /** @addtogroup Checks
      * 
      *  Compare two values for equality with a tolerance and causes an assertion when false
@@ -691,6 +843,8 @@ struct BasicVector3D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
     friend void CHECK_IF_EQUAL(const BasicVector3D<Type> &input,
@@ -699,6 +853,23 @@ struct BasicVector3D
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const BasicVector3D<Type> &input,
+                                     Ref                  near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_EQUAL(const BasicVector3D<Type> &input,
+                                     ConstRef             near_to,
+                                     OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_equal(input, near_to, tolerance) );
+    }
+    /// @}
 
     /** @addtogroup Checks
      * 
@@ -709,6 +880,8 @@ struct BasicVector3D
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @{
      */
     template <std::floating_point OT = float>
     friend void CHECK_IF_NOT_EQUAL(const BasicVector3D<Type> &input,
@@ -717,6 +890,23 @@ struct BasicVector3D
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector3D<Type> &input,
+                                         Ref                  near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+
+    template <std::floating_point OT = float>
+    friend void CHECK_IF_NOT_EQUAL(const BasicVector3D<Type> &input,
+                                         ConstRef             near_to,
+                                         OT                   tolerance = OT{0.0002})
+    {
+        assert( check_if_not_equal(input, near_to, tolerance) );
+    }
+    /// @}
 
     /** @addtogroup Checks
      * 
@@ -750,6 +940,11 @@ using Vector3DfRef = BasicVector3D<float>::Ref;
 using Vector3DdRef = BasicVector3D<double>::Ref;
 using Vector3DRef  = BasicVector3D<double>::Ref;
 using Vector3DlRef = BasicVector3D<long double>::Ref;
+
+using Vector3DfConstRef = BasicVector3D<float>::ConstRef;
+using Vector3DdConstRef = BasicVector3D<double>::ConstRef;
+using Vector3DConstRef  = BasicVector3D<double>::ConstRef;
+using Vector3DlConstRef = BasicVector3D<long double>::ConstRef;
 ///@}  {BasicVector3D::Ref Type Aliases}
 
 
