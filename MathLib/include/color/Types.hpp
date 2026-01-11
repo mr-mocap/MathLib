@@ -23,7 +23,7 @@ class BasicUnitRGB;
 
 /** The definition of an RGB color triple
  *  
- *  @headerfile "color/Types.hpp"
+ *  @headerfile <> <color/Types.hpp>
  */
 template <std::integral T>
 class BasicRGB
@@ -194,7 +194,7 @@ protected:
 
 /** The definition of an RGB color triple with normalized members between 0.0 and 1.0
  *  
- *  @headerfile "color/Types.hpp"
+ *  @headerfile <> <color/Types.hpp>
  * 
  *  @see BasicRGB
  */
@@ -446,7 +446,7 @@ protected:
  *  
  *  @note The natural range is 0.0 - 360.0
  * 
- *  @headerfile "color/Types.hpp"
+ *  @headerfile <> <color/Types.hpp>
  * 
  *  @see BasicRGB
  */
@@ -768,7 +768,7 @@ protected:
  *  
  *  This represents a color as Hue, Saturation, and Value.
  * 
- *  @headerfile "color/Types.hpp"
+ *  @headerfile <> <color/Types.hpp>
  */
 template <std::floating_point T>
 class BasicHSV
@@ -977,7 +977,7 @@ protected:
  *  
  *  This represents a color as Hue, Saturation, and Lightness.
  * 
- *  @headerfile "color/Types.hpp"
+ *  @headerfile <> <color/Types.hpp>
  */
 template <std::floating_point T>
 class BasicHSL

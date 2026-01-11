@@ -4,6 +4,13 @@
 #include <cstdlib>
 #include <numbers>
 
+/** @file
+ *  
+ *  Defines various palette functions
+ *
+ *  @hideincludegraph
+ */
+
 namespace Color
 {
 

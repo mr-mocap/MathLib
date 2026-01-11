@@ -10,10 +10,25 @@
 #include <type_traits>
 #include <cmath>
 
+/** @file
+ *  
+ *  Defines various color conversion functions
+ *
+ *  @hideincludegraph
+ */
+
 
 namespace Color
 {
 
+/** Converts a normalized RGB color to HSV
+ *  
+ *  @tparam T A floating point type
+ * 
+ *  @param input A BasicUnitRGB color to convert
+ *
+ *  @return The color represented as a BasicHSV
+ */
 template <std::floating_point T>
 BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 {
@@ -77,6 +92,14 @@ BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 #endif
 }
 
+/** Converts a HSV color to a unit RGB color
+ *  
+ *  @tparam T A floating point type
+ * 
+ *  @param input A BasicHSV color to convert
+ *
+ *  @return The color represented as a BasicUnitRGB
+ */
 template <std::floating_point T>
 BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
 {
@@ -153,13 +176,23 @@ BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
 
     Math::BasicVector3D<T> p( abs( fract(input_xxx + K.xyz()) * T{6.0} - K.www() ) );
 
-    Math::BasicVector3D<T> out( mix( K.xxx(), saturate( p - K.xxx(), T{0.0}, T{1.0} ), input_hsv.saturation() ) );
+    Math::BasicVector3D<T> out( mix( K.xxx(),
+                                     saturate( p - K.xxx(), T{0.0}, T{1.0} ),
+                                     input_hsv.saturation() ) );
 
     return { input_hsv.value() * out };
 #endif
 #endif
 }
 
+/** Converts a HSV color to a HSL color
+ *  
+ *  @tparam T A floating point type
+ * 
+ *  @param input A BasicHSV color to convert
+ *
+ *  @return The color represented as a BasicHSL
+ */
 template <std::floating_point T>
 BasicHSL<T> ToHSL(const BasicHSV<T> &input_hsv)
 {
@@ -177,6 +210,14 @@ BasicHSL<T> ToHSL(const BasicHSV<T> &input_hsv)
     return BasicHSL<T>{ input_hsv.value(), saturation, lightness };
 }
 
+/** Converts a HSL color to a HSV color
+ *  
+ *  @tparam T A floating point type
+ * 
+ *  @param input A BasicHSL color to convert
+ *
+ *  @return The color represented as a BasicHSV
+ */
 template <std::floating_point T>
 BasicHSV<T> ToHSV(const BasicHSL<T> &input_hsl)
 {
