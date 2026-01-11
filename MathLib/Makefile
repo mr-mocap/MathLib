@@ -1,44 +1,35 @@
-INCLUDE_DIRS = ./include
+#TEST_OBJS = MathLib.o \
+#			Tests/ColorTypesTests.o \
+#			Tests/ColorConversionTests.o \
+#            Tests/AngleTests.o \
+#			Tests/Vector2DTests.o \
+#			Tests/Vector3DTests.o \
+#            Tests/DualNumberTests.o \
+#            Tests/QuaternionTests.o \
+#            Tests/DualQuaternionTests.o \
+#            Tests/SceneNodeTests.o \
+#            Tests/HierarchicalCoordinateSystemTests.o
 
-INC_PARAMS = $(INCLUDE_DIRS:%=-I%)
-DEBUG_FLAGS = -g3
+default: lib
 
-CXXFLAGS=-std=c++20 -W -Wall -pedantic -I . $(INC_PARAMS) $(DEBUG_FLAGS)
-
-TEST_OBJS = MathLib.o \
-			Tests/ColorTypesTests.o \
-			Tests/ColorConversionTests.o \
-            Tests/AngleTests.o \
-			Tests/Vector2DTests.o \
-			Tests/Vector3DTests.o \
-            Tests/DualNumberTests.o \
-            Tests/QuaternionTests.o \
-            Tests/DualQuaternionTests.o \
-            Tests/SceneNodeTests.o \
-            Tests/HierarchicalCoordinateSystemTests.o
-
-TEST_EXE  = code_tests
-
-default: tests
-
-$(TEST_EXE): $(TEST_OBJS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $(TEST_EXE) $(LDFLAGS)
+.PHONY: lib
+lib:
+	cd lib && $(MAKE)
 
 .PHONY: tests
-tests: $(TEST_EXE)
-
-run_tests: $(TEST_EXE)
-	./$(TEST_EXE)
+tests:
+	cd Tests && $(MAKE)
 
 .PHONY: clean
 clean:
-	rm -f $(TEST_OBJS) $(TEST_EXE)
+	cd lib && $(MAKE) clean
 
 .PHONY: docs
 docs:
 	echo "Generating documentation..."
 	doxygen Documentation/Doxyfile
 
+.PHONY: cleandocs
 cleandocs:
 	echo "Removing generated documentation..."
 	rm -rf Documentation/html/* Documentation/latex/*
