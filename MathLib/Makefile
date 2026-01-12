@@ -2,15 +2,15 @@ default: lib
 
 .PHONY: lib
 lib:
-	@cd lib && $(MAKE)
+	$(MAKE) --directory=lib --quiet
 
 .PHONY: tests
 tests:
-	@cd Tests && $(MAKE)
+	$(MAKE) --directory=Tests --quiet
 
 .PHONY: clean
 clean:
-	@cd lib && $(MAKE) clean
+	$(MAKE) --directory=lib --quiet clean
 
 .PHONY: docs
 docs:
