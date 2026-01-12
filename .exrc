@@ -4,7 +4,7 @@
 "
 " NOTE: We don't need to use setlocal here since this
 "       is supposed to be 'global'.
-set path=.,,MathLib/include/**,Tests/**
+set path=.,,MathLib/lib/include/**,MathLib/Tests/**
 
 " Add a local .vim directory for adding project-level filetype
 " behavior.
