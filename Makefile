@@ -2,15 +2,15 @@ default: tests
 
 .PHONY: all
 all: 
-	@$(MAKE) --directory=MathLib --quiet
+	@$(MAKE) --directory=MathLib
 
 .PHONY: tests
 tests:
-	@$(MAKE) --directory=MathLib/Tests --quiet
+	@$(MAKE) --directory=MathLib/Tests
 
 .PHONY: docs
 docs:
-	@$(MAKE) --directory=MathLib --quiet docs
+	@$(MAKE) --directory=MathLib docs
 
 .PHONY: cleandocs
 cleandocs:
