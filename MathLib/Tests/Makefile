@@ -37,7 +37,7 @@ lib: $(LIB_TARGET)
 	@$(MAKE) --directory=.. lib --quiet
 
 .PHONY: all
-all: $(PASSING_TESTS) $(LIB_TARGET)
+all: $(LIB_TARGET) $(PASSING_TESTS)
 
 .PHONY: clean
 clean:

@@ -1,4 +1,4 @@
-default: all
+default: tests
 
 .PHONY: all
 all: 
