@@ -2,24 +2,30 @@ default: all
 
 .PHONY: all
 all: 
-	cd MathLib && $(MAKE)
+	@$(MAKE) --directory=MathLib --quiet
+#	@cd MathLib && $(MAKE)
 
 .PHONY: tests
 tests:
-	cd MathLib && $(MAKE) tests
+	@$(MAKE) --directory=MathLib/Tests --quiet
+#	@cd MathLib && $(MAKE) tests
 
 .PHONY: docs
 docs:
-	cd MathLib && $(MAKE) docs
+	@$(MAKE) --directory=MathLib docs --quiet
+#	@cd MathLib && $(MAKE) docs
 
 .PHONY: cleandocs
 cleandocs:
-	cd MathLib && $(MAKE) cleandocs
+	@$(MAKE) --directory=MathLib cleandocs --quiet
+#	@cd MathLib && $(MAKE) cleandocs
 
 .PHONY: cleanlib
 cleanlib:
-	cd MathLib && $(MAKE) clean
+	@$(MAKE) --directory=MathLib clean --quiet
+#	@cd MathLib && $(MAKE) clean
 
 .PHONY: clean
 clean:
-	cd MathLib && $(MAKE) clean
+	@$(MAKE) --directory=MathLib clean --quiet
+#	@cd MathLib && $(MAKE) clean

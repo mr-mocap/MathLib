@@ -368,8 +368,11 @@ MathLib/Documentation/latex/
 
 # Files built by g++
 *.o
+*.a
 
 # Makefile outputs
-code_tests
+*.d
+*.pass
+MathLib/Tests/Test[a-zA-Z]*
 
 .vscode/

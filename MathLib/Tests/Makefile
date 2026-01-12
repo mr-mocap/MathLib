@@ -11,15 +11,15 @@ CXXFLAGS      = -std=c++20 -W -Wall -Wextra -MMD -MP -pedantic -I . $(INC_PARAMS
 LDFLAGS       = -L$(LIB_BUILD_DIR)
 
 TESTS = Angle \
-		ColorConversion \
-		ColorTypes \
-		DualNumber \
-		DualQuaternion \
-		HierarchicalCoordinateSystem \
-		Quaternion \
-		SceneNode \
-		Vector2D \
-		Vector3D
+	ColorConversion \
+	ColorTypes \
+	DualNumber \
+	DualQuaternion \
+	HierarchicalCoordinateSystem \
+	Quaternion \
+	SceneNode \
+	Vector2D \
+	Vector3D
 
 TEST_BINARIES = $(patsubst %,Test%,${TESTS})
 PASSING_TESTS = $(patsubst %,%.pass,${TEST_BINARIES})
@@ -27,14 +27,14 @@ PASSING_TESTS = $(patsubst %,%.pass,${TEST_BINARIES})
 default: all
 
 $(LIB_BUILD_DIR):
-	@cd .. && $(MAKE) lib
+	@$(MAKE) --directory=.. lib --quiet
 
 $(LIB_TARGET): $(LIB_BUILD_DIR)
-	@cd .. && $(MAKE) lib
+	@$(MAKE) --directory=.. lib --quiet
 
 .PHONY: lib
 lib: $(LIB_TARGET)
-	@cd .. && $(MAKE) lib
+	@$(MAKE) --directory=.. lib --quiet
 
 .PHONY: all
 all: $(PASSING_TESTS) $(LIB_TARGET)
@@ -48,7 +48,7 @@ clean:
 
 .PHONY: cleanlib
 cleanlib:
-	@cd .. && make cleanlib
+	@$(MAKE) --directory=.. cleanlib --quiet
 
 $(TEST_BINARIES): %: %.cpp
 	@echo -n $@ [BUILDING] ...
