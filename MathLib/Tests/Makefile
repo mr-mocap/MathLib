@@ -26,18 +26,12 @@ PASSING_TESTS = $(patsubst %,%.pass,${TEST_BINARIES})
 
 default: all
 
-$(LIB_BUILD_DIR):
+$(LIB_TARGET): 
 	@$(MAKE) --directory=.. lib --quiet
 
-$(LIB_TARGET): $(LIB_BUILD_DIR)
-	@$(MAKE) --directory=.. lib --quiet
-
-.PHONY: lib
 lib: $(LIB_TARGET)
-	@$(MAKE) --directory=.. lib --quiet
 
-.PHONY: all
-all: $(LIB_TARGET) $(PASSING_TESTS)
+all: lib $(PASSING_TESTS)
 
 .PHONY: clean
 clean:
