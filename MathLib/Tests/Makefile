@@ -45,12 +45,12 @@ cleanlib:
 	@$(MAKE) --directory=.. cleanlib --quiet
 
 $(TEST_BINARIES): %: %.cpp
-	@echo -n $@ [BUILDING] ...
+	@echo [$@ BUILDING]
 	@$(CXX) -o $@ $< $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(EXTERNAL_LIBS)
 
-$(PASSING_TESTS): %.pass: %
+%.pass: %
 	@./$< >/dev/null 2>/dev/null
-	@echo [PASSED]
+	@echo [$* PASSED]
 	@touch $@
 
 -include *.d
