@@ -1,5 +1,6 @@
 #include <Math/math/Vector3D.hpp>
 #include <Math/math/Checks.hpp>
+#include <Math/GenericObjects.hpp>
 #include <iostream>
 #include <format>
 #include <numbers>
@@ -187,6 +188,16 @@ void Dot()
 
     // Misc Rotations
     CHECK_IF_EQUAL( dot(Vector3Df{sqrt2_over_2, sqrt2_over_2, 0.0f}, Vector3Df{sqrt2_over_2, sqrt2_over_2, 0.0f}), 1.0f ); // 45 deg rotation
+}
+
+void Swizzle()
+{
+    Generic::VecArray<double, 3> input_vector( {0.0, 1.0, 2.0} );
+    Generic::VecArray<double, 3> new_vector = Generic::swizzle<double, 3, 2, 1, 0>(input_vector);
+
+    assert(input_vector[0] == new_vector[2]);
+    assert(input_vector[1] == new_vector[1]);
+    assert(input_vector[2] == new_vector[0]);
 }
 
 void Run()
