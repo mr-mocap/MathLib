@@ -11,6 +11,7 @@ CXXFLAGS      = -std=c++20 -W -Wall -Wextra -MMD -MP -pedantic -I . $(INC_PARAMS
 LDFLAGS       = -L$(LIB_BUILD_DIR)
 
 TESTS = Angle \
+	Complex \
 	ColorConversion \
 	ColorTypes \
 	DualNumber \
