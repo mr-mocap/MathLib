@@ -76,7 +76,7 @@ public:
 
         // Are we a purely real number?
         if ( approximately_equal_to(magnitude, T{0.0}) )
-            return BasicQuaternion{ std::pow( w(), exponent ) }; // Yes, so only compute the real part
+            return BasicQuaternion{ std::pow( real(), exponent ) }; // Yes, so only compute the real part
 
         // Calculate the angle
         T theta{ std::atan2(magnitude, w()) };
@@ -278,9 +278,9 @@ public:
         BasicVector3D<T> n{ axis.normalized() };
 
         return BasicQuaternion<T>{ cos_theta,
-                              sin_theta * n.x,
-                              sin_theta * n.y,
-                              sin_theta * n.z };
+                                   sin_theta * n.x,
+                                   sin_theta * n.y,
+                                   sin_theta * n.z };
     }
     /// @}
 
@@ -369,7 +369,7 @@ private:
     }
 
     template <std::floating_point OT>
-    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, const OT &scalar)
+    friend constexpr BasicQuaternion<T> operator *(const BasicQuaternion<T> &quaternion, OT scalar)
     {
         return { quaternion.w() * scalar,
                  quaternion.i() * scalar,
@@ -383,7 +383,7 @@ private:
     }
 
     template <std::floating_point OT>
-    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, const OT &scalar)
+    friend constexpr BasicQuaternion<T> operator /(const BasicQuaternion<T> &quaternion, OT scalar)
     {
         return { quaternion.w() / T(scalar),
                  quaternion.i() / T(scalar),
