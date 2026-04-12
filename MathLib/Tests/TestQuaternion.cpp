@@ -459,17 +459,6 @@ void MagnitudeSquaredIsValueOfRealPartOfProductOfAQuaternionAndItsConjugate()
     CHECK_IF_EQUAL( m_squared, std::abs(product.real()) );
 }
 
-void MagnitudeIsAbsoluteValueOfRealPartOfProductOfAQuaternionAndItsConjugate()
-{
-    std::cout << __func__ << std::endl;
-
-    Quaternionf q{ 3.5f, -45.668f, 113.443f, 6.332f};
-    Quaternionf product = q * q.conjugate();
-    float       magnitude = q.magnitude();
-
-    CHECK_IF_EQUAL(magnitude, std::abs(product.real()) );
-}
-
 void DivisionIsJustMultiplyingByTheInverse()
 {
     std::cout << __func__ << std::endl;
