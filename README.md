@@ -1,7 +1,9 @@
 # MathLib
+
 Simple C++ library for dual numbers, quaternions, and dual quaternions
 
 ## Purpose
+
 For exploring the properties of Dual Quaternions and Dual numbers in general.  I may even implement Double numbers as well,
 but I don't yet see the use of them.
 I decided to create a header-only C++ library for implementing these ideas.
@@ -11,23 +13,27 @@ to understand something than getting down and dirty with an implementation (I no
 a similar library out there when I was about to put this up).
 
 ## Unit Tests
+
 The project contains some unit testing for verifying that I did indeed implement things correctly.
 I didn't go for a full unit testing approch.  Rather I just wanted to touch the basics to make sure that
 it works in a few specific cases.
 
 ## Ideas
-1. Conversions
-   * Make a Vector3D from a Vector2D with z = 0
 
-2. Classes
-   * Point2D & Point3D to mirror the Vector couterparts?  Would this be too many classes with unexpected
+- Classes
+   - Point2D & Point3D to mirror the Vector couterparts?  Would this be too many classes with unexpected
      interactions?
-   * Plane
-   * Ray
-   * Sphere
+   - Plane
+   - Ray
+   - Sphere
 
-3. Functions
-   * cross product
-   * Flesh out Quaternion
-      * pitch, roll, yaw
-      * Euler angles
+- Functions
+   - cross product
+   - Flesh out Quaternion
+      - pitch, roll, yaw
+      - Euler angles
+
+## TODO
+
+- slerp() for Complex is incorrect of we slerp() from 0 to 180 degrees.  In fact, the input of -1 for the real
+  component is a domain error!
