@@ -206,7 +206,7 @@ public:
     /** @name Conversion Operators
      *  @{
      */
-    operator BasicRadian<T>() { return BasicRadian<T>{DegreesToRadians(_value)}; }
+    operator BasicRadian<T>() const { return BasicRadian<T>{ DegreesToRadians(_value) }; }
     /// @}
 
     /** @name Constants
