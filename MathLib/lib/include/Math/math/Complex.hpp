@@ -5,6 +5,7 @@
 #include <Math/math/Angle.hpp>
 #include <cassert>
 #include <cmath>
+#include <complex>
 #include <concepts>
 #include <type_traits>
 
@@ -42,6 +43,13 @@ public:
     constexpr BasicComplex() = default;
     constexpr BasicComplex(T real_number) : _real(real_number) { } ///< Constructs a BasicComplex equivalent to the given real number
     constexpr BasicComplex(T real_part, T imaginary_part) : _real(real_part), _imaginary(imaginary_part) { }
+    constexpr BasicComplex(BasicRadian<T> real_part, BasicRadian<T> imaginary_part)
+        :
+        _real( real_part.value() ),
+        _imaginary( imaginary_part.value() )
+    {
+    }
+    constexpr BasicComplex(std::complex<T> c) : _real( std::real(c) ), _imaginary( std::imag(c) ) { } ///< Conversion from std::complex
     /// @}
 
     /** @name Constants
@@ -67,26 +75,26 @@ public:
     /// Computes this BasicComplex raised to a real power
     BasicComplex<T> pow(T exponent) const
     {
-        assert( isUnit() );
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::pow( this->asStdComplex(), exponent );
+        else
+            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
+    }
 
-        T magnitude{ imaginary() };
+    BasicComplex<T> pow(int exponent) const
+    {
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::pow( this->asStdComplex(), exponent );
+        else
+            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
+    }
 
-        // Are we a purely real number?
-        if ( approximately_equal_to(magnitude, T{0.0}) )
-        {
-            // It is an error for real() to be finite & negative when the exponent is not an integer!
-            return BasicComplex{ std::pow( real(), exponent ) }; // Yes, so only compute the real part
-        }
-
-        // Calculate the angle
-        T theta{ std::atan2(magnitude, real()) };
-        T new_theta{ exponent * theta };
-        T coefficient{ std::sin(new_theta) / magnitude };
-
-        // NOW we can calculate to the power of "exponent"...
-        T temp{ real() * real() + magnitude * magnitude };
-
-        return BasicComplex<T>{ std::cos(new_theta), coefficient * i() } * std::pow(temp, exponent);
+    BasicComplex<T> pow(BasicComplex<T> exponent) const
+    {
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::pow( this->asStdComplex(), exponent.asStdComplex() );
+        else
+            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
     }
 
     /** Computes the exponential form of this BasicComplex
@@ -98,32 +106,34 @@ public:
      */
     BasicComplex<T> exp() const
     {
-        T e_to_the_w{ std::exp( real() ) };
-        T vector_part_magnitude{ imaginary() };
-        T cos_v{ std::cos(vector_part_magnitude) };
-        T sin_v{ (vector_part_magnitude > T{0.0}) ? std::sin(vector_part_magnitude) / vector_part_magnitude : T{0.0} };
-
-        return BasicComplex{ cos_v, sin_v * i() } * e_to_the_w;
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::exp( this->asStdComplex() );
+        else
+            static_assert("BasicComplex::exp() has template parameter that is NOT a floating point type!");
     }
 
     /** Computes the log base e of this BasicComplex
      *  
-     *  @note We handle non-unit Quaternions in this version so that we can satisfy the relationship:
+     *  @note We handle non-unit Complex in this version so that we can satisfy the relationship:
      *        log( exp( x ) ) == x
      */
     BasicComplex<T> log() const
     {
-        T magnitude_of_imaginary_part{ imaginary() };
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::log( this->asStdComplex() );
+        else
+            static_assert("BasicComplex::exp() has template parameter that is NOT a floating point type!");
+    }
 
-        // Are we purely a real number?
-        if ( approximately_equal_to(magnitude_of_imaginary_part, T{0.0}) )
-            return BasicComplex{ std::log( real() ) }; // YES, so just set the real() component (the others will be zero)
-
-        T this_norm{ norm() };
-        T theta{ std::acos( real() / this_norm ) };
-        T coefficient{ theta / magnitude_of_imaginary_part };
-
-        return BasicComplex{ std::log(this_norm), coefficient * i() };
+    /** Computes the log base 10 of this BasicComplex
+     * 
+     */
+    BasicComplex<T> log10() const
+    {
+        if constexpr ( std::is_floating_point_v<T> )
+            return std::log10( this->asStdComplex() );
+        else
+            static_assert("BasicComplex::log10() has template parameter that is NOT a floating point type!");
     }
 
     T    normSquared() const { return accumulate(*this * conjugate()); }
@@ -143,18 +153,21 @@ public:
 
     BasicRadian<T> angle() const
     {
-        return T( std::atan2( imaginary().magnitude(), real() ) );
+        return atan2( BasicRadian<T>( imaginary() ), BasicRadian<T>( real() ) );
     }
 
     /** @name Element Access
      *  @{
      */
     constexpr const T &real() const { return _real; }
+    constexpr void     real(T r)    { _real = r; }
 
     constexpr const T &i() const { return _imaginary; }
+    constexpr void     i(T r)    { _imaginary = r; }
 
     /// Extracts the imaginary part of a BasicComplex
     constexpr const T &imaginary() const { return _imaginary; }
+    constexpr void     imaginary(T r)    { _imaginary = r; }
     /// @}
 
     bool isUnit() const { return approximately_equal_to( magnitude(), T{1} ); }
@@ -211,10 +224,17 @@ public:
      */
     constexpr static BasicComplex<T> make_rotation(BasicRadian<T> radians)
     {
-        return { std::cos( radians.value() ), std::sin( radians.value() ) };
+        return { cos( radians ), sin( radians ) };
     }
     /// @}
 
+    constexpr std::complex<T> asStdComplex() const { return std::complex{ _real, _imaginary }; }
+
+    /** @name Conversion Operators
+     *  @{
+     */
+    operator std::complex<T>() const { return std::complex<T>{ _real, _imaginary }; }
+    /// @}
 private:
     T _real{};
     T _imaginary{};
@@ -517,21 +537,21 @@ private:
      *
      *  @note This is meant to mirror the behavior of std::arg( std::complex )
      */
-    friend constexpr T arg(const BasicComplex<T> &input)
+    friend constexpr BasicRadian<T> arg(const BasicComplex<T> &input)
     {
         return input.angle().value();
     }
 
     /** Constructs a unit Complex from the given axis and angle
      *
-     *  @param r     The magnitude of the Complex to create
+     *  @param m     The magnitude of the Complex to create
      *  @param angle The amount of rotation to apply (in radians)
      * 
      *  @note This is meant to mirror the behavior of the std::complex version of std::polar()
      */
-    friend constexpr BasicComplex<T> polar(T r, BasicRadian<T> angle = BasicRadian<T>{})
+    friend constexpr BasicComplex<T> polar(T m, BasicRadian<T> angle = BasicRadian<T>{})
     {
-        return r * BasicComplex<T>::make_rotation( angle );
+        return std::polar( m, angle.value() );
     }
 
     /** Sums up the components of @p input
@@ -585,6 +605,15 @@ private:
         return input.log();
     }
 
+    /**  Computes the log base 10 of the input
+     * 
+     *   @note This will just call @c input.log10()
+     */
+    friend constexpr BasicComplex<T> log10(const BasicComplex<T> &input)
+    {
+        return input.log10();
+    }
+
     /**  Computes the exponential of the input
      * 
      *   @note This will just call @c input.exp()
@@ -593,6 +622,94 @@ private:
     {
         return input.exp();
     }
+
+    /**  Computes the power of the input
+     * 
+     *   @note This will just call @c input.exp()
+     *   @{
+     */
+    friend BasicComplex<T> pow(const BasicComplex<T> &input, T p)
+    {
+        return input.pow( p );
+    }
+
+    friend BasicComplex<T> pow(const BasicComplex<T> &input, int p)
+    {
+        return input.pow( p );
+    }
+
+    friend BasicComplex<T> pow(const BasicComplex<T> &input, const BasicComplex<T> &p)
+    {
+        return input.pow( p );
+    }
+    /// @}
+
+    /** @name Trigonometric Functions
+     * 
+     *  @relates BasicComplex
+     *  @{
+     */
+    friend BasicComplex<T> sin(BasicComplex<T> c)
+    {
+        return std::sin( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> cos(BasicComplex<T> c)
+    {
+        return std::cos( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> tan(BasicComplex<T> c)
+    {
+        return std::tan( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> asin(BasicComplex<T> c)
+    {
+        return std::asin( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> acos(BasicComplex<T> c)
+    {
+        return std::acos( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> atan(BasicComplex<T> c)
+    {
+        return std::atan( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> sinh(BasicComplex<T> c)
+    {
+        return std::sinh( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> cosh(BasicComplex<T> c)
+    {
+        return std::cosh( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> tanh(BasicComplex<T> c)
+    {
+        return std::tanh( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> asinh(BasicComplex<T> c)
+    {
+        return std::asinh( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> acosh(BasicComplex<T> c)
+    {
+        return std::acosh( c.asStdComplex() );
+    }
+
+    friend BasicComplex<T> atanh(BasicComplex<T> c)
+    {
+        return std::atanh( c.asStdComplex() );
+    }
+    /// @}
+
     /// @} {GlobalFunctions}
 };
 

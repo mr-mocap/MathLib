@@ -41,6 +41,15 @@ void TestRotationAtRegularIntervals(Complexf begin, Degreef amount_of_rotation, 
         Complexf new_rotation{ Complexf::make_rotation(current_rotation_amount) };
         Complexf slerp_result = slerp(begin, end_rotation, current_percentage);
 
+        if ( approximately_equal_to( std::abs( end_rotation.imaginary() ), 0.0f, 0.0000001f ) )
+        {
+            // If the imaginary component is very close to 0, then the rotation direction
+            // is ambiguous, so we just compare the absolute values of the imaginary
+            // components (i.e. we ignore the sign of the rotation).
+            slerp_result = Complexf(slerp_result.real(), std::abs(slerp_result.imaginary()));
+            new_rotation = Complexf(new_rotation.real(), std::abs(new_rotation.imaginary()));
+        }
+
         CHECK_IF_EQUAL( slerp_result, new_rotation);
     }
     Complexf slerp_result = slerp(begin, end_rotation, 1.0f);
