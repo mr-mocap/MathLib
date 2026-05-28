@@ -87,9 +87,9 @@ public:
         T temp{ w() * w() + magnitude * magnitude };
 
         return BasicQuaternion<T>{ std::cos(new_theta),
-                              coefficient * i(),
-                              coefficient * j(),
-                              coefficient * k() } * std::pow(temp, exponent);
+                                   coefficient * i(),
+                                   coefficient * j(),
+                                   coefficient * k() } * std::pow(temp, exponent);
     }
 
     /** Computes the exponential form of this BasicQuaternion
