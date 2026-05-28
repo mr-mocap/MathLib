@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Math/math/Functions.hpp>
+#include <cmath>
 #include <concepts>
 #include <compare>
 
@@ -169,6 +170,77 @@ private:
         return BasicRadian{ -input.value() };
     }
     /// @}  {Operators}
+
+    /** @name Trigonometric Functions
+     * 
+     *  @relates BasicComplex
+     *  @{
+     */
+    friend BasicRadian<T> sin(BasicRadian<T> i)
+    {
+        return std::sin( i.value() );
+    }
+
+    friend BasicRadian<T> cos(BasicRadian<T> i)
+    {
+        return std::cos( i.value() );
+    }
+
+    friend BasicRadian<T> tan(BasicRadian<T> i)
+    {
+        return std::tan( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> asin(BasicRadian<T> i)
+    {
+        return std::asin( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> acos(BasicRadian<T> i)
+    {
+        return std::acos( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> atan(BasicRadian<T> i)
+    {
+        return std::atan( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> sinh(BasicRadian<T> i)
+    {
+        return std::sinh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> cosh(BasicRadian<T> i)
+    {
+        return std::cosh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> tanh(BasicRadian<T> i)
+    {
+        return std::tanh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> asinh(BasicRadian<T> i)
+    {
+        return std::asinh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> acosh(BasicRadian<T> i)
+    {
+        return std::acosh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> atanh(BasicRadian<T> i)
+    {
+        return std::atanh( i.asStdComplex() );
+    }
+
+    friend BasicRadian<T> atan2(BasicRadian<T> y, BasicRadian<T> x)
+    {
+        return std::atan2( y.value(), x.value() );
+    }
+    /// @}
 };
 
 
