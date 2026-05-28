@@ -39,8 +39,9 @@ void TestRotationAtRegularIntervals(Quaternionf begin, Degreef amount_of_rotatio
         float       current_percentage{ step_percentage * iCurrentStep };
         Degreef     current_rotation_amount{ amount_of_rotation * current_percentage };
         Quaternionf new_rotation{ Quaternionf::make_rotation(current_rotation_amount, rotation_axis) };
+        Quaternionf slerp_result = slerp(begin, end_rotation, current_percentage);
 
-        CHECK_IF_EQUAL( slerp(begin, end_rotation, current_percentage), new_rotation);
+        CHECK_IF_EQUAL( slerp_result, new_rotation);
     }
     CHECK_IF_EQUAL( slerp(begin, end_rotation, 1.0f), end_rotation);
 }
