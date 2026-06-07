@@ -27,7 +27,7 @@ namespace Math
  *
  *  @headerfile <> <math/Complex.hpp>
  */
-template <class T>
+template <std::floating_point T>
 class BasicComplex
 {
 public:
@@ -75,26 +75,17 @@ public:
     /// Computes this BasicComplex raised to a real power
     BasicComplex<T> pow(T exponent) const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::pow( this->asStdComplex(), exponent );
-        else
-            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
+        return std::pow( this->asStdComplex(), exponent );
     }
 
     BasicComplex<T> pow(int exponent) const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::pow( this->asStdComplex(), exponent );
-        else
-            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
+        return std::pow( this->asStdComplex(), exponent );
     }
 
     BasicComplex<T> pow(BasicComplex<T> exponent) const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::pow( this->asStdComplex(), exponent.asStdComplex() );
-        else
-            static_assert("BasicComplex::pow() has template parameter that is NOT a floating point type!");
+        return std::pow( this->asStdComplex(), exponent.asStdComplex() );
     }
 
     /** Computes the exponential form of this BasicComplex
@@ -106,10 +97,7 @@ public:
      */
     BasicComplex<T> exp() const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::exp( this->asStdComplex() );
-        else
-            static_assert("BasicComplex::exp() has template parameter that is NOT a floating point type!");
+        return std::exp( this->asStdComplex() );
     }
 
     /** Computes the log base e of this BasicComplex
@@ -119,10 +107,7 @@ public:
      */
     BasicComplex<T> log() const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::log( this->asStdComplex() );
-        else
-            static_assert("BasicComplex::exp() has template parameter that is NOT a floating point type!");
+        return std::log( this->asStdComplex() );
     }
 
     /** Computes the log base 10 of this BasicComplex
@@ -130,10 +115,7 @@ public:
      */
     BasicComplex<T> log10() const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::log10( this->asStdComplex() );
-        else
-            static_assert("BasicComplex::log10() has template parameter that is NOT a floating point type!");
+        return std::log10( this->asStdComplex() );
     }
 
     T    normSquared() const { return accumulate(*this * conjugate()); }
@@ -184,17 +166,11 @@ public:
      */
     bool isNaN() const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::isnan(_real) || std::isnan(_imaginary);
-        else
-            return _real.isNaN() || _imaginary.isNaN();
+        return std::isnan(_real) || std::isnan(_imaginary);
     }
     bool isInf() const
     {
-        if constexpr ( std::is_floating_point_v<T> )
-            return std::isinf(_real) || std::isinf(_imaginary);
-        else
-            return _real.isInf() || _imaginary.isInf();
+        return std::isinf(_real) || std::isinf(_imaginary);
     }
     /// @}
 
@@ -273,7 +249,6 @@ private:
      *  @see Equality
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend constexpr bool approximately_equal_to(const BasicComplex<T> &value_to_test,
                                                  const BasicComplex<T> &value_it_should_be,
                                                        OT               tolerance = OT{0.0002})
@@ -359,7 +334,6 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend bool check_if_equal(const BasicComplex<T> &input,
                                const BasicComplex<T> &near_to,
                                      OT               tolerance = OT{0.0002})
@@ -390,7 +364,6 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend bool check_if_not_equal(const BasicComplex<T> &input,
                                    const BasicComplex<T> &near_to,
                                          OT               tolerance = OT{0.0002})
@@ -421,7 +394,6 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend void CHECK_IF_EQUAL(const BasicComplex<T> &input,
                                const BasicComplex<T> &near_to,
                                      OT               tolerance = OT{0.0002})
@@ -440,7 +412,6 @@ private:
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend void CHECK_IF_NOT_EQUAL(const BasicComplex<T> &input,
                                    const BasicComplex<T> &near_to,
                                          OT               tolerance = OT{0.0002})
@@ -458,7 +429,6 @@ private:
      *  @return @c true if @c input is inside @c tolerance , @c false otherwise
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
     friend void CHECK_IF_ZERO(const BasicComplex<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, BasicComplex<T>::zero(), tolerance));
