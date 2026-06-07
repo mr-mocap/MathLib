@@ -34,7 +34,10 @@ BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 {
     assert( input.isNormalized() );
 
-#if 1
+#define TOHSV_METHOD 2
+
+#ifdef TOHSV_METHOD
+#if (TOHSV_METHOD == 1)
     T cmax = max( input );
     T cmin = min( input );
     T delta = cmax - cmin;
@@ -73,23 +76,28 @@ BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 
     // But make hue be 0 - 360 upon return...
     return BasicHSV<T>{ Math::BasicDegree<T>(hue * Math::BasicDegree<T>::modulus()).modulo(), saturation, v };
-#else
+#elif (TOHSV_METHOD == 2)
     // https://web.archive.org/web/20200207113336/http://lolengine.net/blog/2013/07/27/rgb-to-hsv-in-glsl
     using namespace Math;
 
-    Vector4D<T> K{ T{0.0}, T{-1.0} / T{3.0}, T{2.0} / T{3.0}, T{-1.0} };
-    Vector4D<T> p = (input.g() < input.b()) ? Vector4D<T>{input.b(), input.g(), K.w, K.z} : Vector4D<T>{input.g(), input.b(), K.x, K.y};
-    Vector4D<T> q = (input.r() < p.x)       ? Vector4D<T>{p.x, p.y, p.w, input.r()}       : Vector4D<T>{input.r(), p.y, p.z, p.x};
+    BasicVector4D<T> K{ T{0.0}, T{-1.0} / T{3.0}, T{2.0} / T{3.0}, T{-1.0} };
+    BasicVector4D<T> p = (input.g() < input.b()) ? BasicVector4D<T>{input.b(), input.g(), K.w, K.z} : BasicVector4D<T>{input.g(), input.b(), K.x, K.y};
+    BasicVector4D<T> q = (input.r() < p.x)       ? BasicVector4D<T>{p.x, p.y, p.w, input.r()}       : BasicVector4D<T>{input.r(), p.y, p.z, p.x};
 
     T d = q.x - std::min(q.w, q.y);
     T e = 1.0e-10;
 
-    return HSV<T>(
+    return BasicHSV<T>(
                    BasicDegree<T>( std::abs(q.z + (q.w - q.y) / (T{6.0} * d + e)) ) * BasicDegree<T>::modulus(),
                    d / (q.x + e),
                    q.x
-                 );
+                      );
+#else
+    static_assert("Invalid value for TOHSV_METHOD");
 #endif
+#endif
+
+#undef TOHSV_METHOD
 }
 
 /** Converts a HSV color to a unit RGB color
@@ -103,8 +111,11 @@ BasicHSV<T> ToHSV(const BasicUnitRGB<T> &input)
 template <std::floating_point T>
 BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
 {
+#define TORGB_METHOD 1
+
+#ifdef TORGB_METHOD
     // https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
-#if 1
+#if (TORGB_METHOD == 1)
     if ( Math::approximately_equal_to( input_hsv.saturation(), T{0} ) )
         return BasicUnitRGB<T>{ input_hsv.value(), input_hsv.value(), input_hsv.value() };
 
@@ -144,8 +155,7 @@ BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
     }
 
     return out;
-#else
-#if 0
+#elif (TORGB_METHOD == 2)
     T h = std::fmod( T{100.0} + input_hsv.hue().value(), T{1.0} );
     T hue_slice = T{6.0} * h;
     T hue_slice_integer = std::floor( hue_slice );
@@ -169,7 +179,7 @@ BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
                        Math::lerp( UnitRGB<T>{ scrolling_rgb.z, scrolling_rgb.x, scrolling_rgb.y }, UnitRGB<T>{ scrolling_rgb.y, scrolling_rgb.z, scrolling_rgb.x }, is_not_second_slice ),
                        is_not_first_slice
                      );
-#else
+#elif (TORGB_METHOD == 3)
     Math::BasicVector4D<T> K( T{1.0}, T{2.0} / T{3.0}, T{1.0} / T{3.0}, T{3.0} );
 
     Math::BasicVector3D<T> input_xxx( input_hsv.hue().value(), input_hsv.hue().value(), input_hsv.hue().value() );
@@ -181,8 +191,12 @@ BasicUnitRGB<T> ToRGB(const BasicHSV<T> &input_hsv)
                                      input_hsv.saturation() ) );
 
     return { input_hsv.value() * out };
+#else
+    static_assert("Invalid method defined for TORGB_METHOD");
 #endif
 #endif
+
+#undef TORGB_METHOD
 }
 
 /** Converts a HSV color to a HSL color
