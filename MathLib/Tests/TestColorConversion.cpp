@@ -38,8 +38,38 @@ void ConvertingBasicRGBColorsToHSV()
         UnitRGBf blue{ 0.0, 0.0, 1.0 };
         HSVf hsv_representation{ ToHSV( blue ) };
 
-        assert( hsv_representation.hue().value() == 240.0f );
+        assert( hsv_representation.hue() == 240.0_deg_f );
         assert( hsv_representation.hueColor() == HSVf::Blue );
+        assert( hsv_representation.saturation() == 1.0f );
+        assert( hsv_representation.value() == 1.0f );
+    }
+
+    {
+        UnitRGBf cyan{ 0.0, 1.0, 1.0 };
+        HSVf hsv_representation{ ToHSV( cyan ) };
+
+        assert( hsv_representation.hue() == 180.0_deg_f );
+        assert( hsv_representation.hueColor() == HSVf::Cyan );
+        assert( hsv_representation.saturation() == 1.0f );
+        assert( hsv_representation.value() == 1.0f );
+    }
+
+    {
+        UnitRGBf magenta{ 1.0, 0.0, 1.0 };
+        HSVf hsv_representation{ ToHSV( magenta ) };
+
+        assert( hsv_representation.hue() == 300.0_deg_f );
+        assert( hsv_representation.hueColor() == HSVf::Magenta );
+        assert( hsv_representation.saturation() == 1.0f );
+        assert( hsv_representation.value() == 1.0f );
+    }
+
+    {
+        UnitRGBf yellow{ 1.0, 1.0, 0.0 };
+        HSVf hsv_representation{ ToHSV( yellow ) };
+
+        assert( hsv_representation.hue() == 60.0_deg_f );
+        assert( hsv_representation.hueColor() == HSVf::Yellow );
         assert( hsv_representation.saturation() == 1.0f );
         assert( hsv_representation.value() == 1.0f );
     }
