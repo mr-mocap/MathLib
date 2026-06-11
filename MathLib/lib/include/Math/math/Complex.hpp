@@ -66,15 +66,14 @@ public:
 
     constexpr BasicComplex<T> conjugate() const
     {
-        if constexpr (std::is_floating_point_v<T>)
-            return BasicComplex<T>{ _real, -_imaginary };
-        else
-            return BasicComplex<T>{ _real, conjugate(_imaginary) };
+        return BasicComplex<T>{ _real, -_imaginary };
     }
 
     /// Computes this BasicComplex raised to a real power
     BasicComplex<T> pow(T exponent) const
     {
+        // NOTE: Because this is a template function, conversion operators are not
+        //       considered.  Thus, we directly call this->asStdComplex().
         return std::pow( this->asStdComplex(), exponent );
     }
 
@@ -204,7 +203,7 @@ public:
     }
     /// @}
 
-    constexpr std::complex<T> asStdComplex() const { return std::complex{ _real, _imaginary }; }
+    constexpr std::complex<T> asStdComplex() const { return std::complex<T>{ _real, _imaginary }; }
 
     /** @name Conversion Operators
      *  @{
