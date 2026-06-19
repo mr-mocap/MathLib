@@ -479,55 +479,46 @@ namespace Literals
  *  @relates BasicDegree
  *  @{
  */
-/** Documentation */
 constexpr BasicDegree<float> operator ""_deg_f(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-/** Documentation */
 constexpr BasicDegree<float> operator ""_deg_F(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-/** Documentation */
 constexpr BasicDegree<float> operator ""_degf(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-/** Documentation */
 constexpr BasicDegree<float> operator ""_degF(long double degrees)
 {
     return BasicDegree<float>{ static_cast<float>(degrees) };
 }
 
-/** Documentation */
 constexpr BasicDegree<double> operator ""_deg(long double degrees)
 {
     return BasicDegree<double>{ static_cast<double>(degrees) };
 }
 
-/** Documentation */
 constexpr BasicDegree<long double> operator ""_deg_l(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
-/** Documentation */
 constexpr BasicDegree<long double> operator ""_deg_L(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
-/** Documentation */
 constexpr BasicDegree<long double> operator ""_degl(long double degrees)
 {
     return BasicDegree<long double>{degrees};
 }
 
-/** Documentation */
 constexpr BasicDegree<long double> operator ""_degL(long double degrees)
 {
     return BasicDegree<long double>{degrees};
