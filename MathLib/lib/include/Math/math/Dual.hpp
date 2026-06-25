@@ -110,7 +110,11 @@ public:
     T dual{};
     /// @}
 
+private:
     /** @name Equality
+     * 
+     *  @relates BasicDual
+     * 
      *  @{
      */
     /** Defines equality of two Duals
@@ -125,7 +129,27 @@ public:
     {
         return approximately_equal_to(left, right);
     }
-    /// @}
+
+    /** Compare two values for equality with a tolerance
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     *  
+     *  @see Equality
+     */
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test,
+                                                 const BasicDual<T> &value_it_should_be,
+                                                       OT            tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
+               approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
+    }
+    /// @}  {Equality}
 
     /** @addtogroup DualAlgebra Dual Number Algebra
      *  @{
@@ -248,108 +272,16 @@ public:
     /// @}  {Operators}
     /// @}  {DualAlgebra}
 
-    /** @addtogroup Equality
+    /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
      *  @relates BasicDual
      * 
      *  @{
-     *  
-     *  Compare two values for equality with a tolerance
-     *  
-     *  @param input     The first value to compare
-     *  @param near_to   The second value to compare
-     *  @param tolerance The minimum value for being considered equal
-     * 
-     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     *  
-     *  @see Equality
      */
-    template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
-    friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test,
-                                                 const BasicDual<T> &value_it_should_be,
-                                                       OT            tolerance = OT{0.0002})
-    {
-        return approximately_equal_to(value_to_test.real, value_it_should_be.real, tolerance) &&
-               approximately_equal_to(value_to_test.dual, value_it_should_be.dual, tolerance);
-    }
-    /// @}  {Equality}
-
-    /** Calculates the dot-product of two Duals
-     *  
-     *  @return The dot-product of the two inputs
-     *  
-     *  @note This treats the BasicDual number as a pair of numbers,
-     *        or 2D vector, and calculates the dot product as
-     *        as expected of that.
-     *
-     *  @relates BasicDual
-     */
-    friend constexpr T dot(const BasicDual<T> &left, const BasicDual<T> &right)
-    {
-        return left.real * right.real +
-               left.dual * right.dual;
-    }
-
-    /** Calculates the square root of a BasicDual
-     *  
-     *  This treats the input as a BasicDual scalar and
-     *  calculates the square root based on that expectation.
-     *  
-     *  @return The BasicDual as a dual scalar
-     *
-     *  @relates BasicDual
-     */
-    friend constexpr BasicDual<T> dualscalar_sqrt(const BasicDual<T> &input)
-    {
-        // Expect that T is a scalar type (float, double, int, etc.)
-        T root = std::sqrt(input.real);
-
-        return { root, input.dual / (T{2} * root) };
-    }
-
-    /** Calculates the square of the norm
-     * 
-     *  @relates BasicDual
-     */
-    friend constexpr T dualscalar_normsquared(const BasicDual<T> &d)
-    {
-        BasicDual<T> result = d * d.conjugate();
-
-        assert( approximately_equal_to(result.dual, T{0}) );
-
-        return result.real;
-    }
-
-    /** Accumulates the components of the input BasicDual
-     *  
-     *  @return A scalar that is the sum of the components
-     * 
-     *  @relates BasicDual
-     */
-    friend constexpr T accumulate(const BasicDual<T> &input)
-    {
-        return T{input.real + input.dual};
-    }
-
-    /**  Computes the conjugate of the input
-     * 
-     *   @note This will just call @c input.conjugate()
-     */
-    friend constexpr BasicDual<T> conjugate(const BasicDual<T> &input)
-    {
-        return input.conjugate();
-    }
-
-    friend std::string format(const BasicDual<T> &input)
-    {
-        return std::format("[real: {}, dual: {}]", input.real, input.dual);
-    }
-    /// @} {GlobalFunctions}
-
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -378,9 +310,7 @@ public:
         return true;
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -408,10 +338,19 @@ public:
         }
         return true;
     }
+    ///@} {Check}
+    ///@} {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -428,9 +367,7 @@ public:
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -447,9 +384,7 @@ public:
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
@@ -462,6 +397,78 @@ public:
     {
         assert( check_if_equal(input, BasicDual<T>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
+
+    /** @name Global Functions
+     * 
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
+    /** Calculates the dot-product of two Duals
+     *  
+     *  @return The dot-product of the two inputs
+     *  
+     *  @note This treats the BasicDual number as a pair of numbers,
+     *        or 2D vector, and calculates the dot product as
+     *        as expected of that.
+     */
+    friend constexpr T dot(const BasicDual<T> &left, const BasicDual<T> &right)
+    {
+        return left.real * right.real +
+               left.dual * right.dual;
+    }
+
+    /** Calculates the square root of a BasicDual
+     *  
+     *  This treats the input as a BasicDual scalar and
+     *  calculates the square root based on that expectation.
+     *  
+     *  @return The BasicDual as a dual scalar
+     */
+    friend constexpr BasicDual<T> dualscalar_sqrt(const BasicDual<T> &input)
+    {
+        // Expect that T is a scalar type (float, double, int, etc.)
+        T root = std::sqrt(input.real);
+
+        return { root, input.dual / (T{2} * root) };
+    }
+
+    /** Calculates the square of the norm
+     */
+    friend constexpr T dualscalar_normsquared(const BasicDual<T> &d)
+    {
+        BasicDual<T> result = d * d.conjugate();
+
+        assert( approximately_equal_to(result.dual, T{0}) );
+
+        return result.real;
+    }
+
+    /** Accumulates the components of the input BasicDual
+     *  
+     *  @return A scalar that is the sum of the components
+     */
+    friend constexpr T accumulate(const BasicDual<T> &input)
+    {
+        return T{input.real + input.dual};
+    }
+
+    /**  Computes the conjugate of the input
+     * 
+     *   @note This will just call @c input.conjugate()
+     */
+    friend constexpr BasicDual<T> conjugate(const BasicDual<T> &input)
+    {
+        return input.conjugate();
+    }
+
+    friend std::string format(const BasicDual<T> &input)
+    {
+        return std::format("[real: {}, dual: {}]", input.real, input.dual);
+    }
+    /// @} {GlobalFunctions}
 };
 
 
