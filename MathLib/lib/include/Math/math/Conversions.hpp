@@ -31,6 +31,6 @@ constexpr inline T RadiansToDegrees(T radians)
 {
     return radians * (T{180} / std::numbers::pi_v<T>);
 }
-/// @}
+/// @} {Conversions}
 
 }
