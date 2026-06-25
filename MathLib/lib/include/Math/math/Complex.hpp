@@ -215,6 +215,9 @@ private:
     T _imaginary{};
 
     /** @name Equality
+     * 
+     *  @relates BasicComplex
+     * 
      *  @{
      */
     /** Defines equality of two Quaternions
@@ -229,15 +232,8 @@ private:
     {
         return approximately_equal_to(left, right);
     }
-    /// @}
 
-    /** @addtogroup Equality
-     * 
-     *  @relates BasicComplex
-     * 
-     *  @{
-     * 
-     *  Compares two BasicComplex inputs equal, component-wise, to within a tolerance
+    /** Compares two BasicComplex inputs equal, component-wise, to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -320,11 +316,18 @@ private:
         return { -q.real(), -q.imaginary() };
     }
     /// @}  {Operators}
-    /// @}  {QuaternionAlgebra}
+    /// @}  {ComplexAlgebra}
 
     /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  @relates BasicComplex
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -352,9 +355,7 @@ private:
         return true;
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -381,10 +382,19 @@ private:
         }
         return true;
     }
+    ///@} {Check}
+    ///@} {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicComplex
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -400,9 +410,7 @@ private:
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -418,20 +426,22 @@ private:
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if @c input is inside @c tolerance , @c false otherwise
+     * 
+     *  @relates BasicComplex
      */
     template <std::floating_point OT = T>
     friend void CHECK_IF_ZERO(const BasicComplex<T> &input, OT tolerance = OT{0.0002})
     {
         assert( check_if_equal(input, BasicComplex<T>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
 
     /** @name Global Functions
      * 
@@ -677,12 +687,12 @@ private:
     {
         return std::atanh( c.asStdComplex() );
     }
-    /// @}
+    /// @} {Trigonometric Functions}
 
     /// @} {GlobalFunctions}
 };
 
-/** @defgroup ComplexAliases Complex Types
+/** @addtogroup ComplexAliases Complex Types
  * 
  *  Here are the type aliases for Complex
  * 
