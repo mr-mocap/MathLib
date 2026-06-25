@@ -20,7 +20,7 @@ namespace Math
  *  This class exists to try to make it more obviously known what
  *  the units are that are being constructed and passed around.
  *
- *  @see @ref RadianLiterals for convenient user-defined literals.
+ *  @see @ref RadianUserDefinedLiterals for convenient user-defined literals.
  * 
  *  @headerfile <> <math/Angle.hpp>
  */
@@ -253,7 +253,7 @@ private:
  *  therefore attempts have been made to make it easy to convert from
  *  Degree to Radian and vice versa.
  *
- *  @see @ref DegreeLiterals for convenient user-defined literals.
+ *  @see @ref DegreeUserDefinedLiterals for convenient user-defined literals.
  *
  *  @headerfile <> <math/Angle.hpp>
  */
@@ -474,7 +474,7 @@ namespace Literals
  * 
  *  @{
  */
-/** @name User-Defined Literals
+/** @name Degree User-Defined Literals
  * 
  *  @relates BasicDegree
  *  @{
@@ -524,14 +524,14 @@ constexpr BasicDegree<long double> operator ""_degL(long double degrees)
     return BasicDegree<long double>{degrees};
 }
 /// @}
-/// @}  {User-Defined Literals}
+/// @}  {DegreeUserDefinedLiterals}
 
 }
 
 namespace Literals
 {
 
-/** @defgroup RadianUserDefinedLiterals Radian Literals
+/** @addtogroup RadianUserDefinedLiterals Radian Literals
  *  
  *  Here are the user-defined literals for Radian
  * 
@@ -539,7 +539,7 @@ namespace Literals
  * 
  *  @{
  */
-/** @name User-Defined Literals
+/** @name Radian User-Defined Literals
  * 
  *  @relates BasicRadian
  *  @{
@@ -589,7 +589,7 @@ constexpr BasicRadian<long double> operator ""_radL(long double radians)
     return BasicRadian<long double>{radians};
 }
 /// @}
-/// @}
+/// @} {RadianUserDefinedLiterals}
 
 }
 
