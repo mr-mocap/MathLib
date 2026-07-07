@@ -45,18 +45,10 @@ struct BasicVector3D
         using value_type = RType; ///< The underlying implementation type
         /// @}
 
-        /** @name Constructors
-         * 
-         *  @{
-         */
         constexpr BasicRef(RType &x_in, RType &y_in, RType &z_in) : x{x_in}, y{y_in}, z{z_in} { }
         constexpr BasicRef(const BasicRef &) = default;
         constexpr BasicRef(const BasicVector3D<RType> &other) : x{other.x}, y{other.y}, z{other.z} { }
-        /// @}
 
-        /** @name Assignment
-         *  @{
-         */
         constexpr BasicRef &operator =(BasicRef input)
         {
             x = input.x;
@@ -72,44 +64,15 @@ struct BasicVector3D
             z = input.z;
             return *this;
         }
-        /// @}
 
-        /** @name Conversion Operators
-         *  @{
-         */
-        /** BasicVector3D conversion operator
-         * 
-         *  This allows Vector3DRef objects to automatically be converted to BasicVector3D objects
-         *  for situations like passing to functions or constructors to BasicVector3D objects.
-         */
         constexpr operator BasicVector3D<RType>() const { return { x, y, z }; }
 
         constexpr operator std::tuple<RType, RType, RType>() const { return std::make_tuple( x, y, z ); }
-        /// @}
 
-        /** @name Element Access
-         *  @{
-         */
         RType &x;
         RType &y;
         RType &z;
-        /// @}
 
-        /** @name Equality
-         *  @{
-         */
-        /** Defines equality of two BasicVector3D::Ref objects
-         *  
-         *  @note Uses approximately_equal_to under-the-hood
-         *  
-         *  @note We take advantage of the new C++20 rule where if there
-         *        is not an appropriate operator ==(const BasicVector3D<Type> &) defined
-         *        for this class, then the compiler tries a swapped instantiation
-         *        in its place.  This allows us to only define the typical operator ==() here
-         *        and then define comparison of different types to the other class.
-         * 
-         *  @see Equality
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
@@ -123,14 +86,7 @@ struct BasicVector3D
         {
             return approximately_equal_to( left, right );
         }
-        /// @} {Equality}
 
-        /** @name Operators
-         * 
-         *  @relates BasicVector3D
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr BasicVector3D<RType> operator +(BasicRef left, BasicRef<U> right)
@@ -207,22 +163,7 @@ struct BasicVector3D
         {
             return { left.x / scalar, left.y / scalar, left.z / scalar };
         }
-        /// @} {Operators}
 
-        /** Compares two BasicVector3D::Ref inputs equal, component-wise, to within a tolerance
-         * 
-         *  @addtogroup Equality
-         * 
-         *  @relates BasicVector3D
-         *  
-         *  @param value_to_test
-         *  @param value_it_should_be 
-         *  @param tolerance          How close they should be to be considered equal
-         *  
-         *  @return @c true if they are equal
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool approximately_equal_to(BasicRef    value_to_test,
@@ -244,32 +185,12 @@ struct BasicVector3D
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
                    approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
         }
-        /// @}
 
-        /** Sums up the components of @p input
-         *  
-         *  @param input The BasicVector3D::Ref to operate on
-         * 
-         *  @return The sum of all the components
-         */
         friend constexpr RType accumulate(BasicRef input)
         {
             return input.x + input.y + input.z;
         }
 
-        /** Calculate the dot product of two BasicVector3D objects
-         *
-         *  @param left  The first vector
-         *  @param right The second vector
-         * 
-         *  @return The dot product of the two input vectors
-         *  
-         *  @note This is only a strict dot product and thus a normalized
-         *        result will depend on if the input vectors are both
-         *        normalized!
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr RType dot(BasicRef left, BasicRef<U> right)
@@ -283,21 +204,7 @@ struct BasicVector3D
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
         }
-        /// @}
 
-        /** Calculate the normalized dot product of two BasicVector3D objects
-         *
-         *  The input vectors are not assumed to be normalized, so we go
-         *  ahead and divide through by both the input vectors
-         *  to arrive at a normalized output.
-         * 
-         *  @param left  The first vector
-         *  @param right The second vector
-         * 
-         *  @return The dot product of the two input vectors
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr RType dot_normalized(BasicRef left, BasicRef<U> right)
@@ -311,15 +218,7 @@ struct BasicVector3D
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        /// @}
 
-        /** Calculates the cross product of two BasicVector3D::Ref objects
-         * 
-         *  @param left  The first vector
-         *  @param right The second vector
-         * 
-         *  @return The cross product of the input vectors
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr BasicVector3D<RType> cross(BasicRef left, BasicRef<U> right)
@@ -327,34 +226,16 @@ struct BasicVector3D
             return cross( BasicVector3D<RType>(left), BasicVector3D<RType>(right) );
         }
 
-        /** Creates the normalized form of a BasicVector3D::Ref
-         *  
-         *  @param input The BasicVector3D::Ref to normalize
-         *  
-         *  @return The normalized version of @p input
-         */
         friend constexpr BasicVector3D<RType> normalized(BasicRef input)
         {
             return BasicVector3D<RType>( input ).normalized();
         }
 
-        /** Calculate the absolute value of all components of a BasicVector3D
-         *   
-         *   @param input The BasicVector3D::Ref to operate on
-         *
-         *   @return The BasicVector3D with only positive values
-         */
         friend constexpr BasicVector3D<RType> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y), std::abs(input.z) };
         }
 
-        /** Calculate the fractional part of all components of a BasicVector3D
-         *   
-         *   @param input The BasicVector3D::Ref to operate on
-         *
-         *   @return The BasicVector3D with only fractional values
-         */
         friend constexpr BasicVector3D<RType> fract(BasicRef input)
         {
             RType dummy;
@@ -412,18 +293,6 @@ struct BasicVector3D
             return std::format("[x: {:.6}, y: {:.6}, z: {:.6}]", input.x, input.y, input.z);
         }
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for equality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_equal(BasicRef    input,
@@ -465,20 +334,7 @@ struct BasicVector3D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_not_equal(BasicRef input,
@@ -520,20 +376,7 @@ struct BasicVector3D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for equality with a tolerance and causes an assertion when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend void CHECK_IF_EQUAL(BasicRef    input,
@@ -551,20 +394,7 @@ struct BasicVector3D
         {
             assert( check_if_equal(input, near_to, tolerance) );
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and causes an assertion when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend void CHECK_IF_NOT_EQUAL(BasicRef    input,
@@ -582,17 +412,7 @@ struct BasicVector3D
         {
             assert( check_if_not_equal(input, near_to, tolerance) );
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare a value to near zero
-         *  
-         *  @param input     The first value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if @c input is inside @c tolerance , @c false otherwise
-         */
         template <std::floating_point OT = float>
         friend void CHECK_IF_ZERO(BasicRef input, OT tolerance = OT{0.0002})
         {
@@ -637,13 +457,108 @@ struct BasicVector3D
     }
     /// @}
 
+    /** @name Assignment
+     *  @{
+     */
+    constexpr BasicVector3D<Type> &operator =(const BasicVector3D &other) = default;
+    constexpr BasicVector3D<Type> &operator =(Ref other)
+    {
+        x = other.x;
+        y = other.y;
+        return *this;
+    }
+    /// @}
+
     /** @name Conversion Operators
      *  @{
      */
     constexpr operator std::tuple<Type, Type, Type>() const { return std::make_tuple( x, y, z ); }
     /// @}
 
+    /** @name Constants
+     *  @{
+     */
+    constexpr static BasicVector3D<Type> unit_x() { return { Type{1}, Type{0}, Type{0} }; }
+    constexpr static BasicVector3D<Type> unit_y() { return { Type{0}, Type{1}, Type{0} }; }
+    constexpr static BasicVector3D<Type> unit_z() { return { Type{0}, Type{0}, Type{1} }; }
+
+    constexpr static BasicVector3D<Type> zero() { return { }; }
+    /// @}
+
+    constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
+
+    constexpr value_type magnitudeSquared() const { return normSquared(); }
+    constexpr value_type magnitude() const { return norm(); }
+
+    constexpr BasicVector3D<Type> normalized() const
+    {
+        auto n = magnitude();
+
+        return { x / n, y / n, z / n };
+    }
+
+    /** @name Invalid Value Check
+     *  @{
+     */
+    bool isNaN() const { return std::isnan(x) || std::isnan(y) || std::isnan(z); }
+    bool isInf() const { return std::isinf(x) || std::isinf(y) || std::isinf(z); }
+    /// @}
+
+    /** @name Swizzle operations
+     *  @{
+     */
+    constexpr BasicVector2D<Type>::ConstRef xy() const &  { return { x, y }; }
+    constexpr BasicVector2D<Type>::Ref      xy()       &  { return { x, y }; }
+    constexpr BasicVector2D<Type>           xy()       && { return { x, y }; }
+
+    constexpr BasicVector2D<Type>::ConstRef xz() const &  { return { x, z }; }
+    constexpr BasicVector2D<Type>::Ref      xz()       &  { return { x, z }; }
+    constexpr BasicVector2D<Type>           xz()       && { return { x, z }; }
+
+    constexpr BasicVector2D<Type>::ConstRef yx() const &  { return { y, x }; }
+    constexpr BasicVector2D<Type>::Ref      yx()       &  { return { y, x }; }
+    constexpr BasicVector2D<Type>           yx()       && { return { y, x }; }
+
+    constexpr BasicVector2D<Type>::ConstRef yz() const &  { return { y, z }; }
+    constexpr BasicVector2D<Type>::Ref      yz()       &  { return { y, z }; }
+    constexpr BasicVector2D<Type>           yz()       && { return { y, z }; }
+
+    constexpr BasicVector2D<Type>::ConstRef zx() const &  { return { z, x }; }
+    constexpr BasicVector2D<Type>::Ref      zx()       &  { return { z, x }; }
+    constexpr BasicVector2D<Type>           zx()       && { return { z, x }; }
+
+    constexpr ConstRef            xyz() const &  { return { x, y, z }; }
+    constexpr Ref                 xyz()       &  { return { x, y, z }; }
+    constexpr BasicVector3D<Type> xyz()       && { return { x, y, z }; }
+
+    constexpr ConstRef            xzy() const &  { return { x, z, y }; }
+    constexpr Ref                 xzy()       &  { return { x, z, y }; }
+    constexpr BasicVector3D<Type> xzy()       && { return { x, z, y }; }
+
+    constexpr ConstRef            zxy() const &  { return { z, x, y }; }
+    constexpr Ref                 zxy()       &  { return { z, x, y }; }
+    constexpr BasicVector3D<Type> zxy()       && { return { z, x, y }; }
+
+    constexpr ConstRef            zyx() const &  { return { z, y, x }; }
+    constexpr Ref                 zyx()       &  { return { z, y, x }; }
+    constexpr BasicVector3D<Type> zyx()       && { return { z, y, x }; }
+    /// @}
+
+    /** @name Element Access
+     *  @{
+     */
+    value_type x{};
+    value_type y{};
+    value_type z{};
+    /// @}
+
+private:
+
     /** @name Equality
+     * 
+     *  @relates BasicVector3D
+     * 
      *  @{
      */
     /** Defines equality of two BasicVector3D objects
@@ -665,17 +580,45 @@ struct BasicVector3D
     {
         return approximately_equal_to(left, right);
     }
-    /// @}
 
-    /** @name Constants
-     *  @{
+    /** Compares two BasicVector3D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
      */
-    constexpr static BasicVector3D<Type> unit_x() { return { Type{1}, Type{0}, Type{0} }; }
-    constexpr static BasicVector3D<Type> unit_y() { return { Type{0}, Type{1}, Type{0} }; }
-    constexpr static BasicVector3D<Type> unit_z() { return { Type{0}, Type{0}, Type{1} }; }
+    template <class U, std::floating_point OT = float>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool approximately_equal_to(const BasicVector3D    &value_to_test,
+                                                 const BasicVector3D<U> &value_it_should_be,
+                                                       OT                tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
+    }
 
-    constexpr static BasicVector3D<Type> zero() { return { }; }
-    /// @}
+    /** Compares two BasicVector3D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
+    template <class U, std::floating_point OT = float>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool approximately_equal_to(const BasicVector3D &value_to_test,
+                                                       BasicRef<U>    value_it_should_be,
+                                                       OT             tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
+               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
+    }
+    /// @}  {Equality}
 
     /** @addtogroup Vector3DAlgebra 3D Vector Algebra
      * 
@@ -766,111 +709,12 @@ struct BasicVector3D
     /// @}  {Operators}
     /// @}  {Vector3DAlgebra}
 
-    constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z); }
-    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
-
-    constexpr value_type magnitudeSquared() const { return normSquared(); }
-    constexpr value_type magnitude() const { return norm(); }
-
-    constexpr BasicVector3D<Type> normalized() const
-    {
-        auto n = magnitude();
-
-        return { x / n, y / n, z / n };
-    }
-
-    /** @name Invalid Value Check
-     *  @{
-     */
-    bool isNaN() const { return std::isnan(x) || std::isnan(y) || std::isnan(z); }
-    bool isInf() const { return std::isinf(x) || std::isinf(y) || std::isinf(z); }
-    /// @}
-
-    /** @name Swizzle operations
-     *  @{
-     */
-    constexpr BasicVector2D<Type>::ConstRef xy() const &  { return { x, y }; }
-    constexpr BasicVector2D<Type>::Ref      xy()       &  { return { x, y }; }
-    constexpr BasicVector2D<Type>           xy()       && { return { x, y }; }
-
-    constexpr BasicVector2D<Type>::ConstRef xz() const &  { return { x, z }; }
-    constexpr BasicVector2D<Type>::Ref      xz()       &  { return { x, z }; }
-    constexpr BasicVector2D<Type>           xz()       && { return { x, z }; }
-
-    constexpr BasicVector2D<Type>::ConstRef yx() const &  { return { y, x }; }
-    constexpr BasicVector2D<Type>::Ref      yx()       &  { return { y, x }; }
-    constexpr BasicVector2D<Type>           yx()       && { return { y, x }; }
-
-    constexpr BasicVector2D<Type>::ConstRef yz() const &  { return { y, z }; }
-    constexpr BasicVector2D<Type>::Ref      yz()       &  { return { y, z }; }
-    constexpr BasicVector2D<Type>           yz()       && { return { y, z }; }
-
-    constexpr BasicVector2D<Type>::ConstRef zx() const &  { return { z, x }; }
-    constexpr BasicVector2D<Type>::Ref      zx()       &  { return { z, x }; }
-    constexpr BasicVector2D<Type>           zx()       && { return { z, x }; }
-
-    constexpr ConstRef            xyz() const &  { return { x, y, z }; }
-    constexpr Ref                 xyz()       &  { return { x, y, z }; }
-    constexpr BasicVector3D<Type> xyz()       && { return { x, y, z }; }
-
-    constexpr ConstRef            xzy() const &  { return { x, z, y }; }
-    constexpr Ref                 xzy()       &  { return { x, z, y }; }
-    constexpr BasicVector3D<Type> xzy()       && { return { x, z, y }; }
-
-    constexpr ConstRef            zxy() const &  { return { z, x, y }; }
-    constexpr Ref                 zxy()       &  { return { z, x, y }; }
-    constexpr BasicVector3D<Type> zxy()       && { return { z, x, y }; }
-
-    constexpr ConstRef            zyx() const &  { return { z, y, x }; }
-    constexpr Ref                 zyx()       &  { return { z, y, x }; }
-    constexpr BasicVector3D<Type> zyx()       && { return { z, y, x }; }
-    /// @}
-
-    /** @name Element Access
-     *  @{
-     */
-    value_type x{};
-    value_type y{};
-    value_type z{};
-    /// @}
-
-    /** @addtogroup Equality
+    /** @name Global Functions
      * 
      *  @relates BasicVector3D
      * 
      *  @{
-     * 
-     *  Compares two BasicVector3D inputs equal, component-wise, to within a tolerance
-     *  
-     *  @param value_to_test
-     *  @param value_it_should_be 
-     *  @param tolerance          How close they should be to be considered equal
-     *  
-     *  @return @c true if they are equal
      */
-    template <class U, std::floating_point OT = float>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool approximately_equal_to(const BasicVector3D    &value_to_test,
-                                                 const BasicVector3D<U> &value_it_should_be,
-                                                       OT                tolerance = OT{0.0002})
-    {
-        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
-               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
-    }
-
-    template <class U, std::floating_point OT = float>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool approximately_equal_to(const BasicVector3D &value_to_test,
-                                                       BasicRef<U>    value_it_should_be,
-                                                       OT             tolerance = OT{0.0002})
-    {
-        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance) &&
-               approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance);
-    }
-    /// @}
-
     /** Sums up the components of @p input
      *  
      *  @param input The BasicVector3D to operate on
@@ -892,8 +736,6 @@ struct BasicVector3D
      *  @note This is only a strict dot product and thus a normalized
      *        result will depend on if the input vectors are both
      *        normalized!
-     * 
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -902,13 +744,23 @@ struct BasicVector3D
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
     }
 
+    /** Calculate the dot product of two BasicVector3D objects
+     *
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *  
+     *  @note This is only a strict dot product and thus a normalized
+     *        result will depend on if the input vectors are both
+     *        normalized!
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot(const BasicVector3D &left, BasicRef<U> right)
     {
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z);
     }
-    /// @}
 
     /** Calculate the normalized dot product of two BasicVector3D objects
      *
@@ -920,8 +772,6 @@ struct BasicVector3D
      *  @param right The second vector
      * 
      *  @return The dot product of the two input vectors
-     * 
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -930,13 +780,23 @@ struct BasicVector3D
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
 
+    /** Calculate the normalized dot product of two BasicVector3D objects
+     *
+     *  The input vectors are not assumed to be normalized, so we go
+     *  ahead and divide through by both the input vectors
+     *  to arrive at a normalized output.
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot_normalized(const BasicVector3D &left, BasicRef<U> right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
-    /// @}
 
     /** Creates the normalized form of a BasicVector3D
      *  
@@ -955,8 +815,6 @@ struct BasicVector3D
      *  @param right The second vector
      * 
      *  @return The cross product of the input vectors
-     * 
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -967,6 +825,13 @@ struct BasicVector3D
                  cross( left.xy(), right.xy() ) };
     }
 
+    /** Calculates the cross product of two BasicVector3D objects
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The cross product of the input vectors
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr BasicVector3D<Type> cross(const BasicVector3D &left, BasicRef<U> right)
@@ -975,7 +840,6 @@ struct BasicVector3D
                  cross( left.zx(), right.zx() ),
                  cross( left.xy(), right.xy() ) };
     }
-    /// @}
 
     /** Calculate the absolute value of all components of a BasicVector3D
      *   
@@ -1050,18 +914,24 @@ struct BasicVector3D
     {
         return std::format("[x: {:.6}, y: {:.6}, z: {:.6}]", input.x, input.y, input.z);
     }
+    ///@}  {Global Functions}
 
     /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  @relates BasicVector3D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1084,6 +954,14 @@ struct BasicVector3D
         return true;
     }
 
+    /** Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_equal(const BasicVector3D &input,
@@ -1104,19 +982,14 @@ struct BasicVector3D
         }
         return true;
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1139,6 +1012,14 @@ struct BasicVector3D
         return true;
     }
 
+    /** Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_not_equal(const BasicVector3D &input,
@@ -1159,19 +1040,25 @@ struct BasicVector3D
         }
         return true;
     }
-    /// @}
+    /// @}  {Check}
+    /// @}  {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicVector3D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1182,6 +1069,14 @@ struct BasicVector3D
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for equality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_EQUAL(const BasicVector3D &input,
@@ -1190,19 +1085,14 @@ struct BasicVector3D
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1213,6 +1103,14 @@ struct BasicVector3D
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_NOT_EQUAL(const BasicVector3D &input,
@@ -1221,11 +1119,8 @@ struct BasicVector3D
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
@@ -1237,6 +1132,8 @@ struct BasicVector3D
     {
         assert( check_if_equal(input, BasicVector3D<Type>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
 };
 
 /** @defgroup BasicVector3DRefAliases Vector3DRef Types
