@@ -574,6 +574,12 @@ private:
         return approximately_equal_to(left, right);
     }
 
+    /** Defines equality of a BasicVector3D and BasicRef objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @see Equality
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector3D &left, BasicRef<U> right)
