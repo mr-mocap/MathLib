@@ -35,24 +35,12 @@ struct BasicVector2D
     template <class RType>
     struct BasicRef
     {
-        /** @name Types
-         *  @{
-         */
         using value_type = RType; ///< The underlying implementation type
-        /// @}
 
-        /** @name Constructors
-         * 
-         *  @{
-         */
         constexpr BasicRef(RType &x_in, RType &y_in) : x{x_in}, y{y_in} { }
         constexpr BasicRef(const BasicRef &) = default;
         constexpr BasicRef(const BasicVector2D<RType> &other) : x{other.x}, y{other.y} { }
-        /// @}
 
-        /** @name Assignment
-         *  @{
-         */
         constexpr BasicRef &operator =(BasicRef input)
         {
             x = input.x;
@@ -66,25 +54,7 @@ struct BasicVector2D
             y = input.y;
             return *this;
         }
-        /// @}
 
-        /** @name Equality
-         *  @{
-         */
-        /** Defines equality of two BasicVector2D::Ref objects
-         *  
-         *  @note Uses approximately_equal_to under-the-hood
-         *  
-         *  @note We take advantage of the new C++20 rule where if there
-         *        is not an appropriate operator ==(const BasicVector2D<Type> &) defined
-         *        for this class, then the compiler tries a swapped instantiation
-         *        in its place.  This allows us to only define the typical operator ==() here
-         *        and then define comparison of different types to the other class.
-         * 
-         *  @see Equality
-         */
-        template <class U>
-            requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
         {
             return approximately_equal_to( left, right );
@@ -96,21 +66,7 @@ struct BasicVector2D
         {
             return approximately_equal_to( left, right );
         }
-        /// @}
 
-        /** @addtogroup Vector2DAlgebra 2D Vector Algebra
-         * 
-         *  Two Dimensional Vector Algebra
-         * 
-         *  @{
-         */
-
-        /** @name Operators
-         * 
-         *  @relates BasicVector2D
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr BasicVector2D<RType> operator +(BasicRef left, BasicRef<U> right)
@@ -187,43 +143,14 @@ struct BasicVector2D
         {
             return { left.x / scalar, left.y / scalar };
         }
-        /// @} {Operators}
-        /// @} {Vector2DAlgebra}
-
-        /** @name Conversion Operators
-         *  @{
-         */
-        /** BasicVector2D conversion operator
-         * 
-         *  This allows Ref objects to automatically be converted to BasicVector2D objects
-         *  for situations like passing to functions or constructors to BasicVector2D objects.
-         */
         constexpr operator BasicVector2D<RType>() const { return { x, y }; }
 
         constexpr operator std::tuple<RType, RType>() const { return std::make_tuple( x, y ); }
-        /// @}
 
-        /** @name Element Access
-         *  
-         *  @{
-         */
         RType &x;
         RType &y;
-        /// @}
 
 
-        /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
-         * 
-         *  @addtogroup Equality
-         * 
-         *  @relates BasicVector2D
-         *  
-         *  @param value_to_test
-         *  @param value_it_should_be 
-         *  @param tolerance          How close they should be to be considered equal
-         *  
-         *  @return @c true if they are equal
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool approximately_equal_to(BasicRef    value_to_test,
@@ -234,18 +161,6 @@ struct BasicVector2D
                    approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
         }
 
-        /** Compares a BasicVector2D::Ref and BasicVector2D inputs equal, component-wise, to within a tolerance
-         * 
-         *  @addtogroup Equality
-         * 
-         *  @relates BasicVector2D
-         *  
-         *  @param value_to_test
-         *  @param value_it_should_be 
-         *  @param tolerance          How close they should be to be considered equal
-         *  
-         *  @return @c true if they are equal
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool approximately_equal_to(      BasicRef          value_to_test,
@@ -367,18 +282,6 @@ struct BasicVector2D
             return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
         }
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for equality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_equal(BasicRef    input,
@@ -420,20 +323,7 @@ struct BasicVector2D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_not_equal(BasicRef input,
@@ -475,20 +365,7 @@ struct BasicVector2D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for equality with a tolerance and causes an assertion when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend void CHECK_IF_EQUAL(BasicRef    input,
@@ -506,20 +383,7 @@ struct BasicVector2D
         {
             assert( check_if_equal(input, near_to, tolerance) );
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and causes an assertion when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend void CHECK_IF_NOT_EQUAL(BasicRef    input,
@@ -537,17 +401,7 @@ struct BasicVector2D
         {
             assert( check_if_not_equal(input, near_to, tolerance) );
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare a value to near zero
-         *  
-         *  @param input     The first value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if @c input is inside @c tolerance , @c false otherwise
-         */
         template <std::floating_point OT = float>
         friend void CHECK_IF_ZERO(BasicRef input, OT tolerance = OT{0.0002})
         {
@@ -819,8 +673,6 @@ private:
      *  @note This is only a strict dot product and thus a normalized
      *        result will depend on if the input vectors are both
      *        normalized!
-     *
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -829,13 +681,23 @@ private:
         return (left.x * right.x) + (left.y * right.y);
     }
 
+    /** Calculate the dot product of two BasicVector2D objects
+     *
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *  
+     *  @note This is only a strict dot product and thus a normalized
+     *        result will depend on if the input vectors are both
+     *        normalized!
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot(const BasicVector2D &left, BasicRef<U> right)
     {
         return (left.x * right.x) + (left.y * right.y);
     }
-    /// @}
 
     /** Calculate the normalized dot product of two BasicVector2D objects
      *
@@ -847,8 +709,6 @@ private:
      *  @param right The second vector
      * 
      *  @return The dot product of the two input vectors
-     *
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -857,13 +717,23 @@ private:
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
 
+    /** Calculate the normalized dot product of two BasicVector2D objects
+     *
+     *  The input vectors are not assumed to be normalized, so we go
+     *  ahead and divide through by both the input vectors
+     *  to arrive at a normalized output.
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot_normalized(const BasicVector2D &left, BasicRef<U> right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
-    /// @} {dot_normalized}
 
     /** Creates the normalized form of a BasicVector2D
      *  
@@ -887,8 +757,6 @@ private:
      *        of a determinant of a matrix, I define the same idea here but
      *        using a 2 x 2 matrix instead of the 3 x 3 3D for the version (also
      *        owing to the recursive nature of the calculation of a determinant).
-     * 
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -897,13 +765,24 @@ private:
         return (left.x * right.y) - (left.y * right.x);
     }
 
+    /** Calculates a pseudo cross product between two BasicVector2D objects
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return A scalar value representing the 2D cross product
+     * 
+     *  @note Since the 3D version of cross product comes from the calculation
+     *        of a determinant of a matrix, I define the same idea here but
+     *        using a 2 x 2 matrix instead of the 3 x 3 3D for the version (also
+     *        owing to the recursive nature of the calculation of a determinant).
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type cross(const BasicVector2D<Type> &left, BasicRef<U> right)
     {
         return (left.x * right.y) - (left.y * right.x);
     }
-    /// @} {cross}
 
     /** Calculate the absolute value of all components of a BasicVector2D
      *   
@@ -991,8 +870,6 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1015,6 +892,14 @@ private:
         return true;
     }
 
+    /** Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_equal(const BasicVector2D &input,
@@ -1035,7 +920,6 @@ private:
         }
         return true;
     }
-    /// @}
 
     /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
@@ -1044,8 +928,6 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1068,6 +950,14 @@ private:
         return true;
     }
 
+    /** Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_not_equal(const BasicVector2D &input,
@@ -1088,7 +978,6 @@ private:
         }
         return true;
     }
-    /// @}
     /// @}  {Check}
     /// @}  {Checks}
 
