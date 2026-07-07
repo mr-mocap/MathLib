@@ -595,7 +595,67 @@ struct BasicVector2D
     constexpr operator std::tuple<Type, Type>() const { return std::make_tuple( x, y ); }
     /// @}
 
+    /** @name Constants
+     *  @{
+     */
+    constexpr static BasicVector2D<Type> unit_x() { return { Type{1}, Type{0} }; }
+    constexpr static BasicVector2D<Type> unit_y() { return { Type{0}, Type{1} }; }
+
+    constexpr static BasicVector2D<Type> zero() { return {}; }
+    /// @}
+ 
+    constexpr value_type normSquared() const { return (x * x) + (y * y); }
+    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
+
+    constexpr value_type magnitudeSquared() const { return normSquared(); }
+    constexpr value_type magnitude() const { return norm(); }
+
+    constexpr BasicVector2D<Type> normalized() const
+    {
+        auto n = norm();
+
+        return { x / n, y / n };
+    }
+
+    /** @name Invalid Value Check
+     *  @{
+     */
+    bool isNaN() const { return std::isnan(x) || std::isnan(y); }
+    bool isInf() const { return std::isinf(x) || std::isinf(y); }
+    /// @}
+
+    /** @name Swizzle operations
+     *  @{
+     */
+    constexpr BasicVector2D xx() const { return { x, x }; }
+    constexpr BasicVector2D xx()       { return { x, x }; }
+
+    constexpr BasicVector2D yy() const { return { y, y }; }
+    constexpr BasicVector2D yy()       { return { y, y }; }
+
+    constexpr ConstRef      xy() const &  { return { x, y }; }
+    constexpr Ref           xy()       &  { return { x, y }; }
+    constexpr BasicVector2D xy()       && { return { x, y }; }
+
+    constexpr ConstRef      yx() const &  { return { y, x }; }
+    constexpr Ref           yx()       &  { return { y, x }; }
+    constexpr BasicVector2D yx()       && { return { y, x }; }
+    /// @} {Swizzle operations}
+
+
+    /** @name Element Access
+     *  @{
+     */
+    Type x{};
+    Type y{};
+    /// @}
+
+private:
+
     /** @name Equality
+     * 
+     *  @relates BasicVector2D
+     * 
      *  @{
      */
     /** Defines equality of two BasicVector2D objects
@@ -613,17 +673,38 @@ struct BasicVector2D
     {
         return approximately_equal_to(left, right);
     }
-    /// @}
 
-    /** @name Constants
-     *  @{
+    /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     * 
+     *  @see Equality
      */
-    constexpr static BasicVector2D<Type> unit_x() { return { Type{1}, Type{0} }; }
-    constexpr static BasicVector2D<Type> unit_y() { return { Type{0}, Type{1} }; }
+    template <class U, std::floating_point OT = float>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool approximately_equal_to(const BasicVector2D    &value_to_test,
+                                                 const BasicVector2D<U> &value_it_should_be,
+                                                       OT                tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+    }
 
-    constexpr static BasicVector2D<Type> zero() { return {}; }
-    /// @}
- 
+    template <class U, std::floating_point OT = float>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool approximately_equal_to(const BasicVector2D &value_to_test,
+                                                       BasicRef<U>    value_it_should_be,
+                                                       OT             tolerance = OT{0.0002})
+    {
+        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
+               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
+    }
+    /// @}  {Equality}
+
     /** @addtogroup Vector2DAlgebra 2D Vector Algebra
      * 
      *  Two Dimensional Vector Algebra
@@ -633,7 +714,7 @@ struct BasicVector2D
 
     /** @name Operators
      *  
-     *  @relates Vector2D
+     *  @relates BasicVector2D
      *  @{
      */
     template <class U>
@@ -713,89 +794,12 @@ struct BasicVector2D
     /// @}  {Operators}
     /// @}  {Vector2DAlgebra}
 
-    constexpr value_type normSquared() const { return (x * x) + (y * y); }
-    constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
-
-    constexpr value_type magnitudeSquared() const { return normSquared(); }
-    constexpr value_type magnitude() const { return norm(); }
-
-    constexpr BasicVector2D<Type> normalized() const
-    {
-        auto n = norm();
-
-        return { x / n, y / n };
-    }
-
-    /** @name Invalid Value Check
-     *  @{
-     */
-    bool isNaN() const { return std::isnan(x) || std::isnan(y); }
-    bool isInf() const { return std::isinf(x) || std::isinf(y); }
-    /// @}
-
-    /** @name Swizzle operations
-     *  @{
-     */
-    constexpr BasicVector2D xx() const { return { x, x }; }
-    constexpr BasicVector2D xx()       { return { x, x }; }
-
-    constexpr BasicVector2D yy() const { return { y, y }; }
-    constexpr BasicVector2D yy()       { return { y, y }; }
-
-    constexpr ConstRef      xy() const &  { return { x, y }; }
-    constexpr Ref           xy()       &  { return { x, y }; }
-    constexpr BasicVector2D xy()       && { return { x, y }; }
-
-    constexpr ConstRef      yx() const &  { return { y, x }; }
-    constexpr Ref           yx()       &  { return { y, x }; }
-    constexpr BasicVector2D yx()       && { return { y, x }; }
-    /// @} {Swizzle operations}
-
-
-    /** @name Element Access
-     *  @{
-     */
-    Type x{};
-    Type y{};
-    /// @}
-
-    /** @addtogroup Equality
+    /** @name Global Functions
      * 
      *  @relates BasicVector2D
      * 
      *  @{
-     * 
-     *  Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
-     *  
-     *  @param value_to_test
-     *  @param value_it_should_be 
-     *  @param tolerance          How close they should be to be considered equal
-     *  
-     *  @return @c true if they are equal
-     * 
-     *  @see Equality
      */
-    template <class U, std::floating_point OT = float>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool approximately_equal_to(const BasicVector2D    &value_to_test,
-                                                 const BasicVector2D<U> &value_it_should_be,
-                                                       OT                tolerance = OT{0.0002})
-    {
-        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
-    }
-
-    template <class U, std::floating_point OT = float>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool approximately_equal_to(const BasicVector2D &value_to_test,
-                                                       BasicRef<U>    value_it_should_be,
-                                                       OT             tolerance = OT{0.0002})
-    {
-        return approximately_equal_to(value_to_test.x, value_it_should_be.x, tolerance) &&
-               approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
-    }
-    /// @}
-
     /** Sums up the components of @p input
      *  
      *  @input The BasicVector2D to operate on
@@ -969,10 +973,18 @@ struct BasicVector2D
     {
         return std::format("[x: {:.6}, y: {:.6}]", input.x, input.y);
     }
+    ///@}  {Global Functions}
 
     /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  @relates BasicVector2D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -1025,9 +1037,7 @@ struct BasicVector2D
     }
     /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -1079,18 +1089,25 @@ struct BasicVector2D
         return true;
     }
     /// @}
+    /// @}  {Check}
+    /// @}  {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicVector2D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1101,6 +1118,14 @@ struct BasicVector2D
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for equality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_EQUAL(const BasicVector2D &input,
@@ -1109,19 +1134,14 @@ struct BasicVector2D
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     * 
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1132,6 +1152,14 @@ struct BasicVector2D
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_NOT_EQUAL(const BasicVector2D &input,
@@ -1140,11 +1168,8 @@ struct BasicVector2D
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
@@ -1156,6 +1181,8 @@ struct BasicVector2D
     {
         assert( check_if_equal(input, BasicVector2D<Type>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
 };
 
 /** @defgroup BasicVector2DRefAliases Vector2DRef Types
