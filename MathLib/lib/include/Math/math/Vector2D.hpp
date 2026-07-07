@@ -548,6 +548,16 @@ private:
                approximately_equal_to(value_to_test.y, value_it_should_be.y, tolerance);
     }
 
+    /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     * 
+     *  @see Equality
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool approximately_equal_to(const BasicVector2D &value_to_test,
