@@ -328,6 +328,9 @@ private:
     BasicDual<BasicQuaternion<T>> _frame_of_reference{ BasicQuaternion<T>::identity(), BasicQuaternion<T>::zero() }; // The default value is an identity transformation
 
     /** @name Equality
+     * 
+     *  @relates BasicDualQuaternion
+     * 
      *  @{
      */
     /** Defines equality of two DualQuaternions
@@ -343,7 +346,26 @@ private:
     {
         return approximately_equal_to(left, right);
     }
-    /// @}
+
+    /** Compares two BasicDualQuaternion inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     *  
+     *  @see Equality
+     */
+    //template <std::floating_point OT = float>
+    friend constexpr bool approximately_equal_to(const BasicDualQuaternion<T> &value_to_test,
+                                                 const BasicDualQuaternion<T> &value_it_should_be,
+                                                                           T  tolerance = T{0.0002})
+    {
+        // Just use the underlying BasicDual number's version of the same function...
+        return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
+    }
+    /// @}  {Equality}
 
     /** @addtogroup DualQuaternionAlgebra Dual Quaternion Algebra
      *  @{
@@ -367,8 +389,6 @@ private:
      *  @param dual_scalar     The amount to scale by
      *  
      *  @return The scaled BasicDualQuaternion
-     *  
-     *  @see DualQuaternionAlgebra
      */
     friend constexpr BasicDualQuaternion<T> operator *(T scalar, const BasicDualQuaternion<T> &dual_quaternion)
     {
@@ -381,8 +401,6 @@ private:
      *  @param dual_quaternion The DualQuaternion to scale
      *  
      *  @return The scaled DualQuaternion
-     *  
-     *  @see DualQuaternionAlgebra
      */
     friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &dual_quaternion, T scalar)
     {
@@ -395,8 +413,6 @@ private:
      *  @param dual_scalar     The amount to scale by
      *  
      *  @return The scaled BasicDualQuaternion
-     *  
-     *  @see BasicDualQuaternion Algebra
      */
     friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &dual_quaternion,
                                                        const BasicDual<T>           &dual_scalar)
@@ -408,8 +424,6 @@ private:
     /** Defines multiplication of two DualQuaternions
      *
      *  @return The resulting BasicDualQuaternion
-     *  
-     *  @see BasicDualQuaternion Algebra
      */
     friend constexpr BasicDualQuaternion<T> operator *(const BasicDualQuaternion<T> &left_side,
                                                        const BasicDualQuaternion<T> &right_side)
@@ -423,8 +437,6 @@ private:
      *  @param dual_scalar     The amount to scale by
      *  
      *  @return The scaled DualQuaternion
-     *  
-     *  @see BasicDualQuaternion Algebra
      */
     friend constexpr BasicDualQuaternion<T> operator /(const BasicDualQuaternion<T> &dual_quaternion,
                                                        const BasicDual<T>           &dual_scalar)
@@ -433,79 +445,19 @@ private:
                                                               dual_scalar.conjugate())._frame_of_reference /
                                        dualscalar_normsquared(dual_scalar) );
     }
-    /// @}  {DualQuaternionAlgebra}
     /// @}  {Operators}
+    /// @}  {DualQuaternionAlgebra}
 
-    /** @addtogroup Equality
+    /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
      *  @relates BasicDualQuaternion
      * 
      *  @{
-     * 
-     *  Compares two BasicDualQuaternion inputs equal, component-wise, to within a tolerance
-     *  
-     *  @param value_to_test
-     *  @param value_it_should_be 
-     *  @param tolerance          How close they should be to be considered equal
-     *  
-     *  @return @c true if they are equal
-     *  
-     *  @see Equality
      */
-    //template <std::floating_point OT = float>
-    friend constexpr bool approximately_equal_to(const BasicDualQuaternion<T> &value_to_test,
-                                                 const BasicDualQuaternion<T> &value_it_should_be,
-                                                                           T  tolerance = T{0.0002})
-    {
-        // Just use the underlying BasicDual number's version of the same function...
-        return approximately_equal_to( value_to_test._frame_of_reference, value_it_should_be._frame_of_reference, tolerance );
-    }
-    /// @}  {Equality}
-
-    /** Creates the normalized form of a BasicDualQuaternion
-     *  
-     *  @param input The BasicDualQuaternion to normalize
-     *  
-     *  @return The normalized version of @p input
-     */
-    friend constexpr BasicDualQuaternion<T> normalized(const BasicDualQuaternion<T> &input)
-    {
-        return input.normalized();
-    }
-
-    /** Generates a linear blend between two BasicDualQuaternion objects
-     *  
-     *  @param beginning  The start state
-     *  @param end        The ending state
-     *  @param percentage The percentage blend between the two (typically [0..1])
-     */
-    template <std::floating_point OT = float>
-    friend constexpr BasicDualQuaternion<T> blend(const BasicDualQuaternion<T> &beginning,
-                                                  const BasicDualQuaternion<T> &end,
-                                                        OT                      percentage)
-    {
-        auto blended = beginning + (end - beginning) * percentage;
-
-        return blended.normalized();
-    }
-
-    friend std::string format(const BasicDualQuaternion<T> &input)
-    {
-        return std::format("[real: {}, dual: {}]", input.real(), input.dual());
-    }
-
-    /**  Computes the conjugate of the input
-     * 
-     *   @note This will just call @c input.conjugate()
-     */
-    friend constexpr BasicDualQuaternion<T> conjugate(const BasicDualQuaternion<T> &input)
-    {
-        return input.conjugate();
-    }
-
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -533,9 +485,7 @@ private:
         return true;
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -562,10 +512,19 @@ private:
         }
         return true;
     }
+    ///@} {Check}
+    ///@} {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicDualQuaternion
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -581,9 +540,7 @@ private:
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -599,9 +556,7 @@ private:
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
@@ -613,6 +568,56 @@ private:
     {
         assert( check_if_equal(input, BasicDualQuaternion<T>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
+
+    /** @name Global Functions
+     * 
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
+    /** Creates the normalized form of a BasicDualQuaternion
+     *  
+     *  @param input The BasicDualQuaternion to normalize
+     *  
+     *  @return The normalized version of @p input
+     */
+    friend constexpr BasicDualQuaternion<T> normalized(const BasicDualQuaternion<T> &input)
+    {
+        return input.normalized();
+    }
+
+    /** Generates a linear blend between two BasicDualQuaternion objects
+     *  
+     *  @param beginning  The start state
+     *  @param end        The ending state
+     *  @param percentage The percentage blend between the two (typically [0..1])
+     */
+    template <std::floating_point OT = float>
+    friend constexpr BasicDualQuaternion<T> blend(const BasicDualQuaternion<T> &beginning,
+                                                  const BasicDualQuaternion<T> &end,
+                                                        OT                      percentage)
+    {
+        auto blended = beginning + (end - beginning) * percentage;
+
+        return blended.normalized();
+    }
+
+    /**  Computes the conjugate of the input
+     * 
+     *   @note This will just call @c input.conjugate()
+     */
+    friend constexpr BasicDualQuaternion<T> conjugate(const BasicDualQuaternion<T> &input)
+    {
+        return input.conjugate();
+    }
+
+    friend std::string format(const BasicDualQuaternion<T> &input)
+    {
+        return std::format("[real: {}, dual: {}]", input.real(), input.dual());
+    }
+    /// @} {GlobalFunctions}
 };
 
 
