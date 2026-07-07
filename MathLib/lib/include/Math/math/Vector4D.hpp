@@ -44,17 +44,10 @@ struct BasicVector4D
         using value_type = RType; ///< The underlying implementation type
         /// @}
 
-        /** @name Constructors
-         *  @{}
-         */
         constexpr BasicRef(RType &x_in, RType &y_in, RType &z_in, RType &w_in) : x{x_in}, y{y_in}, z{z_in}, w{w_in} { }
         constexpr BasicRef(const BasicRef &) = default;
         constexpr BasicRef(const BasicVector4D<RType> &other) : x{other.x}, y{other.y}, z{other.z}, w{other.w} { }
-        /// @}
 
-        /** @name Assignment
-         *  @{
-         */
         constexpr BasicRef &operator =(BasicRef input)
         {
             x = input.x;
@@ -72,45 +65,16 @@ struct BasicVector4D
             w = input.w;
             return *this;
         }
-        /// @}
 
-        /** @name Conversion Operators
-         *  @{
-         */
-        /** BasicVector4D conversion operator
-         * 
-         *  This allows Vector4DRef objects to automatically be converted to BasicVector4D objects
-         *  for situations like passing to functions or constructors to BasicVector4D objects.
-         */
         constexpr operator BasicVector4D<RType>() const { return { x, y, z, w }; }
 
         constexpr operator std::tuple<RType, RType, RType, RType>() const { return std::make_tuple( x, y, z, w ); }
-        /// @}
 
-        /** @name Element Access
-         *  @{
-         */
         RType &x;
         RType &y;
         RType &z;
         RType &w;
-        /// @}
 
-        /** @name Equality
-         *  @{
-         */
-        /** Defines equality of two BasicVector4D::Ref objects
-         *  
-         *  @note Uses approximately_equal_to under-the-hood
-         *  
-         *  @note We take advantage of the new C++20 rule where if there
-         *        is not an appropriate operator ==(const BasicVector4D<Type> &) defined
-         *        for this class, then the compiler tries a swapped instantiation
-         *        in its place.  This allows us to only define the typical operator ==() here
-         *        and then define comparison of different types to the other class.
-         * 
-         *  @see Equality
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
@@ -124,14 +88,7 @@ struct BasicVector4D
         {
             return approximately_equal_to( left, right );
         }
-        /// @} {Equality}
 
-        /** @name Operators
-         * 
-         *  @relates BasicVector4D
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr BasicVector4D<RType> operator +(BasicRef left, BasicRef<U> right)
@@ -232,22 +189,7 @@ struct BasicVector4D
         {
             return { left.x / scalar, left.y / scalar, left.z / scalar, left.w / scalar };
         }
-        /// @} {Operators}
 
-        /** Compares two BasicVector4D::Ref inputs equal, component-wise, to within a tolerance
-         * 
-         *  @addtogroup Equality
-         * 
-         *  @relates BasicVector4D
-         *  
-         *  @param value_to_test
-         *  @param value_it_should_be 
-         *  @param tolerance          How close they should be to be considered equal
-         *  
-         *  @return @c true if they are equal
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool approximately_equal_to(BasicRef    value_to_test,
@@ -271,32 +213,12 @@ struct BasicVector4D
                    approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
                    approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
         }
-        /// @}
         
-        /** Sums up the components of @p input
-         *  
-         *  @param input The BasicVector4D::Ref to operate on
-         * 
-         *  @return The sum of all the components
-         */
         friend constexpr RType accumulate(BasicRef input)
         {
             return input.x + input.y + input.z + input.w;
         }
 
-        /** Calculate the dot product of two BasicVector4D::Ref objects
-         *
-         *  @param left  The first vector
-         *  @param right The second vector
-         * 
-         *  @return The dot product of the two input vectors
-         *  
-         *  @note This is only a strict dot product and thus a normalized
-         *        result will depend on if the input vectors are both
-         *        normalized!
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr RType dot(BasicRef left, BasicRef<U> right)
@@ -310,21 +232,7 @@ struct BasicVector4D
         {
             return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
         }
-        /// @}
 
-        /** Calculate the normalized dot product of two BasicVector4D objects
-         *
-         *  The input vectors are not assumed to be normalized, so we go
-         *  ahead and divide through by both the input vectors
-         *  to arrive at a normalized output.
-         * 
-         *  @param left  The first vector
-         *  @param right The second vector
-         * 
-         *  @return The dot product of the two input vectors
-         * 
-         *  @{
-         */
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr RType dot_normalized(BasicRef left, BasicRef<U> right)
@@ -338,25 +246,12 @@ struct BasicVector4D
         {
             return dot(left, right) / (left.magnitude() * right.magnitude());
         }
-        /// @}
 
-        /** Creates the normalized form of a BasicVector4D::Ref
-         *  
-         *  @param input The BasicVector4D::Ref to normalize
-         *  
-         *  @return The normalized version of @p input
-         */
         friend constexpr BasicVector4D<RType> normalized(BasicRef input)
         {
             return BasicVector4D<RType>( input ).normalized();
         }
 
-        /** Calculate the absolute value of all components of a BasicVector4D
-         *   
-         *   @param input The BasicVector4D::Ref to operate on
-         *
-         *   @return The BasicVector4D with only positive values
-         */
         friend constexpr BasicVector4D<RType> abs(BasicRef input)
         {
             return { std::abs(input.x), std::abs(input.y), std::abs(input.z), std::abs(input.w) };
@@ -421,18 +316,6 @@ struct BasicVector4D
             return std::format("[x: {:.6}, y: {:.6}, z: {:.6}, w: {:.6}]", input.x, input.y, input.z, input.w);
         }
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for equality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_equal(BasicRef    input,
@@ -474,20 +357,7 @@ struct BasicVector4D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and prints debug information when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend bool check_if_not_equal(BasicRef input,
@@ -529,20 +399,7 @@ struct BasicVector4D
             }
             return true;
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare two values for inequality with a tolerance and causes an assertion when false
-         *  
-         *  @param input     The first value to compare
-         *  @param near_to   The second value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-         * 
-         *  @{
-         */
         template <class U, std::floating_point OT = float>
             requires Concept::SameUnqualified<RType, U>
         friend void CHECK_IF_NOT_EQUAL(BasicRef    input,
@@ -560,17 +417,7 @@ struct BasicVector4D
         {
             assert( check_if_not_equal(input, near_to, tolerance) );
         }
-        /// @}
 
-        /** @addtogroup Checks
-         * 
-         *  Compare a value to near zero
-         *  
-         *  @param input     The first value to compare
-         *  @param tolerance The minimum value for being considered equal
-         * 
-         *  @return @c true if @c input is inside @c tolerance , @c false otherwise
-         */
         template <std::floating_point OT = float>
         friend void CHECK_IF_ZERO(BasicRef input, OT tolerance = OT{0.0002})
         {
@@ -619,34 +466,24 @@ struct BasicVector4D
     }
     /// @}
 
+    /** @name Assignment
+     *  @{
+     */
+    constexpr BasicVector4D<Type> &operator =(const BasicVector4D &other) = default;
+    constexpr BasicVector4D<Type> &operator =(Ref other)
+    {
+        x = other.x;
+        y = other.y;
+        z = other.z;
+        w = other.w;
+        return *this;
+    }
+    /// @}
+
     /** @name Conversion Operators
      *  @{
      */
     constexpr operator std::tuple<Type, Type, Type, Type>() const { return std::make_tuple( x, y, z ); }
-    /// @}
-
-    /** @name Equality
-     *  @{
-     */
-    /** Defines equality of two BasicVector4D objects
-     *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
-     *  @see Equality
-     */
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool operator ==(const BasicVector4D &left, const BasicVector4D<U> &right)
-    {
-        return approximately_equal_to(left, right);
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr bool operator ==(const BasicVector4D &left, BasicRef<U> right)
-    {
-        return approximately_equal_to(left, right);
-    }
     /// @}
 
     /** @name Constants
@@ -660,91 +497,6 @@ struct BasicVector4D
     constexpr static BasicVector4D<Type> zero() { return { }; }
     /// @}
     
-    /** @addtogroup Vector4DAlgebra 4D Vector Algebra
-     * 
-     *  Four Dimensional Vector Algrbra
-     * 
-     *  @{
-     */
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator +(const BasicVector4D &left, const BasicVector4D<U> &right)
-    {
-        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator +(const BasicVector4D &left, BasicRef<U> right)
-    {
-        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator -(const BasicVector4D &left, const BasicVector4D<U> &right)
-    {
-        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator -(const BasicVector4D &left, BasicRef<U> right)
-    {
-        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, const BasicVector4D<U> &right)
-    {
-        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, BasicRef<U> right)
-    {
-        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, const U &scalar)
-    {
-        return { left.x * scalar, left.y * scalar, left.z * scalar, left.w * scalar };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator *(const U &scalar, const BasicVector4D<U> &right)
-    {
-        return { scalar * right.x, scalar * right.y, scalar * right.z, scalar * right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D &left, const BasicVector4D<U> &right)
-    {
-        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D &left, BasicRef<U> right)
-    {
-        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
-    }
-
-    template <class U>
-        requires Concept::SameUnqualified<Type, U>
-    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D<Type> &left, const U &right)
-    {
-        return { left.x / right, left.y / right, left.z / right, left.w / right };
-    }
-    /// @}  {Vector4DAlgebra}
-
     constexpr value_type normSquared() const { return (x * x) + (y * y) + (z * z) + (w * w); }
     constexpr value_type norm() const { return std::sqrt( normSquared() ); } ///< @todo See if we need to use std::hypot()
 
@@ -830,13 +582,41 @@ struct BasicVector4D
     value_type w{};
     /// @}
 
-    /** @addtogroup Equality
-     * 
+private:
+
+    /** @name Equality
+     *
      *  @relates BasicVector4D
      * 
      *  @{
-     * 
-     *  Compares two BasicVector4D inputs equal, component-wise, to within a tolerance
+     */
+    /** Defines equality of two BasicVector4D objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @see Equality
+     */
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool operator ==(const BasicVector4D &left, const BasicVector4D<U> &right)
+    {
+        return approximately_equal_to(left, right);
+    }
+
+    /** Defines equality of a BasicVector4D and BasicRef objects
+     *  
+     *  @note Uses approximately_equal_to under-the-hood
+     *  
+     *  @see Equality
+     */
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr bool operator ==(const BasicVector4D &left, BasicRef<U> right)
+    {
+        return approximately_equal_to(left, right);
+    }
+
+    /** Compares two BasicVector4D inputs equal, component-wise, to within a tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -856,6 +636,14 @@ struct BasicVector4D
                approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
     }
 
+    /** Compares two BasicVector4D inputs equal, component-wise, to within a tolerance
+     *  
+     *  @param value_to_test
+     *  @param value_it_should_be 
+     *  @param tolerance          How close they should be to be considered equal
+     *  
+     *  @return @c true if they are equal
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool approximately_equal_to(const BasicVector4D &value_to_test,
@@ -867,8 +655,105 @@ struct BasicVector4D
                approximately_equal_to(value_to_test.z, value_it_should_be.z, tolerance) &&
                approximately_equal_to(value_to_test.w, value_it_should_be.w, tolerance);
     }
-    /// @}
+    /// @}  {Equality}
 
+    /** @addtogroup Vector4DAlgebra 4D Vector Algebra
+     * 
+     *  Four Dimensional Vector Algrbra
+     * 
+     *  @{
+     */
+
+    /** @name Operators
+     *  
+     *  @relates BasicVector4D
+     *  @{
+     */
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator +(const BasicVector4D &left, const BasicVector4D<U> &right)
+    {
+        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator +(const BasicVector4D &left, BasicRef<U> right)
+    {
+        return { left.x + right.x, left.y + right.y, left.z + right.z, left.w + right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator -(const BasicVector4D &left, const BasicVector4D<U> &right)
+    {
+        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator -(const BasicVector4D &left, BasicRef<U> right)
+    {
+        return { left.x - right.x, left.y - right.y, left.z - right.z, left.w - right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, const BasicVector4D<U> &right)
+    {
+        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, BasicRef<U> right)
+    {
+        return { left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator *(const BasicVector4D &left, const U &scalar)
+    {
+        return { left.x * scalar, left.y * scalar, left.z * scalar, left.w * scalar };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator *(const U &scalar, const BasicVector4D<U> &right)
+    {
+        return { scalar * right.x, scalar * right.y, scalar * right.z, scalar * right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D &left, const BasicVector4D<U> &right)
+    {
+        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D &left, BasicRef<U> right)
+    {
+        return { left.x / right.x, left.y / right.y, left.z / right.z, left.w / right.w };
+    }
+
+    template <class U>
+        requires Concept::SameUnqualified<Type, U>
+    friend constexpr BasicVector4D<Type> operator /(const BasicVector4D<Type> &left, const U &right)
+    {
+        return { left.x / right, left.y / right, left.z / right, left.w / right };
+    }
+    /// @}  {Operators}
+    /// @}  {Vector4DAlgebra}
+
+    /** @name Global Functions
+     * 
+     *  @relates BasicVector4D
+     * 
+     *  @{
+     */
     /** Sums up the components of @p input
      *  
      *  @param input The BasicVector4D to operate on
@@ -890,8 +775,6 @@ struct BasicVector4D
      *  @note This is only a strict dot product and thus a normalized
      *        result will depend on if the input vectors are both
      *        normalized!
-     *
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -900,13 +783,23 @@ struct BasicVector4D
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
     }
 
+    /** Calculate the dot product of two BasicVector4D objects
+     *
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     *  
+     *  @note This is only a strict dot product and thus a normalized
+     *        result will depend on if the input vectors are both
+     *        normalized!
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot(const BasicVector4D &left, BasicRef<U> right)
     {
         return (left.x * right.x) + (left.y * right.y) + (left.z * right.z) + (left.w * right.w);
     }
-    /// @}
 
     /** Calculate the normalized dot product of two BasicVector4D objects
      *
@@ -918,8 +811,6 @@ struct BasicVector4D
      *  @param right The second vector
      * 
      *  @return The dot product of the two input vectors
-     *
-     *  @{
      */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
@@ -928,13 +819,23 @@ struct BasicVector4D
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
 
+    /** Calculate the normalized dot product of two BasicVector4D objects
+     *
+     *  The input vectors are not assumed to be normalized, so we go
+     *  ahead and divide through by both the input vectors
+     *  to arrive at a normalized output.
+     * 
+     *  @param left  The first vector
+     *  @param right The second vector
+     * 
+     *  @return The dot product of the two input vectors
+     */
     template <class U>
         requires Concept::SameUnqualified<Type, U>
     friend constexpr Type dot_normalized(const BasicVector4D &left, BasicRef<U> right)
     {
         return dot(left, right) / (left.magnitude() * right.magnitude());
     }
-    /// @}
 
     /** Creates the normalized form of a BasicVector4D
      *  
@@ -1027,18 +928,24 @@ struct BasicVector4D
     {
         return std::format("[x: {:.6}, y: {:.6}, z: {:.6}, w: {:.6}]", input.x, input.y, input.z, input.w);
     }
+    ///@}  {Global Functions}
 
     /** @addtogroup Checks
+     *  @{
+     */
+    /** @name Check
      * 
-     *  Compare two values for equality with a tolerance and prints debug information when false
+     *  @relates BasicVector4D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     *
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1060,6 +967,15 @@ struct BasicVector4D
         }
         return true;
     }
+
+    /** Compare two values for equality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_equal(const BasicVector4D &input,
@@ -1080,19 +996,14 @@ struct BasicVector4D
         }
         return true;
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     *
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1115,6 +1026,14 @@ struct BasicVector4D
         return true;
     }
 
+    /** Compare two values for inequality with a tolerance and prints debug information when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend bool check_if_not_equal(const BasicVector4D &input,
@@ -1135,19 +1054,25 @@ struct BasicVector4D
         }
         return true;
     }
-    /// @}
+    /// @}  {Check}
+    /// @}  {Checks}
 
-    /** @addtogroup Checks
+    /** @addtogroup Assertions
+     *  @{
+     */
+    /** @name Assert
      * 
-     *  Compare two values for equality with a tolerance and causes an assertion when false
+     *  @relates BasicVector4D
+     * 
+     *  @{
+     */
+    /** Compare two values for equality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
-     *
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1158,6 +1083,14 @@ struct BasicVector4D
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for equality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_EQUAL(const BasicVector4D &input,
@@ -1166,19 +1099,14 @@ struct BasicVector4D
     {
         assert( check_if_equal(input, near_to, tolerance) );
     }
-    /// @}
     
-    /** @addtogroup Checks
-     * 
-     *  Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
-     *
-     *  @{
      */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
@@ -1189,6 +1117,14 @@ struct BasicVector4D
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
 
+    /** Compare two values for inequality with a tolerance and causes an assertion when false
+     *  
+     *  @param input     The first value to compare
+     *  @param near_to   The second value to compare
+     *  @param tolerance The minimum value for being considered equal
+     * 
+     *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     */
     template <class U, std::floating_point OT = float>
         requires Concept::SameUnqualified<Type, U>
     friend void CHECK_IF_NOT_EQUAL(const BasicVector4D &input,
@@ -1197,11 +1133,8 @@ struct BasicVector4D
     {
         assert( check_if_not_equal(input, near_to, tolerance) );
     }
-    /// @}
 
-    /** @addtogroup Checks
-     * 
-     *  Compare a value to near zero
+    /** Compare a value to near zero
      *  
      *  @param input     The first value to compare
      *  @param tolerance The minimum value for being considered equal
@@ -1213,6 +1146,8 @@ struct BasicVector4D
     {
         assert( check_if_equal(input, BasicVector4D<Type>::zero(), tolerance));
     }
+    ///@} {Assert}
+    ///@} {Assertions}
 };
 
 
