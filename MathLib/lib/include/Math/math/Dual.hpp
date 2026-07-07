@@ -111,6 +111,7 @@ public:
     /// @}
 
 private:
+
     /** @name Equality
      * 
      *  @relates BasicDual
