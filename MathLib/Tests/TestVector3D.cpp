@@ -19,8 +19,6 @@ void TestFunction(const Vector3Df &input)
 
 void DefaultInitialied()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df default_initialized;
 
     CHECK_IF_EQUAL( default_initialized.x, 0.0f );
@@ -30,8 +28,6 @@ void DefaultInitialied()
 
 void OneInitializer()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 2.2f };
 
     CHECK_IF_EQUAL( one.x, 2.2f );
@@ -42,8 +38,6 @@ void OneInitializer()
 
 void TwoInitializers()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 2.2f, 3.3f };
 
     CHECK_IF_EQUAL( one.x, 2.2f );
@@ -53,8 +47,6 @@ void TwoInitializers()
 
 void ThreeInitializers()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 2.2f, 3.3f, 4.4f };
 
     CHECK_IF_EQUAL( one.x, 2.2f );
@@ -64,8 +56,6 @@ void ThreeInitializers()
 
 void PassedToFunction()
 {
-    std::cout << __func__ << std::endl;
-
     TestFunction( { } );
     TestFunction( { 1.0f } );
     TestFunction( { 66.0f, 33.3f } );
@@ -88,8 +78,6 @@ void OperatorEqualsAndNotEquals()
 
 void AssignVector3DToVector3DRef()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 1.0f, 2.0f };
     Vector3Df two{ 2.1f, 2.3f, 12.0f };
 
@@ -118,8 +106,6 @@ void AssignVector3DToVector3DRef()
 
 void AssignVector3DRefToVector3DRef()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 1.0f, 2.0f, 3.0f };
     Vector3Df two{ 2.1f, 2.3f, 2.4f };
 
@@ -136,8 +122,6 @@ void AssignVector3DRefToVector3DRef()
 
 void AssignVector3DRefToVector3D()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 1.0f, 2.0f, 3.0f };
     Vector3Df two{ 2.1f, 2.3f, 2.5f };
 
@@ -154,8 +138,6 @@ void AssignVector3DRefToVector3D()
 
 void AssignVector3DToVector3D()
 {
-    std::cout << __func__ << std::endl;
-
     Vector3Df one{ 1.0f, 2.0f, 3.0f };
     Vector3Df two{ 2.1f, 2.3f, 2.5f };
 
@@ -172,8 +154,6 @@ void AssignVector3DToVector3D()
 
 void Dot()
 {
-    std::cout << __func__ << std::endl;
-
     float sqrt2_over_2 = std::numbers::sqrt2_v<float> / 2.0f;
     // At first, let's use unit vectors...
 
