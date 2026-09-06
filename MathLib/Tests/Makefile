@@ -16,6 +16,7 @@ TESTS = Angle \
 	ColorTypes \
 	DualNumber \
 	DualQuaternion \
+	ForwardDifferentiation \
 	HierarchicalCoordinateSystem \
 	Quaternion \
 	SceneNode \
