@@ -31,8 +31,6 @@ using namespace Math;
  */
 void IdentityDualIsAsExpected()
 {
-    std::cout << __func__ << std::endl;
-
     Dualf identity = Dualf::identity();
 
     CHECK_IF_EQUAL(identity.real, 1.0f);
@@ -43,8 +41,6 @@ void IdentityDualIsAsExpected()
  */
 void ZeroDualIsAsExpected()
 {
-    std::cout << __func__ << std::endl;
-
     Dualf zero = Dualf::zero();
 
     CHECK_IF_EQUAL(zero.real, 0.0f);
@@ -55,8 +51,6 @@ void ZeroDualIsAsExpected()
  */
 void MakePureDualSetsRealComponentToZero()
 {
-    std::cout << __func__ << std::endl;
-
     CHECK_IF_EQUAL( Dualf::make_pure(3.0f).real, 0.0f );
 }
 
@@ -64,8 +58,6 @@ void MakePureDualSetsRealComponentToZero()
  */
 void MakePureDualSetsDualComponentToGivenValue()
 {
-    std::cout << __func__ << std::endl;
-
     CHECK_IF_EQUAL( Dualf::make_pure(3.3f).dual, 3.3f );
 }
 
@@ -74,8 +66,6 @@ void MakePureDualSetsDualComponentToGivenValue()
  */
 void DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues()
 {
-    std::cout << __func__ << std::endl;
-
     Dualf d1{ 1.0f, 3.0f  };
     Dualf d2{ 9.0f, 11.0f };
 
@@ -87,8 +77,6 @@ void DotProductMultiplesCorrespondingElementsAndThenSumsTheResultingValues()
  */
 void DualScalarSquareRootTimesItselfIsTheOriginalNumber()
 {
-    std::cout << __func__ << std::endl;
-
     Dualf original_number{ 3.456f, 86.332f };
     Dualf root = dualscalar_sqrt(original_number);
     Dualf root_squared = root * root;
