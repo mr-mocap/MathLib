@@ -4,6 +4,7 @@
 #include <cassert>
 #include <concepts>
 #include <type_traits>
+#include <cstdlib>
 
 
 /** @file
@@ -271,6 +272,35 @@ private:
         return left - BasicDual<T>( T(scalar) );
     }
     /// @}  {Operators}
+
+    /** @name Trigonometric Functions
+     * 
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
+    friend constexpr BasicDual<T> sin(const BasicDual<T> &input)
+    {
+        static_assert( std::is_floating_point_v<T> );
+
+        return { std::sin( input.real ), std::cos( input.real ) * input.dual };
+    }
+
+    friend constexpr BasicDual<T> cos(const BasicDual<T> &input)
+    {
+        static_assert( std::is_floating_point_v<T> );
+
+        return { std::cos( input.real ), -std::sin( input.real ) * input.dual };
+    }
+    /// @}  {Trigonometric Functions}
+
+    /** @name Miscellaneous Mathematical Functions
+     * 
+     *  @relates BasicDual
+     * 
+     *  @{
+     */
+    /// @}  {Miscellaneous Mathematical Functions}
     /// @}  {DualAlgebra}
 
     /** @addtogroup Checks

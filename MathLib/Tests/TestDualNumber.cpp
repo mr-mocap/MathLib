@@ -1,8 +1,9 @@
 #include <Math/math/Dual.hpp>
 #include <Math/math/Checks.hpp>
+#include <cstdlib>
+#include <numbers>
 #include <cassert>
 #include <iostream>
-#include <cstdlib>
 
 /** @file
  * 
@@ -88,9 +89,9 @@ void OperatorEquality()
 {
     Dual d( 12.0 );
 
-    assert( d == 12.0 );
-    assert( 12.0 == d );
-    assert( d == Dual( 12.0 ) );
+    CHECK_IF_EQUAL( d, 12.0 );
+    CHECK_IF_EQUAL( 12.0, d );
+    CHECK_IF_EQUAL( d, Dual( 12.0 ) );
 }
 
 void OperatorMultiply()
@@ -98,16 +99,58 @@ void OperatorMultiply()
     Dual d( 16.0 );
     Dual r = d * 2.0;
 
-    assert( r == 32.0 );
-    assert( r == Dual( 32.0 ) );
-    assert( 32.0 == r );
-    assert( Dual( 32.0 ) == r );
+    CHECK_IF_EQUAL( r, 32.0 );
+    CHECK_IF_EQUAL( r, Dual( 32.0 ) );
+    CHECK_IF_EQUAL( 32.0, r );
+    CHECK_IF_EQUAL( Dual( 32.0 ), r );
+}
+
+void OperatorAddition()
+{
+    Dual a( 2.0, 3.0 );
+    Dual b( 4.0, 5.0 );
+    Dual result = a + b;
+
+    CHECK_IF_EQUAL( result.real, 6.0 );
+    CHECK_IF_EQUAL( result.dual, 8.0 );
+}
+
+void OperatorSubtraction()
+{
+    Dual a( 2.0, 3.0 );
+    Dual b( 4.0, 5.0 );
+    Dual result = a - b;
+
+    CHECK_IF_EQUAL( result.real, -2.0 );
+    CHECK_IF_EQUAL( result.dual, -2.0 );
+}
+
+void OperatorSin()
+{
+    Dual a( std::numbers::pi / 2.0, 1.0 );
+    Dual result = sin( a );
+
+    CHECK_IF_EQUAL( result.real, 1.0 );
+    CHECK_IF_EQUAL( result.dual, 0.0 );
+}
+
+void OperatorCos()
+{
+    Dual a( 0.0, 1.0 );
+    Dual result = cos( a );
+
+    CHECK_IF_EQUAL( result.real, 1.0 );
+    CHECK_IF_EQUAL( result.dual, 0.0 );
 }
 
 void TestOperators()
 {
     OperatorEquality();
     OperatorMultiply();
+    OperatorAddition();
+    OperatorSubtraction();
+    OperatorSin();
+    OperatorCos();
 }
 
 /** Run all of the unit tests in this namespace
