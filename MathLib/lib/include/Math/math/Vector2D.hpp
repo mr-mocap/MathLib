@@ -55,6 +55,8 @@ struct BasicVector2D
             return *this;
         }
 
+        template <class U>
+            requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
         {
             return approximately_equal_to( left, right );
