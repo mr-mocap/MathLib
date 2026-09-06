@@ -465,6 +465,7 @@ struct BasicVector3D
     {
         x = other.x;
         y = other.y;
+        z = other.z;
         return *this;
     }
     /// @}
