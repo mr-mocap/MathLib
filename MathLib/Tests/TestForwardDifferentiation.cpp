@@ -42,8 +42,10 @@ void TwoVariables()
     Dualf derivative_wrt_x = TwoVariableFunction( {input_x, 1.0f}, {input_y, 0.0f} );
     Dualf derivative_wrt_y = TwoVariableFunction( {input_x, 0.0f}, {input_y, 1.0f} );
 
-    CHECK_IF_EQUAL(derivative_wrt_x.real, 9.0f);
-    CHECK_IF_EQUAL(derivative_wrt_x.dual, 6.0f);
+    CHECK_IF_EQUAL(derivative_wrt_x.real, 12.0f);
+    CHECK_IF_EQUAL(derivative_wrt_x.dual, 12.0f);
+    CHECK_IF_EQUAL(derivative_wrt_y.real, 12.0f);
+    CHECK_IF_EQUAL(derivative_wrt_y.dual, 4.0f);
 }
 
 void Run()
