@@ -127,20 +127,104 @@ void OperatorSubtraction()
 
 void OperatorSin()
 {
-    Dual a( std::numbers::pi / 2.0, 1.0 );
-    Dual result = sin( a );
+    // 0 degrees
+    {
+        Dual a( 0.0, 1.0 );
+        Dual result = sin( a );
 
-    CHECK_IF_EQUAL( result.real, 1.0 );
-    CHECK_IF_EQUAL( result.dual, 0.0 );
+        CHECK_IF_EQUAL( result.real, 0.0 );
+        CHECK_IF_EQUAL( result.dual, 1.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, std::cos(a.real) );
+    }
+
+    // 90 degrees
+    {
+        Dual a( std::numbers::pi / 2.0, 1.0 );
+        Dual result = sin( a );
+
+        CHECK_IF_EQUAL( result.real, 1.0 );
+        CHECK_IF_EQUAL( result.dual, 0.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, std::cos(a.real) );
+    }
+
+    // 180 degrees
+    {
+        Dual a( std::numbers::pi, 1.0 );
+        Dual result = sin( a );
+
+        CHECK_IF_EQUAL( result.real, 0.0 );
+        CHECK_IF_EQUAL( result.dual, -1.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, std::cos(a.real) );
+    }
+
+    // 270 degrees
+    {
+        Dual a( std::numbers::pi * (3.0 / 2.0), 1.0 );
+        Dual result = sin( a );
+
+        CHECK_IF_EQUAL( result.real, -1.0 );
+        CHECK_IF_EQUAL( result.dual, 0.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, std::cos(a.real) );
+    }
 }
 
 void OperatorCos()
 {
-    Dual a( 0.0, 1.0 );
-    Dual result = cos( a );
+    // 0 degrees
+    {
+        Dual a( 0.0, 1.0 );
+        Dual result = cos( a );
 
-    CHECK_IF_EQUAL( result.real, 1.0 );
-    CHECK_IF_EQUAL( result.dual, 0.0 );
+        CHECK_IF_EQUAL( result.real, 1.0 );
+        CHECK_IF_EQUAL( result.dual, 0.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, -std::sin(a.real) );
+    }
+
+    // 90 degrees
+    {
+        Dual a( std::numbers::pi / 2.0, 1.0 );
+        Dual result = cos( a );
+
+        CHECK_IF_EQUAL( result.real, 0.0 );
+        CHECK_IF_EQUAL( result.dual, -1.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, -std::sin(a.real) );
+    }
+
+    // 180 degrees
+    {
+        Dual a( std::numbers::pi, 1.0 );
+        Dual result = cos( a );
+
+        CHECK_IF_EQUAL( result.real, -1.0 );
+        CHECK_IF_EQUAL( result.dual, 0.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, -std::sin(a.real) );
+    }
+
+    // 270 degrees
+    {
+        Dual a( std::numbers::pi * (3.0 / 2.0), 1.0 );
+        Dual result = cos( a );
+
+        CHECK_IF_EQUAL( result.real, 0.0 );
+        CHECK_IF_EQUAL( result.dual, 1.0 );
+
+        // More symbolic check
+        CHECK_IF_EQUAL( result.dual, -std::sin(a.real) );
+    }
 }
 
 void TestOperators()
