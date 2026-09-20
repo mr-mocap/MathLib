@@ -294,6 +294,13 @@ private:
     }
     /// @}  {Trigonometric Functions}
 
+    template <std::floating_point OT = T>
+        requires std::is_floating_point_v<T>
+    friend constexpr BasicDual<T> pow(const BasicDual<T> &input, OT power)
+    {
+        return { std::pow( input.real, power ), power * std::pow( input.real, power - OT{1.0} ) * input.dual };
+    }
+
     /** @name Miscellaneous Mathematical Functions
      * 
      *  @relates BasicDual
