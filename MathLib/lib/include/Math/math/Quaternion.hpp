@@ -312,7 +312,7 @@ private:
                (left._k == right._k);
     }
 
-    /** Compares two BasicQuaternion inputs equal, component-wise, to within a tolerance
+    /** Compares two BasicQuaternion inputs equal, component-wise, to within a scalar tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -321,9 +321,13 @@ private:
      *  @return @c true if they are equal
      * 
      *  @see Equality
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
+        requires std::is_floating_point_v<T> // This line looks redundant, but remember we only want this method
+                                             // if we can directly compare the members with a floating point type
     friend constexpr bool approximately_equal_to(const BasicQuaternion<T> &value_to_test,
                                                  const BasicQuaternion<T> &value_it_should_be,
                                                        OT                  tolerance = OT{0.0002})
@@ -429,6 +433,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -458,6 +465,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -498,6 +508,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -515,6 +528,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -531,6 +547,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if @c input is inside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
