@@ -335,8 +335,6 @@ private:
      */
     /** Defines equality of two DualQuaternions
      *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
      *  @note Use C++20's ability to generate the operator !=() from operator ==()
      * 
      *  @see Equality
@@ -344,7 +342,7 @@ private:
     friend constexpr bool operator ==(const BasicDualQuaternion<T> &left,
                                       const BasicDualQuaternion<T> &right)
     {
-        return approximately_equal_to(left, right);
+        return left._frame_of_reference == right._frame_of_reference;
     }
 
     /** Compares two BasicDualQuaternion inputs equal, component-wise, to within a tolerance
