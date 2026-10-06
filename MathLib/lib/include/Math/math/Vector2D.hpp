@@ -59,14 +59,14 @@ struct BasicVector2D
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) && (left.y == right.y);
         }
 
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, const BasicVector2D<U> &right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) && (left.y == right.y);
         }
 
         template <class U>
@@ -527,7 +527,7 @@ private:
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector2D &left, const BasicVector2D<U> &right)
     {
-        return approximately_equal_to(left, right);
+        return (left.x == right.x) && (left.y == right.y);
     }
 
     /** Compares two BasicVector2D inputs equal, component-wise, to within a tolerance

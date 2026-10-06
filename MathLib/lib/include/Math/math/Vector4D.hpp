@@ -79,14 +79,20 @@ struct BasicVector4D
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) &&
+                   (left.y == right.y) &&
+                   (left.z == right.z) &&
+                   (left.w == right.w);
         }
 
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, const BasicVector4D<U> &right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) &&
+                   (left.y == right.y) &&
+                   (left.z == right.z) &&
+                   (left.w == right.w);
         }
 
         template <class U>
@@ -600,7 +606,10 @@ private:
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector4D &left, const BasicVector4D<U> &right)
     {
-        return approximately_equal_to(left, right);
+        return (left.x == right.x) &&
+               (left.y == right.y) &&
+               (left.z == right.z) &&
+               (left.w == right.w);
     }
 
     /** Defines equality of a BasicVector4D and BasicRef objects
@@ -613,7 +622,10 @@ private:
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector4D &left, BasicRef<U> right)
     {
-        return approximately_equal_to(left, right);
+        return (left.x == right.x) &&
+               (left.y == right.y) &&
+               (left.z == right.z) &&
+               (left.w == right.w);
     }
 
     /** Compares two BasicVector4D inputs equal, component-wise, to within a tolerance

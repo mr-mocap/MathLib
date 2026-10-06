@@ -77,14 +77,18 @@ struct BasicVector3D
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, BasicRef<U> right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) &&
+                   (left.y == right.y) &&
+                   (left.z == right.z);
         }
 
         template <class U>
             requires Concept::SameUnqualified<RType, U>
         friend constexpr bool operator ==(BasicRef left, const BasicVector3D<U> &right)
         {
-            return approximately_equal_to( left, right );
+            return (left.x == right.x) &&
+                   (left.y == right.y) &&
+                   (left.z == right.z);
         }
 
         template <class U>
@@ -572,7 +576,9 @@ private:
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector3D &left, const BasicVector3D<U> &right)
     {
-        return approximately_equal_to(left, right);
+        return (left.x == right.x) &&
+               (left.y == right.y) &&
+               (left.z == right.z);
     }
 
     /** Defines equality of a BasicVector3D and BasicRef objects
@@ -585,7 +591,9 @@ private:
         requires Concept::SameUnqualified<Type, U>
     friend constexpr bool operator ==(const BasicVector3D &left, BasicRef<U> right)
     {
-        return approximately_equal_to(left, right);
+        return (left.x == right.x) &&
+               (left.y == right.y) &&
+               (left.z == right.z);
     }
 
     /** Compares two BasicVector3D inputs equal, component-wise, to within a tolerance
