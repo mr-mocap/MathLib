@@ -130,7 +130,7 @@ private:
         return (left.real == right.real) && (left.dual == right.dual);
     }
 
-    /** Compare two values for equality with a tolerance
+    /** Compare two values for equality with a scalar tolerance
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -139,9 +139,13 @@ private:
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
      *  
      *  @see Equality
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
-        requires std::is_floating_point_v<T>
+        requires std::is_floating_point_v<T> // This line looks redundant, but remember we only want this method
+                                             // if we can directly compare the members with a floating point type
     friend constexpr bool approximately_equal_to(const BasicDual<T> &value_to_test,
                                                  const BasicDual<T> &value_it_should_be,
                                                        OT            tolerance = OT{0.0002})
@@ -317,13 +321,16 @@ private:
      * 
      *  @{
      */
-    /** Compare two values for equality with a tolerance and prints debug information when false
+    /** Compare two values for equality with a scalar tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -346,13 +353,16 @@ private:
         return true;
     }
 
-    /** Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a scalar tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -386,13 +396,16 @@ private:
      * 
      *  @{
      */
-    /** Compare two values for equality with a tolerance and causes an assertion when false
+    /** Compare two values for equality with a scalar tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are equal within @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -403,13 +416,16 @@ private:
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    /** Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a scalar tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if the two are not equal outside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
@@ -426,6 +442,9 @@ private:
      *  @param tolerance The minimum value for being considered equal
      * 
      *  @return @c true if @c input is inside @c tolerance , @c false otherwise
+     * 
+     *  @note This is defined to *only* come into existence when each of the members of
+     *        the class can be compared with a floating point type.
      */
     template <std::floating_point OT = T>
         requires std::is_floating_point_v<T>
