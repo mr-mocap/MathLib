@@ -306,7 +306,10 @@ private:
      */
     friend constexpr bool operator ==(const BasicQuaternion<T> &left, const BasicQuaternion<T> &right)
     {
-        return approximately_equal_to(left, right);
+        return (left._w == right._w) &&
+               (left._i == right._i) &&
+               (left._j == right._j) &&
+               (left._k == right._k);
     }
 
     /** Compares two BasicQuaternion inputs equal, component-wise, to within a tolerance
