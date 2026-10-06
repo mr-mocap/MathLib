@@ -231,7 +231,7 @@ private:
         return (left._real == right._real) && (left._imaginary == right.imaginary);
     }
 
-    /** Compares two BasicComplex inputs equal, component-wise, to within a tolerance
+    /** Compares two BasicComplex inputs equal, component-wise, to within a scalar tolerance
      *  
      *  @param value_to_test
      *  @param value_it_should_be 
@@ -325,7 +325,7 @@ private:
      * 
      *  @{
      */
-    /** Compare two values for equality with a tolerance and prints debug information when false
+    /** Compare two values for equality with a scalar tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -353,7 +353,7 @@ private:
         return true;
     }
 
-    /** Compare two values for inequality with a tolerance and prints debug information when false
+    /** Compare two values for inequality with a scalar tolerance and prints debug information when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -392,7 +392,7 @@ private:
      * 
      *  @{
      */
-    /** Compare two values for equality with a tolerance and causes an assertion when false
+    /** Compare two values for equality with a scalar tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
@@ -408,7 +408,7 @@ private:
         assert( check_if_equal(input, near_to, tolerance) );
     }
 
-    /** Compare two values for inequality with a tolerance and causes an assertion when false
+    /** Compare two values for inequality with a scalar tolerance and causes an assertion when false
      *  
      *  @param input     The first value to compare
      *  @param near_to   The second value to compare
