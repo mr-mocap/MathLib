@@ -121,15 +121,13 @@ private:
      */
     /** Defines equality of two Duals
      *  
-     *  @note Uses approximately_equal_to under-the-hood
-     *  
      *  @note Use C++20's ability to generate the operator !=() from operator ==()
      * 
      *  @see Equality
      */
     friend constexpr bool operator ==(const BasicDual<T> &left, const BasicDual<T> &right)
     {
-        return approximately_equal_to(left, right);
+        return (left.real == right.real) && (left.dual == right.dual);
     }
 
     /** Compare two values for equality with a tolerance
