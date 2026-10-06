@@ -228,7 +228,7 @@ private:
      */
     friend constexpr bool operator ==(const BasicComplex<T> &left, const BasicComplex<T> &right)
     {
-        return (left._real == right._real) && (left._imaginary == right.imaginary);
+        return (left._real == right._real) && (left._imaginary == right._imaginary);
     }
 
     /** Compares two BasicComplex inputs equal, component-wise, to within a scalar tolerance
